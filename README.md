@@ -1,6 +1,6 @@
-#branch tree
+# branch tree
 main
-- dev/m
+- dev
     - dev/back
         - feat1, feat2 …
     - dev/front
