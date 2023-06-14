@@ -2,6 +2,7 @@ package com.e1i5.stackOverflow.question.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,13 +13,10 @@ import java.util.List;
 public class QuestionResponseDto {
     private long questionId;
     private long memberId;
-    private String name;
     private String title;
-    private String body;
-    private int score;
-    private boolean checked;
-    private List<String> tags;
-    private int answerCount;
-    private String createdAt;
-    private String modifiedAt;
+    private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+   private int viewCount;
+   private int answerCount;
 }

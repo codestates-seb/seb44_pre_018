@@ -9,12 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+
 
 @RestController
 @RequestMapping("/questions")
@@ -22,15 +21,33 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final QuestionService questionService;
+
     private final QuestionMapper mapper;
 
     @PostMapping
-    public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.questionPostDto questionPostDto){
+    public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto){
         Question question = mapper.questionPostDtoToQuestion(questionPostDto);
-        //question createQuestion = questionService. 서비스 계층
-        QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(createQuestion); //서비스 계층 조금 있다가
-        return  new ResponseEntity(responseDto, HttpStatus.CREATED);
+        return  new ResponseEntity<>(mapper.questionsToResponseDto(question), HttpStatus.OK);
 
     }
+    @PatchMapping
+    public ResponseEntity patchQuestion(@Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto){
+        return new ResponseEntity<>(HttpStatus.OK);
+
+
+    }
+    @GetMapping
+    public ResponseEntity getQuestions(){
+        return  new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/{question_id}")
+    public ResponseEntity getQuestion(@PathVariable("question_id")@Positive long questionId){
+        return  new ResponseEntity<>(HttpStatus.OK);
+    }
+    @DeleteMapping("/{question_id}")
+    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }

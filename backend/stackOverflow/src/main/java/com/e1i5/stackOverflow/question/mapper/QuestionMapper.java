@@ -10,14 +10,12 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
-    @Mapping(source = "memberId", target = "member.memberId")
-    Question questionPostDtoToQuestion(QuestionDto.questionPostDto questionPostDto);
-    @Mapping(source = "memberId", target = "member.memberId")
-    Question questionPatchDtoToQuestion(QuestionDto.questionPatchDto questionPatchDto);
-    @Mapping(source = "member.memberId", target = "memberId")
-    @Mapping(source = "member.name", target = "name")
+
+    Question questionPostDtoToQuestion(QuestionDto.QuestionPostDto questionPostDto);
+
+    Question questionPatchDtoToQuestion(QuestionDto.QuestionPatchDto questionPatchDto);
+
     QuestionResponseDto questionToQuestionResponseDto(Question question);
-    @Mapping(source = "member.memberId", target = "memberId")
-    @Mapping(source = "member.name", target = "name")
+
     List<QuestionResponseDto> questionsToResponseDto(List<Question>questions);
 }

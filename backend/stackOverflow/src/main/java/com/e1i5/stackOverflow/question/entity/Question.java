@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -13,20 +15,18 @@ import javax.persistence.*;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private Long questionId;
     @Column(nullable = false)
     private String title;
-
     @Column(nullable = false)
-    private String body;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
-    @Column
-    private int answerCount =0;
+    private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
+    private int viewsCount;
+    private int answerCount;
 
 
-}
+
+    }
+
+

@@ -12,12 +12,12 @@ public class QuestionDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class questionPostDto {
+    public static class QuestionPostDto {
         @NotBlank(message = "제목을 작성해야 합니다")
         private String title;
         @NotBlank(message = "내용을 작성해야 합니다")
         @Pattern(regexp = "^[a-zA-Z]+$")
-        private String body;
+        private String content;
         private long memberId;
     }
 
@@ -25,7 +25,7 @@ public class QuestionDto {
     @NoArgsConstructor
     @Setter
     @Getter
-    public static class questionPatchDto{
+    public static class QuestionPatchDto{
         @Pattern(regexp = "^[a-zA-Z]+$")
         private String body;
         private long memberId;
