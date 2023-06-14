@@ -17,8 +17,8 @@ public class Member {
     private String email;
     private String password;
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
-    private LocalDateTime created_at;
-    private LocalDateTime Modified_at;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
     private Image profile_image;
 
     public Member(String name, String phone, String email, String password) {
