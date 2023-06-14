@@ -1,20 +1,24 @@
+import { Link } from 'react-router-dom';
+import Filter from '../components/Filter';
+import SearchBar from '../components/SearchBar';
+import ListItem from '../components/ListItem';
+import Pagination from '../components/global/Pagination';
+
 const MainList = () => {
   return (
     <div className="inner">
-      나비야, 나비야 이리 날아오너라 노랑나비, 흰 나비 춤을 추며 오너라 봄바람에
-      꽃잎도 방긋방긋 웃으며 참새도 짹짹짹 노래하며 춤춘다 봄바람에 꽃잎도
-      방긋방긋 웃으며 참새도 짹짹짹 노래하며 춤춘다 나비야, 나비야 이리
-      날아오너라 노랑나비, 흰 나비 춤을 추며 오너라 나비야, 나비야 이리
-      날아오너라 노랑나비, 흰 나비 춤을 추며 오너라나비야, 나비야 이리
-      날아오너라 노랑나비, 흰 나비 춤을 추며 오너라 봄바람에 꽃잎도 방긋방긋
-      웃으며 참새도 짹짹짹 노래하며 춤춘다 봄바람에 꽃잎도 방긋방긋 웃으며
-      참새도 짹짹짹 노래하며 춤춘다 나비야, 나비야 이리 날아오너라 노랑나비, 흰
-      나비 춤을 추며 오너라 나비야, 나비야 이리 날아오너라 노랑나비, 흰 나비
-      춤을 추며 오너라나비야, 나비야 이리 날아오너라 노랑나비, 흰 나비 춤을 추며
-      오너라 봄바람에 꽃잎도 방긋방긋 웃으며 참새도 짹짹짹 노래하며 춤춘다
-      봄바람에 꽃잎도 방긋방긋 웃으며 참새도 짹짹짹 노래하며 춤춘다 나비야,
-      나비야 이리 날아오너라 노랑나비, 흰 나비 춤을 추며 오너라 나비야, 나비야
-      이리 날아오너라 노랑나비, 흰 나비 춤을 추며 오너라
+      <div className="flex items-center justify-between">
+        <h3 className="maintitle">All Questins</h3>
+        <Link to="/noticewrite">Ask Qustion</Link>
+      </div>
+      <div className="flex items-center justify-between">
+        <Filter />
+        <SearchBar />
+      </div>
+      <ul>
+        <ListItem />
+      </ul>
+      <Pagination />
     </div>
   );
 };
