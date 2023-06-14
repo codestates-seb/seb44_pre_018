@@ -26,7 +26,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody){
         Member member = mapper.memberPostDtoToMember(requestBody);
-        return new ResponseEntity<>(member, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.memberToResponseDto(member), HttpStatus.OK);
     }
 
     @PatchMapping
