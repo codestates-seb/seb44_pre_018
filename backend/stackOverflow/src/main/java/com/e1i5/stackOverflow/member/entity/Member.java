@@ -1,4 +1,4 @@
-package com.e1i5.stackOverflow.member;
+package com.e1i5.stackOverflow.member.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +22,9 @@ public class Member {
     private Image profile_image;
 
     public Member(String name, String phone, String email, String password) {
+        this.email = email;
         this.name = name;
         this.phone = phone;
-        this.email = email;
         this.password = password;
     }
 
