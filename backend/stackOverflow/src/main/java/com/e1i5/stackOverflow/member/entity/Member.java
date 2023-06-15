@@ -1,23 +1,38 @@
 package com.e1i5.stackOverflow.member.entity;
 
+import com.e1i5.stackOverflow.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 @Setter
-public class Member {
+@Entity
+public class Member extends Auditable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
+
+    @Column(length = 100, nullable = false, unique = true)
     private String name;
+    @Column(length = 13, nullable = false, unique = true)
     private String phone;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(length = 20, nullable = false, unique = true)
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+
+    @Column(length = 100)
     private String profileImageName;
 
     public Member(String name, String phone, String email, String password) {
