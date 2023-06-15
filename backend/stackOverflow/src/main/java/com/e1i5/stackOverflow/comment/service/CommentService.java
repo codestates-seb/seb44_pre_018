@@ -28,23 +28,16 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    // 댓글 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
+    // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
     public List<Comment> findCommentList(long questionId){
         List<Comment> commentPage = commentRepository.findAllByQuestionId(questionId);
         return commentPage;
     }
 
 
-    // 특정 질문의 댓글 조회
-    public List<Comment> findComment(long questionId){
-        commentRepository.findAllByQuestionId(questionId);
-
-        return null;
-    }
-
-
     // 댓글 수정 - 해당 댓글 작성자만 수정 가능
     public Comment updateComment(Comment comment){
+
         return null;
     }
 
@@ -55,18 +48,17 @@ public class CommentService {
     }
 
     // 댓글 삭제 - 해당 댓글 작성자, 질문글 작성자 모두 삭제 가능하다.
-    public void deleteComment(long commentId) {
-        // 저장된 댓글을 찾는다.
-        Comment result = findVerifiedComment(commentId);
+//    public void deleteComment(long commentId) {
+//        // if(댓글 작성자 || 질문작성자) 삭제 else 예외발생
+//
+//        // 저장된 댓글을 찾는다.
+//        Comment result = findVerifiedComment(commentId);
+//
+//        commentRepository.delete(result);
+//
+//    }
 
-        // 작성자가 생성한 댓글인지 검증
-
-        commentRepository.delete(result);
-
-    }
-
-
-    // 해당 댓글을 작성한 사람인지 판단하는 메서드. memberService 이용
+    // commentId에 해당하는 댓글을 찾는 메서드 보류. 더 간단하게 할 수 있을 듯
     @Transactional
     public Comment findVerifiedComment(long commentId){
         //
@@ -83,6 +75,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         comment.setLikeCount(comment.getLikeCount() + 1);
+        commentRepository.save(comment);// 좋아요 수 증가 후 변경 내용 저장
 
     }
 
@@ -92,4 +85,21 @@ public class CommentService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         comment.setDislikeCount(comment.getDislikeCount() + 1);
     }
+
+    // 채택 메서드
+    public void chooseComment(long commentId){
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        // 댓글> 질문자 채택글로 변경
+        // if(질문 작성자라면)
+        comment.setChoose(true);
+        commentRepository.save(comment);
+
+    }
+
+    //질문 작성자인지 판단하는 메서드
+
+    //댓글 작성자인지 판단하는 메서드
+
+
 }

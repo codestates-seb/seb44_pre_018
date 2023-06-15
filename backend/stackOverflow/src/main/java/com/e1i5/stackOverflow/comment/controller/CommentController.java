@@ -17,10 +17,10 @@ import java.net.URI;
 import java.util.*;
 
 @RestController
-@RequestMapping("/comment")
-//@Validated
+@RequestMapping("/v1/comment")
+@Validated
 public class CommentController {
-    private final static String COMMENT_DEFAULT_URL = "/comment";
+    private final static String COMMENT_DEFAULT_URL = "v1/comment";
     private CommentService commentService;
     private CommentMapper mapper;
 
@@ -30,21 +30,17 @@ public class CommentController {
     }
 
 
-    // 댓글 조회 - 비회원도 조회 가능
-    @GetMapping
-    public ResponseEntity<List<Comment>> getCommentList(@PathVariable("comment-id") @Positive long questionId){
+    // 댓글 조회 - 비회원도 조회 가능, 질문의 id를 전달받는다.
+    @GetMapping("/{question-id}")
+    public ResponseEntity<List<Comment>> getCommentList(@PathVariable("question-id") @Positive long questionId){
         List<Comment> comments = commentService.findCommentList(questionId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
 
     }
 
-    // 특정 질문의 댓글 조회
-    @GetMapping("/{question-id}")
-    public ResponseEntity getComment(@PathVariable("comment-id") @Positive long )
-
 
     // 댓글 수정 - 해당 댓글 작성자만 수정 가능
-    @PatchMapping("/{comment-id}")
+    @PatchMapping("/{comment-id}/rewrite")
     public ResponseEntity updateComment(@Valid @RequestBody CommentDto.Patch requestBody){
         // 작성자인지 검증
 
@@ -54,32 +50,49 @@ public class CommentController {
     }
 
     // 댓글 생성 - 회원만 생성 가능
-    @PostMapping("/member/comment/write")
+    @PostMapping
     public ResponseEntity postComment(@Valid @RequestBody CommentDto.Post requestBody){
+        // 회원인지 판단
+
         Comment comment = mapper.commentPostDtoToComment(requestBody);
         Comment createComment = commentService.createComment(comment);
-        URI location = UriCreator.createUri(COMMENT_DEFAULT_URL, createComment.getCommentId());
+//        URI location = UriCreator.createUri(COMMENT_DEFAULT_URL, createComment.getCommentId());
 
-        return ResponseEntity.created(location).build();
+//        return ResponseEntity.created(location).build();
+        return new ResponseEntity<>(createComment, HttpStatus.OK);
     }
 
-    // 댓글 삭제 - 해당 댓글 작성자만 생성 가능
-    @DeleteMapping
-
-    // 해당 댓글을 작성한 사람인지 판단하는 메서드
+    // 댓글 삭제 - 질문글 작성자와 답변 작성자 둘 다 삭제가 가능하다.
+//    @DeleteMapping("/{comment-id}/delete")
+//    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
+//        // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
+//
+//        commentService.deleteComment(commentId);
+//        return new ResponseEntity(HttpStatus.NO_CONTENT);
+//    }
 
     // 댓글 추천수
-    @PatchMapping("/member/comment/{comment-id}/like")
-    public ResponseEntity<Void> likeComment(@PathVariable long commentId){
+    @PatchMapping("/{comment-id}/like")
+    public ResponseEntity<Void> likeComment(@PathVariable("comment-id") long commentId){
         commentService.likeCount(commentId);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+    //return new ResponseEntity<>(createComment, HttpStatus.OK);
 
-    // 댓글 비추천 수
-    @PatchMapping("/memeber/comment/{comment-id}/dislike")
+    // 댓글 비추천 수 > 회원만 가능하다.
+    @PatchMapping("/{comment-id}/dislike")
     public ResponseEntity<Void> dislikeComment(@PathVariable long commentId) {
+        // 회원이라면 아래 로직 진행, else 예외 진행
         commentService.dislikeCount(commentId);
         return ResponseEntity.ok().build();
     }
+
+    //댓글 채택 > 질문자에게만 보인다.
+    @PostMapping("/{comment-id}/choose")
+    public ResponseEntity chooseComment(@PathVariable long commentId){
+        commentService.chooseComment(commentId);
+        return ResponseEntity.ok("댓글이 채택되었습니다.");
+    }
+
 
 }
