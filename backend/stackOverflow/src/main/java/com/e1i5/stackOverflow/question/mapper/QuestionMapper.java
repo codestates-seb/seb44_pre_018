@@ -13,6 +13,7 @@ public interface QuestionMapper {
 
     Question questionPostDtoToQuestion(QuestionDto.QuestionPostDto questionPostDto);
 
+
     Question questionPatchDtoToQuestion(QuestionDto.QuestionPatchDto questionPatchDto);
 
     QuestionResponseDto questionToQuestionResponseDto(Question question);

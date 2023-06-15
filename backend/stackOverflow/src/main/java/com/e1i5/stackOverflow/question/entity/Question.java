@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.question.entity;
 
+import com.e1i5.stackOverflow.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +21,15 @@ public class Question {
     private String title;
     @Column(nullable = false)
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt= LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime modifiedAt= LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "memberId")
+    private Member member;
     private int viewsCount;
     private int answerCount;
 

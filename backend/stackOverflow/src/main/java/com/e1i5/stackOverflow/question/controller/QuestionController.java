@@ -24,27 +24,28 @@ public class QuestionController {
 
     private final QuestionMapper mapper;
 
-    @PostMapping
+    @PostMapping //질문 생성
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto){
         Question question = mapper.questionPostDtoToQuestion(questionPostDto);
-        return  new ResponseEntity<>(mapper.questionsToResponseDto(question), HttpStatus.OK);
+        return  new ResponseEntity<>(mapper.questionToQuestionResponseDto(question), HttpStatus.CREATED);
 
     }
-    @PatchMapping
+    @PatchMapping //질문 수정
     public ResponseEntity patchQuestion(@Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto){
-        return new ResponseEntity<>(HttpStatus.OK);
+        Question patchQuestion = mapper.questionPatchDtoToQuestion(questionPatchDto);
+        return new ResponseEntity<>((mapper.questionToQuestionResponseDto(patchQuestion)),HttpStatus.OK);
 
 
     }
-    @GetMapping
+    @GetMapping //질문 조회
     public ResponseEntity getQuestions(){
         return  new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/{question_id}")
+    @GetMapping("/{question_id}") //특정 질문 조회
     public ResponseEntity getQuestion(@PathVariable("question_id")@Positive long questionId){
         return  new ResponseEntity<>(HttpStatus.OK);
     }
-    @DeleteMapping("/{question_id}")
+    @DeleteMapping("/{question_id}") //질문 삭제
     public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId){
         return new ResponseEntity<>(HttpStatus.OK);
     }
