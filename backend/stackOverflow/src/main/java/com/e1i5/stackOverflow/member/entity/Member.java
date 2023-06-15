@@ -42,10 +42,6 @@ public class Member extends Auditable {
         this.password = password;
     }
 
-    public Member(String profileImageName) {
-        this.profileImageName = profileImageName;
-    }
-
     public enum MemberStatus {
         MEMBER_ACTIVE("활동중"),
         MEMBER_SLEEP("휴면 상태"),
