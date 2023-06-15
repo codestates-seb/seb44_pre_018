@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.questionVote.entity;
 
 
+import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.question.entity.Question;
 import lombok.Getter;
 import lombok.Setter;

@@ -27,7 +27,7 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto){
         Question question = mapper.questionPostDtoToQuestion(questionPostDto);
-        return  new ResponseEntity<>(mapper.questionsToResponseDto(question), HttpStatus.OK);
+        return  new ResponseEntity<>(question, HttpStatus.OK);
 
     }
     @PatchMapping
