@@ -56,35 +56,30 @@ public class CommentController {
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
         Comment createComment = commentService.createComment(comment);
-//        URI location = UriCreator.createUri(COMMENT_DEFAULT_URL, createComment.getCommentId());
-
-//        return ResponseEntity.created(location).build();
         return new ResponseEntity<>(createComment, HttpStatus.OK);
     }
 
     // 댓글 삭제 - 질문글 작성자와 답변 작성자 둘 다 삭제가 가능하다.
-//    @DeleteMapping("/{comment-id}/delete")
-//    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
-//        // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
-//
-//        commentService.deleteComment(commentId);
-//        return new ResponseEntity(HttpStatus.NO_CONTENT);
-//    }
+    @DeleteMapping("/{comment-id}/delete")
+    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
+        // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
+        commentService.deleteComment(commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-    // 댓글 추천수
+    // 댓글 추천수 증가> 로그인한 회원만 가능
     @PatchMapping("/{comment-id}/like")
     public ResponseEntity<Void> likeComment(@PathVariable("comment-id") long commentId){
         commentService.likeCount(commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    //return new ResponseEntity<>(createComment, HttpStatus.OK);
 
-    // 댓글 비추천 수 > 회원만 가능하다.
+    // 댓글 비추천 수 증가 > 로그인한 회원만 가능.
     @PatchMapping("/{comment-id}/dislike")
-    public ResponseEntity<Void> dislikeComment(@PathVariable long commentId) {
+    public ResponseEntity<Void> dislikeComment(@PathVariable("comment-id") long commentId) {
         // 회원이라면 아래 로직 진행, else 예외 진행
         commentService.dislikeCount(commentId);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //댓글 채택 > 질문자에게만 보인다.

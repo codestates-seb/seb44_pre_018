@@ -4,6 +4,9 @@ import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.comment.repository.CommentRepository;
+import com.e1i5.stackOverflow.member.entity.Member;
+import com.e1i5.stackOverflow.member.service.MemberService;
+import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,15 +19,14 @@ import java.util.Optional;
 @Service
 public class CommentService {
      private final CommentRepository commentRepository;
-//     private final MemberService memberService;
-    // private final QuestionService questionService;
+     private final MemberService memberService;
+//     private final QuestionService questionService;
 
-    public CommentService(CommentRepository commentRepository
-//                          QuestionService questionService
-//                          MemberService memberService
-                          ){
+    public CommentService(CommentRepository commentRepository,
+//                          QuestionService questionService,
+                          MemberService memberService){
 //       this.questionService = questionService;
-//        this.memberService = memberService;
+        this.memberService = memberService;
         this.commentRepository = commentRepository;
     }
 
@@ -47,16 +49,16 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    // 댓글 삭제 - 해당 댓글 작성자, 질문글 작성자 모두 삭제 가능하다.
-//    public void deleteComment(long commentId) {
-//        // if(댓글 작성자 || 질문작성자) 삭제 else 예외발생
-//
-//        // 저장된 댓글을 찾는다.
-//        Comment result = findVerifiedComment(commentId);
-//
-//        commentRepository.delete(result);
-//
-//    }
+    //댓글 삭제 - 해당 댓글 작성자, 질문글 작성자 모두 삭제 가능하다.
+    public void deleteComment(long commentId) {
+        // if(댓글 작성자 || 질문작성자) 삭제 else 예외발생
+
+        // 저장된 댓글을 찾는다.
+        Comment result = findVerifiedComment(commentId);
+
+        commentRepository.delete(result);
+
+    }
 
     // commentId에 해당하는 댓글을 찾는 메서드 보류. 더 간단하게 할 수 있을 듯
     @Transactional
@@ -84,6 +86,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         comment.setDislikeCount(comment.getDislikeCount() + 1);
+        commentRepository.save(comment);
     }
 
     // 채택 메서드

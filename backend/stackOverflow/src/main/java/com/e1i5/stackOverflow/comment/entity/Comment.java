@@ -1,6 +1,8 @@
 package com.e1i5.stackOverflow.comment.entity;
 
 import com.e1i5.stackOverflow.audit.Auditable;
+import com.e1i5.stackOverflow.member.entity.Member;
+import com.e1i5.stackOverflow.question.entity.Question;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,15 +25,17 @@ public class Comment extends Auditable {
 
     @Column(nullable = false, columnDefinition = "TEXT CHECK (LENGTH(content) <= 500)")
     private String content;
-    private long questionId; // mapping 후 생략
 
+    private long questionId; // mapping 후 생략> 충돌 발생함
+
+//    // member와
 //    @ManyToOne
 //    @JoinColumn(name = "MEMBER_ID")
-//    private Member memberId;
-
+//    private Member member;
+//
 //    @ManyToOne
 //    @JoinColumn(name = "QUESTION_ID")
-//    private Question questionId;
+//    private Question question;
 
     private boolean choose; // f = comment t = answercomment
 
