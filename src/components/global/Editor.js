@@ -1,6 +1,19 @@
 import { useRef, useState, useMemo } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import styled from 'styled-components';
+
+const QuillWrapper = ReactQuill(async () => await import('react-quill'), {
+  ssr: false,
+  loading: () => <p>Loading ...</p>,
+});
+const QuillEditor = styled(QuillWrapper)`
+  background: #fff;
+  height: ${({ height }) => `${height}px`};
+  .ql-container {
+    height: ${({ height }) => `${height - 41}px`};
+  }
+`;
 
 const Editor = () => {
   const editorRef = useRef(null);
@@ -29,7 +42,7 @@ const Editor = () => {
 
   return (
     <>
-      <ReactQuill
+      <QuillEditor
         ref={editorRef}
         value={contents}
         onChange={setContents}
