@@ -1,3 +1,5 @@
+import Editor from '../components/global/Editor';
+
 const NoticeWrite = () => {
   return (
     <div className="inner">
@@ -9,7 +11,7 @@ const NoticeWrite = () => {
         </div>
         <div>
           <label htmlFor="body">Body</label>
-          <input type="text" id="body" />
+          <Editor />
         </div>
         <div>
           <label htmlFor="tag">Tag</label>
