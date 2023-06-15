@@ -1,0 +1,71 @@
+{
+  "questions": [
+    {
+      "id": "1",
+      "createdDate": "2023-06-13T01:02:17Z",
+      "updateDate": "2023-06-13T01:02:17Z",
+      "title": "How to generate a key when you know how to check the key?",
+      "member": {
+        "email": "nyang@gmail.com",
+        "displayName": "냥냥씨",
+        "imgurl": "https://cdn1.picuki.com/hosted-by-instagram/q/0exhNuNYnjBGZDHIdN5WmL9I2Pk2GAlRNecaS7j0nyZiNxIsbHWB58ltwdGn%7C%7CDh6Kwh9HS+Lfzpi7IkjVF1UZFN7P0XaSrCJTD5V76ubV+jN1jZg95VolbszKnMWZXau88YvVgmYdSodF%7C%7CpPHL%7C%7Clo79UvOa0LGFq8zCXW%7C%7CdDmG4CqZL0APIz9Z8j3aqT3ULr+JAwIy9L%7C%7CyUnKF4n9pCL5DwEXbr2MM1wq+95Q6NKtckG1Ozvj3jpQTxsRGB9KD+XudaZlvg71g67WBMszkCfCqU3JlVMx1C%7C%7CuksQgrMY2dWHFqxM+N9+sqPVETFKCipkr0k+wKuckQLMYWT5%7C%7ClR1%7C%7CHWB2omwSup%7C%7ChMSnI%7C%7CeWRd7iz3jQeoLoK+tpRWBYJvKOVkrtZvqzWp4NzqppT6wekWG78zmufbSphEQjVTZM.jpeg"
+      },
+      "roles": [
+        "ROLE_USER"
+      ],
+      "questionReplies": [
+        {
+          "id": "1",
+          "member": {
+            "displayName": "블랙조하",
+            "imgurl": "https://cdn1.picuki.com/hosted-by-instagram/q/0exhNuNYnjBGZDHIdN5WmL9I2Pk2GAlRNecaS7j0nyZiNxIsbHWB58ltwdGn%7C%7CDh6Kwh9HS+Lfzpi7IkjVF1UZFN7P0XaSrCJTD5V76ubV+jN1jZg95VolbszKnMWZXau88YvVgmYdSodF%7C%7CpPHL%7C%7Clo79UvOa0LGFq8zCXW%7C%7CdDmG4CqZL0APIz9Z8j3aqT3ULr+JAwIy9L%7C%7CyUnKF4n9pCL5DwEXbr2MM1wq+95Q6NKtckG1Ozvj3jpQTxsRGB9KD+XudaZlvg71g67WBMszkCfCqU3JlVMx1C%7C%7CuksQgrMY2dWHFqxM+N9+sqPVETFKCipkr0k+wKuckQLMYWT5%7C%7ClR1%7C%7CHWB2omwSup%7C%7ChMSnI%7C%7CeWRd7iz3jQeoLoK+tpRWBYJvKOVkrtZvqzWp4NzqppT6wekWG78zmufbSphEQjVTZM.jpeg"
+          },
+          "content": "I have a list of bean objects passed into my JSP page, and one of them is a comment field. This field may contain newlines, and I want to replace them with semicolons using JSTL, so that the field can be displayed in a text input. I have found one solution, but it's not very elegant. I'll post below as a possibility.",
+          "updateDate": "2023-06-13"
+        },
+        {
+          "id": "2",
+          "member": {
+            "displayName": "오렌지",
+            "imgurl": "https://cdn1.picuki.com/hosted-by-instagram/q/0exhNuNYnjBGZDHIdN5WmL9I2Pk2GAlRNecaS7j0nyZiNxIsbHWB58ltwdGn%7C%7CDh6Kwh9HS+Lfzpi7IkjVF1UZFN7P0XaSrCJTD5V76ubV+jN1jZg95VolbszKnMWZXau88YvVgmYdSodF%7C%7CpPHL%7C%7Clo79UvOa0LGFq8zCXW%7C%7CdDmG4CqZL0APIz9Z8j3aqT3ULr+JAwIy9L%7C%7CyUnKF4n9pCL5DwEXbr2MM1wq+95Q6NKtckG1Ozvj3jpQTxsRGB9KD+XudaZlvg71g67WBMszkCfCqU3JlVMx1C%7C%7CuksQgrMY2dWHFqxM+N9+sqPVETFKCipkr0k+wKuckQLMYWT5%7C%7ClR1%7C%7CHWB2omwSup%7C%7ChMSnI%7C%7CeWRd7iz3jQeoLoK+tpRWBYJvKOVkrtZvqzWp4NzqppT6wekWG78zmufbSphEQjVTZM.jpeg"
+          },
+          "content": "I have a list of bean objects passed into my JSP page, and one of them is a comment field. This field may contain newlines, and I want to replace them with semicolons using JSTL, so that the field can be displayed in a text input. I have found one solution, but it's not very elegant. I'll post below as a possibility.",
+          "updateDate": "2023-06-13"
+        }
+      ],
+      "answers": [
+        {
+          "questionId": "1",
+          "answerId": "1",
+          "member": {
+            "email": "nyang@gmail.com",
+            "displayName": "블랙조하",
+            "imgurl": "https://cdn1.picuki.com/hosted-by-instagram/q/0exhNuNYnjBGZDHIdN5WmL9I2Pk2GAlRNecaS7j0nyZiNxIsbHWB58ltwdGn%7C%7CDh6Kwh9HS+Lfzpi7IkjVF1UZFN7P0XaSrCJTD5V76ubV+jN1jZg95VolbszKnMWZXau88YvVgmYdSodF%7C%7CpPHL%7C%7Clo79UvOa0LGFq8zCXW%7C%7CdDmG4CqZL0APIz9Z8j3aqT3ULr+JAwIy9L%7C%7CyUnKF4n9pCL5DwEXbr2MM1wq+95Q6NKtckG1Ozvj3jpQTxsRGB9KD+XudaZlvg71g67WBMszkCfCqU3JlVMx1C%7C%7CuksQgrMY2dWHFqxM+N9+sqPVETFKCipkr0k+wKuckQLMYWT5%7C%7ClR1%7C%7CHWB2omwSup%7C%7ChMSnI%7C%7CeWRd7iz3jQeoLoK+tpRWBYJvKOVkrtZvqzWp4NzqppT6wekWG78zmufbSphEQjVTZM.jpeg",
+            "roles": [
+              "ROLE_USER"
+            ]
+          },
+          "content": "<p dir=\"auto\">안녕하세요. <a class=\"user-mention notranslate\" data-hovercard-type=\"user\" data-hovercard-\"url\"=\"/users/dubipy/hovercard\" data-octo-click=\"hovercard-link-click\" data-octo-dimensions=\"link_type:self\" href=\"https://github.com/dubipy\">@dubipy</a> 님!<br>\n코드스테이츠 교육 엔지니어 권준혁 입니다. <g-emoji class=\"g-emoji\" alias=\"raised_hands\" fallback-src=\"https://github.githubassets.com/images/icons/emoji/unicode/1f64c.png\">🙌</g-emoji></p>\n<p dir=\"auto\">질문 주신 내용은 노드 환경이 구성되어 있지 않기 때문에 발생되는 문제로 확인됩니다.</p>\n<p dir=\"auto\">",
+          "createdDate": "2023-06-13T02:09:52Z",
+          "updateDate": "2023-06-13T02:09:52Z",
+          "selection": false,
+          "answerReplies": [
+            {
+              "anwerReplyId": "1",
+              "member": {
+                "displayName": "냥냥씨",
+                "imgurl": "https://cdn1.picuki.com/hosted-by-instagram/q/0exhNuNYnjBGZDHIdN5WmL9I2Pk2GAlRNecaS7j0nyZiNxIsbHWB58ltwdGn%7C%7CDh6Kwh9HS+Lfzpi7IkjVF1UZFN7P0XaSrCJTD5V76ubV+jN1jZg95VolbszKnMWZXau88YvVgmYdSodF%7C%7CpPHL%7C%7Clo79UvOa0LGFq8zCXW%7C%7CdDmG4CqZL0APIz9Z8j3aqT3ULr+JAwIy9L%7C%7CyUnKF4n9pCL5DwEXbr2MM1wq+95Q6NKtckG1Ozvj3jpQTxsRGB9KD+XudaZlvg71g67WBMszkCfCqU3JlVMx1C%7C%7CuksQgrMY2dWHFqxM+N9+sqPVETFKCipkr0k+wKuckQLMYWT5%7C%7ClR1%7C%7CHWB2omwSup%7C%7ChMSnI%7C%7CeWRd7iz3jQeoLoK+tpRWBYJvKOVkrtZvqzWp4NzqppT6wekWG78zmufbSphEQjVTZM.jpeg",
+                "roles": [
+                  "ROLE_USER"
+                ]
+              },
+              "content": "bash파일이 꼬여있어서 삭제 후 다시 설치하고 경로 잡아줬습니다 node 부분도 설치는 되어있는데 패키지 쪽에 에러가 발생해서 모두 삭제 후 재설치 해주고 npm install 하니 해결됐습니다 감사합니다",
+              "createdDate": "2023-06-13T01:02:17Z",
+              "updateDate": "2023-06-13T01:02:17Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
