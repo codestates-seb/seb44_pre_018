@@ -39,11 +39,16 @@ public class QuestionController {
 
     @PostMapping //질문 생성
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto){
+<<<<<<< HEAD
         Question question = questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
 
         URI location = UriCreator.createUri(QUESTION_DEFAULT_URL, question.getQuestionId());
 
         return  new ResponseEntity<>(mapper.questionToQuestionResponseDto(question), HttpStatus.CREATED);
+=======
+        Question question = mapper.questionPostDtoToQuestion(questionPostDto);
+        return  new ResponseEntity<>(question, HttpStatus.OK);
+>>>>>>> afa8f86d9c61d5c805df18d7b9b827f01f5164d2
 
     }
     @PatchMapping("/{question-id}") //질문 수정
