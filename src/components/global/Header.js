@@ -3,6 +3,8 @@
 // 3. 태블릿 사이즈로 줄일 경우, navbar사라지고 햄버거 버튼 출력
 import { useState } from 'react';
 import { BrowserRouter, Link } from 'react-router-dom';
+import logo from '../assets/logo-w.png';
+import profile from '../assets/profile_image1.jpeg';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,11 +17,7 @@ const Header = () => {
     <BrowserRouter>
       <header className="flex justify-between items-center h-24 w-screen bg-white shadow-md fixed top-0 left-0">
         <div className="flex items-center w-screen">
-          <img
-            src={process.env.PUBLIC_URL + '/logo-w.png'}
-            alt="logo"
-            className="h-15 mr-4"
-          />
+          <img src={logo} alt="logo" className="h-15 mr-4" />
         </div>
         <div className="flex items-center">
           <Link className="pointBu01 mr-4" to="/login">
@@ -29,7 +27,7 @@ const Header = () => {
             Signup
           </Link>
           <img
-            src={process.env.PUBLIC_URL + '/profile1.jpeg'}
+            src={profile}
             alt="profile"
             className="h-12 w-12 rounded-full object-cover"
           />
