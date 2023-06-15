@@ -7,10 +7,10 @@ import java.util.List;
 
 
 
-public class QuestionResponseDto {
 @Getter
 @Setter
-public static class Answers {
+public class QuestionResponseDto {
+
     private long questionId;
     private long memberId;
     private String title;
@@ -20,21 +20,4 @@ public static class Answers {
     private int viewCount;
     private int answerCount;
 }
-    @Getter
-    @Setter
-    public static class AnswerIds {
-        private long questionId;
 
-        private long memberId;
-
-        private String title;
-
-        private String content;
-
-        private LocalDateTime createdAt;
-
-        private LocalDateTime modifiedAt;
-
-        private List<Long> answerIds;
-    }
-}

@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
 
-    Question questionPostDtoToQuestion(QuestionDto.QuestionPostDto questionPostDto);
+    Question questionPostDtoToQuestion(QuestionDto.QuestionPostDto requestBody);
 
 
-    Question questionPatchDtoToQuestion(QuestionDto.QuestionPatchDto questionPatchDto);
+    Question questionPatchDtoToQuestion(QuestionDto.QuestionPatchDto requestBody);
 
     QuestionResponseDto questionToQuestionResponseDto(Question question);
 

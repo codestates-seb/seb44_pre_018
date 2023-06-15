@@ -22,7 +22,6 @@ public class Question {
     @Column(nullable = false, name = "STATUS")
     private QuestionStatus questionStatus = QuestionStatus.QUESTION_EXIST;
 
-
     @Column(nullable = false,columnDefinition = "TEXT")
     private String title;
     @Column(nullable = false,columnDefinition = "TEXT")
