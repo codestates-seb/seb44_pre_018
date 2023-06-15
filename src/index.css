@@ -7,12 +7,12 @@
     @apply text-2xl text-black;
   }
   .pointBu01 {
-    @apply transition flex justify-center items-center px-5 py-3 font-normal rounded-md bg-pointCol03 text-black hover:bg-pointCol05 hover:text-white;
+    @apply transition cursor-pointer flex justify-center items-center px-5 py-3 font-normal rounded-md bg-pointCol03 text-black hover:bg-pointCol05 hover:text-white;
   }
   .pointBu02 {
-    @apply transition flex justify-center items-center px-5 py-3 rounded-md marker:bg-pointCol05 text-white hover:bg-pointCol02;
+    @apply transition cursor-pointer flex justify-center items-center px-5 py-3 rounded-md marker:bg-pointCol05 text-white hover:bg-pointCol02;
   }
   .pointBu03 {
-    @apply transition flex justify-center items-center px-5 py-3 rounded-md marker:bg-pointCol02 text-white hover:bg-pointCol03 hover:text-black;
+    @apply transition cursor-pointer flex justify-center items-center px-5 py-3 rounded-md marker:bg-pointCol02 text-white hover:bg-pointCol03 hover:text-black;
   }
 }
