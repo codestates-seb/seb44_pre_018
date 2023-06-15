@@ -6,6 +6,7 @@ import com.e1i5.stackOverflow.member.mapper.MemberMapper;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -45,26 +47,31 @@ public class MemberController {
 
     @PatchMapping("/{memberId}")
     public ResponseEntity patchMember(@PathVariable("memberId") @Positive long memberId,
-                                      @Valid @RequestBody MemberDto.Patch requestBody,
-                                      @RequestPart MultipartFile memberImage){
-        Member findMember = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody), memberImage);
+                                      @Valid @RequestBody MemberDto.Patch requestBody){
+        requestBody.setMemberId(memberId);
+        Member findMember = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
 
-        return new ResponseEntity<>(findMember, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(findMember), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity getMembers(){
+    public ResponseEntity getMembers(@Positive @RequestParam int page,
+                                     @Positive @RequestParam int size){
+        Page<Member> pageMembers = memberService.findMembers(page-1, size);
+        List<Member> members = pageMembers.getContent();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(mapper.membersToMemberResponseDtos(members), HttpStatus.OK);
     }
 
     @GetMapping("/{member_id}")
     public ResponseEntity getMember(@PathVariable("member_id") @Positive long memberId){
-        return new ResponseEntity<>(HttpStatus.OK);
+        Member findMember = memberService.findMember(memberId);
+        return new ResponseEntity<>(mapper.memberToMemberResponseDto(findMember), HttpStatus.OK);
     }
 
     @DeleteMapping("/{member_id}")
     public ResponseEntity deleteMember(@PathVariable("member_id") @Positive long memberId){
-        return new ResponseEntity<>(HttpStatus.OK);
+        memberService.deleteMember(memberId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
