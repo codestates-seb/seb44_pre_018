@@ -15,7 +15,7 @@ const NoticeWrite = () => {
         </div>
         <div>
           <label htmlFor="tag">Tag</label>
-          <input type="text" id="tag" />
+          <input type="text" id="tag" className="inputBox" />
         </div>
       </form>
     </div>

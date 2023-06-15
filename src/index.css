@@ -16,6 +16,6 @@
     @apply transition cursor-pointer flex justify-center items-center px-5 py-3 rounded-md bg-pointCol02 text-white hover:bg-pointCol03 hover:text-black;
   }
   .inputBox {
-    @apply border-[1px] border-black/[.3] border-solid w-screen rounded-md;
+    @apply border-[1px] border-black/[.3] border-solid w-screen rounded-md h-9  pl-3;
   }
 }
