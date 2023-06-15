@@ -12,12 +12,9 @@
 import { useState, useEffect } from 'react';
 import ItemView from '../components/global/ItemView';
 import ItemAnswer from '../components/global/ItemAnswer';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const DetailPage = () => {
   const [, setViewCount] = useState(0);
-  const [content, setContent] = useState('');
 
   useEffect(() => {
     increaseViewCount(); // 초기 렌더링 시에 조회수 증가
@@ -25,11 +22,6 @@ const DetailPage = () => {
 
   const increaseViewCount = () => {
     setViewCount((prevCount) => prevCount + 1);
-  };
-
-  const handleContentChange = (event, editor) => {
-    const data = editor.getData();
-    setContent(data);
   };
 
   return (
@@ -72,11 +64,6 @@ const DetailPage = () => {
         <form>
           <button type="submit">Edit your Answer</button>
         </form>
-        <CKEditor
-          editor={ClassicEditor}
-          data={content}
-          onChange={handleContentChange}
-        />
       </div>
     </div>
   );

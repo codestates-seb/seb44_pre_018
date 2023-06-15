@@ -1,8 +1,10 @@
+import logo2 from '../assets/logo-h.png';
+
 const Footer = () => {
   return (
     <div className="footer-container">
       <div
-        className="h-26 flex justify-center items-center"
+        className="h-25 flex justify-center"
         style={{
           backgroundColor: 'rgba(130, 130, 170, 0.12)',
           position: 'absolute',
@@ -12,12 +14,8 @@ const Footer = () => {
         }}
       >
         <div className="flex flex-col items-center">
-          <img
-            src={process.env.PUBLIC_URL + '/logo-h.png'}
-            alt="로고"
-            className="h-15 mr-5"
-          />
-          <p style={{ color: '#B8B8B8' }}>
+          <img src={logo2} alt="logo2" className="h-15" />
+          <p className="text-sm font-light py-2" style={{ color: '#B8B8B8' }}>
             Site desing / logo @ 2023 CodeStates_44_E1I5
           </p>
         </div>
