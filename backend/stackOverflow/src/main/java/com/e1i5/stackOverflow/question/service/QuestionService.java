@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,23 +34,23 @@ public class QuestionService {
     }
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
-        Long memberId = getMemberIdFromToken();
-        question.getMember().setMemberId(memberId);
+//        Long memberId = getMemberIdFromToken();
+//        question.getMember().setMemberId(memberId);
 
         return questionRepository.save(question);
     }
 
     public Question updateQuestion(Question question) { //질문 수정 (질문 수정은 작성자만 가능)
         Question findQuestion = findQuestion(question.getQuestionId());
-        Long memberIdFromToken = getMemberIdFromToken();
+        //Long memberIdFromToken = getMemberIdFromToken();
 
         // 작성자가 본인이 맞는지 확인하는 코드
-        if (findQuestion.getMember().getMemberId() != memberIdFromToken) {
-            throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_QUESTION);
-        }
-        Optional.ofNullable(question.getTitle()).ifPresent(title -> findQuestion.setTitle(title));
-        Optional.ofNullable(question.getContent()).ifPresent(content -> findQuestion.setContent(content));
-        findQuestion.setModifiedAt(LocalDateTime.now());
+//        if (findQuestion.getMember().getMemberId() != memberIdFromToken) {
+//            throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_QUESTION);
+//        }
+//        Optional.ofNullable(question.getTitle()).ifPresent(title -> findQuestion.setTitle(title));
+//        Optional.ofNullable(question.getContent()).ifPresent(content -> findQuestion.setContent(content));
+//        findQuestion.setModifiedAt(LocalDateTime.now());
 
         return questionRepository.save(findQuestion);
     }
@@ -87,25 +87,25 @@ public class QuestionService {
 
     public void deleteQuestion(long questionId) {
         Question findQuestion = findQuestion(questionId);
-        Long memberIdFromToken = getMemberIdFromToken();
+        //Long memberIdFromToken = getMemberIdFromToken();
 
-        if (findQuestion.getMember().getMemberId() != memberIdFromToken) { //작성자가 본인인지 확인하는 코드
-            throw new BusinessLogicException(ExceptionCode.CANNOT_DELETE_QUESTION); //아닐경우 예외처리
-        }
+//        if (findQuestion.getMember().getMemberId() != memberIdFromToken) { //작성자가 본인인지 확인하는 코드
+//            throw new BusinessLogicException(ExceptionCode.CANNOT_DELETE_QUESTION); //아닐경우 예외처리
+//        }
 
         questionRepository.deleteById(questionId);
     }
 
-    private Long getMemberIdFromToken() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!(principal instanceof Map)) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_LOGIN);
-        }
-
-        Map findPrincipal = (Map) principal;
-        Long memberId = (Long) findPrincipal.get("memberId");
-
-        return memberId;
+//    private Long getMemberIdFromToken() {   //스프링 시큐리티 관련 추후
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if (!(principal instanceof Map)) {
+//            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_LOGIN);
+//        }
+//
+//        Map findPrincipal = (Map) principal;
+//        Long memberId = (Long) findPrincipal.get("memberId");
+//
+//        return memberId;
     }
 
-}
+
