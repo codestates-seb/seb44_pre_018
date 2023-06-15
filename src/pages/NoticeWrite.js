@@ -5,7 +5,7 @@ const NoticeWrite = () => {
       <form>
         <div>
           <label htmlFor="title">Title</label>
-          <input type="text" id="title" />
+          <input type="text" id="title" className="inputBox" />
         </div>
         <div>
           <label htmlFor="body">Body</label>
