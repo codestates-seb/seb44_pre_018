@@ -10,6 +10,9 @@ module.exports = {
         pointCol04: '#E9EFFF',
         pointCol05: '#6991FC',
       },
+      fontSize: {
+        xxs: '0.65rem',
+      },
     },
   },
   plugins: [],
