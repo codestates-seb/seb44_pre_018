@@ -17,10 +17,19 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
-    @Column(nullable = false)
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "STATUS")
+    private QuestionStatus questionStatus = QuestionStatus.QUESTION_EXIST;
+
+
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String content;
+    @Column(nullable = false)
+    private int view;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt= LocalDateTime.now();
 
@@ -30,6 +39,18 @@ public class Question {
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
+
+    public enum QuestionStatus {
+        QUESTION_NOT_EXIST("존재하지 않는 질문"),
+        QUESTION_EXIST("존재하는 질문");
+
+        @Getter
+        private String status;
+
+        QuestionStatus(String status) {
+            this.status = status;
+        }
+    }
     private int viewsCount;
     private int answerCount;
 

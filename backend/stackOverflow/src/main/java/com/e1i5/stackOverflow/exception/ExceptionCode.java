@@ -20,6 +20,7 @@ public enum ExceptionCode {
     NOT_IMPLEMENTATION(501, "Not Implementation"),
     INVALID_MEMBER_STATUS(400, "Invalid member status"),
     QUESTION_NOT_FOUND(404,"Question not found"),
+    QUESTION_EXISTS(409,"question exists"),
     QUESTION_MEMBER_NOT_MATCH(1004,"Question memberId not match"),
     SECRET_QUESTION_QUESTIONID_NOT_MATCH(1818,"Qustion memberId Answer memberId not match and not admin"),
     ANSWER_NOT_MATCH(404,"Answer is not match"),

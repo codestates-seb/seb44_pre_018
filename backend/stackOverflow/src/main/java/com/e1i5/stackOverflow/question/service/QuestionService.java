@@ -34,78 +34,67 @@ public class QuestionService {
     }
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
-//        Long memberId = getMemberIdFromToken();
-//        question.getMember().setMemberId(memberId);
-
+        verifyExistsTitle(question.getTitle());
         return questionRepository.save(question);
+
+
     }
 
     public Question updateQuestion(Question question) { //질문 수정 (질문 수정은 작성자만 가능)
-        Question findQuestion = findQuestion(question.getQuestionId());
-        //Long memberIdFromToken = getMemberIdFromToken();
+        Question findQuestion = findVerifiedQuestion(question.getQuestionId());//요청된 질문이 DB에 없으면 에러
 
-        // 작성자가 본인이 맞는지 확인하는 코드
-//        if (findQuestion.getMember().getMemberId() != memberIdFromToken) {
-//            throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_QUESTION);
-//        }
-//        Optional.ofNullable(question.getTitle()).ifPresent(title -> findQuestion.setTitle(title));
-//        Optional.ofNullable(question.getContent()).ifPresent(content -> findQuestion.setContent(content));
-//        findQuestion.setModifiedAt(LocalDateTime.now());
+        Optional.ofNullable(question.getTitle()) //제목수정
+                .ifPresent(questionTitle->findQuestion.setTitle(questionTitle));
+        Optional.ofNullable(question.getContent()) //내용수정
+                .ifPresent(questionBody->findQuestion.setContent(questionBody));
+        Optional.ofNullable(question.getQuestionStatus()) //글 삭제
+                .ifPresent(questionStatus->findQuestion.setQuestionStatus(questionStatus));
 
-        return questionRepository.save(findQuestion);
+        Question updatedQuestion = questionRepository.save(findQuestion);
+
+        return updatedQuestion;
+
     }
 
     public Question findQuestion(long questionId) { //질문 검색
-        return findVerifiedQuestion(questionId);
+        Question findQuestion = findVerifiedQuestion(questionId); //요청된 질문이 DB에 없으면 에러
+
+        findQuestion.setView(findQuestion.getView()+1); //view 1증가
+        questionRepository.save(findQuestion); // 수정후 DB에 저장
+
+        return findQuestion;
     }
+    public Page<Question> findQuestions(int page, int size, String sort) { //여러 질문 검색(페이지 단위)
+        Page<Question> questionPage = questionRepository.findAllByQuestionStatus
+                (PageRequest.of(page, size,
+                Sort.by(sort).descending()),
+                Question.QuestionStatus.QUESTION_EXIST);
 
-    public Question findVerifiedQuestion(long questionId) { //특정 질문 검색
-        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
-        Question question = optionalQuestion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-        return question;
-//        /**
-//         * response에 List<answer> 필드를 채우기 위한 코드
-//         * 위의 updateQuestion과 findQuestion 메서드에도 적용됨
-//         */
-//        List<Answer> answers = answerService.findAnswers(question.getQuestionId());
-//        question.setAnswers(answers); 22조 파트 레퍼
-
-    }
-
-    public Page<Question> findQuestions(int page, int size) { //여러 질문 검색(페이지 단위)
-        Page<Question> questionPage = questionRepository.findAll(PageRequest.of(page, size,
-                Sort.by("questionId").descending()));
 
         List<Question> questions = questionPage.getContent();
-//        for (Question question : questions) {
-//            List<Comment> answers = CommentService.findAnswers(question.getQuestionId());
-//            question.setComments(answers);
-//        }
+
 
         return questionPage;
     }
 
     public void deleteQuestion(long questionId) {
         Question findQuestion = findQuestion(questionId);
-        //Long memberIdFromToken = getMemberIdFromToken();
-
-//        if (findQuestion.getMember().getMemberId() != memberIdFromToken) { //작성자가 본인인지 확인하는 코드
-//            throw new BusinessLogicException(ExceptionCode.CANNOT_DELETE_QUESTION); //아닐경우 예외처리
-//        }
-
-        questionRepository.deleteById(questionId);
+        questionRepository.delete(findQuestion);
     }
 
-//    private Long getMemberIdFromToken() {   //스프링 시큐리티 관련 추후
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (!(principal instanceof Map)) {
-//            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_LOGIN);
-//        }
-//
-//        Map findPrincipal = (Map) principal;
-//        Long memberId = (Long) findPrincipal.get("memberId");
-//
-//        return memberId;
+
+    private void verifyExistsTitle(String title) {//이미 글이 존재하면 에러
+        Optional<Question> question = questionRepository.findByTitle(title);
+        if (question.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.QUESTION_EXISTS);
+        }
     }
+    public Question findVerifiedQuestion(long questionId) { //요청된 질문이 DB에 없으면 에러
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
+        Question findQuestion = optionalQuestion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+        return findQuestion;
+
+    }
+}
 
 
