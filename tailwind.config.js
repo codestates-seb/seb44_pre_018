@@ -8,7 +8,7 @@ module.exports = {
         pointCol02: '#002075',
         pointCol03: '#C2D3FF',
         pointCol04: '#E9EFFF',
-        pointCol05: '#E9EFFF',
+        pointCol05: '#6991FC',
       },
     },
   },
