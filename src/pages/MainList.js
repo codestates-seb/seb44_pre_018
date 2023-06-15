@@ -17,7 +17,7 @@ const MainList = () => {
         <Filter />
         <SearchBar />
       </div>
-      <ul>
+      <ul className="border-t-[1px] border-black/[.3] border-solid">
         <ListItem />
       </ul>
       <Pagination />

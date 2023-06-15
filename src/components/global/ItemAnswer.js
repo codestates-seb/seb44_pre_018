@@ -3,10 +3,10 @@ import { faMessage } from '@fortawesome/free-solid-svg-icons';
 
 const ItemAnswer = () => {
   return (
-    <>
-      <span>1</span>
+    <div>
+      <span className="font-light mr-1">1</span>
       <FontAwesomeIcon icon={faMessage} />
-    </>
+    </div>
   );
 };
 
