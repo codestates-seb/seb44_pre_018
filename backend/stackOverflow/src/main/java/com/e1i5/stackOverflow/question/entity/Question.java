@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.question.entity;
 
 import com.e1i5.stackOverflow.audit.Auditable;
+import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,11 @@ public class Question extends Auditable {
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
+
+    //질문-댓글 1:n
+    @ManyToOne
+    @JoinColumn(name = "commentId")
+    private Comment comment;
 
     public enum QuestionStatus {
         QUESTION_NOT_EXIST("존재하지 않는 질문"),

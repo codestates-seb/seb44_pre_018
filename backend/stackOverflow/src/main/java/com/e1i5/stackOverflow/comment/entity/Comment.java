@@ -28,14 +28,14 @@ public class Comment extends Auditable {
 
     private long questionId; // mapping 후 생략> 충돌 발생함
 
-//    // member와
-//    @ManyToOne
-//    @JoinColumn(name = "MEMBER_ID")
-//    private Member member;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "QUESTION_ID")
-//    private Question question;
+    // member와
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "QUESTION_ID")
+    private Question question;
 
     private boolean choose; // f = comment t = answercomment
 

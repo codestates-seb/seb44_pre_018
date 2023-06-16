@@ -7,8 +7,7 @@ public enum ExceptionCode {
     MEMEBR_EXISTS(409, "Member exists"),
 
     COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다."),
-    NOT_A_MEMBER(404, "회원이 아닙니다.");
-
+    NOT_A_MEMBER(404, "회원이 아닙니다."),
 
     MEMBER_EXISTS(409, "Member exists"),
     MEMBER_NOT_LOGIN(403, "Member not login"),
