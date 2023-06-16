@@ -1,26 +1,43 @@
+import styled from 'styled-components';
 import logo2 from '../assets/logo-h.png';
+
+const FooterContainer = styled.div`
+  background-color: rgba(130, 130, 170, 0.12);
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 19vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 8vw;
+    height: 13vh;
+
+    @media (max-width: 768px) {
+      width: 5vw;
+      height: 10vh;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    color: #b8b8b8;
+    margin-top: 8px;
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+`;
 
 const Footer = () => {
   return (
-    <div className="footer-container">
-      <div
-        className="h-25 flex justify-center"
-        style={{
-          backgroundColor: 'rgba(130, 130, 170, 0.12)',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-        }}
-      >
-        <div className="flex flex-col items-center">
-          <img src={logo2} alt="logo2" className="h-15" />
-          <p className="text-sm font-light py-2" style={{ color: '#B8B8B8' }}>
-            Site desing / logo @ 2023 CodeStates_44_E1I5
-          </p>
-        </div>
-      </div>
-    </div>
+    <FooterContainer>
+      <img src={logo2} alt="logo2" />
+      <p>Site desing / logo @ 2023 CodeStates_44_E1I5</p>
+    </FooterContainer>
   );
 };
 
