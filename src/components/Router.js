@@ -7,6 +7,7 @@ import NoticeWrite from '../pages/NoticeWrite';
 import Header from '../components/global/Header';
 import Navbar from '../components/global/Navbar';
 import Footer from '../components/global/Footer';
+import MyPage from '../pages/MyPage';
 
 const Router = () => {
   const hideNavbar = ['/Login', '/Register'];
@@ -23,6 +24,7 @@ const Router = () => {
                 <Route path="/write" element={<NoticeWrite />} />
                 <Route path="/detail/:id" element={<DetailPage />} />
                 <Route path="/noticewrite" element={<NoticeWrite />} />
+                <Route path="/mypage" element={<MyPage />} />
               </Routes>
             </div>
           </section>
