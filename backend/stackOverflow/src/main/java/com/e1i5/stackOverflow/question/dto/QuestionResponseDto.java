@@ -15,9 +15,6 @@ public class QuestionResponseDto {
     private long memberId;
     private String title;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-    private int viewCount;
-    private int answerCount;
+
 }
 

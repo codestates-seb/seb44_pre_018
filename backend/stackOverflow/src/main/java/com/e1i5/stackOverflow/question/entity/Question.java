@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.question.entity;
 
+import com.e1i5.stackOverflow.audit.Auditable;
 import com.e1i5.stackOverflow.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Question {
+public class Question extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
@@ -29,11 +30,12 @@ public class Question {
     @Column(nullable = false)
     private int view;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt= LocalDateTime.now();
+    public Question(String title, String content, int view) {
+        this.title = title;
+        this.content = content;
+        this.view = view;
+    }
 
-    @Column(nullable = false)
-    private LocalDateTime modifiedAt= LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "memberId")
@@ -50,8 +52,8 @@ public class Question {
             this.status = status;
         }
     }
-    private int viewsCount;
-    private int answerCount;
+
+
 
 
 

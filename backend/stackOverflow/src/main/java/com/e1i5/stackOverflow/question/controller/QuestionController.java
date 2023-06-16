@@ -24,14 +24,14 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/questions")
+@RequestMapping("/question")
 @Validated
 @Slf4j
 
 
 public class QuestionController {
 
-    private final static String QUESTION_DEFAULT_URL = "/api/questions";
+
     private final QuestionMapper mapper;
     private final QuestionService questionService;
 
@@ -41,19 +41,17 @@ public class QuestionController {
     }
 
 
-    @PostMapping("/member/question") //질문 생성
+    @PostMapping("/create") //질문 생성
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
 
         Question question = questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
-
-        URI location = UriCreator.createUri(QUESTION_DEFAULT_URL, question.getQuestionId());
 
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(question)), HttpStatus.CREATED);
 
 
     }
 
-    @PatchMapping("/member/question/{question-id}") //질문 수정
+    @PatchMapping("/{question_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question-id") @Positive long questionId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
         questionPatchDto.setQuestionId(questionId);
@@ -62,7 +60,7 @@ public class QuestionController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(patchQuestion)), HttpStatus.OK);
     }
 
-    @GetMapping("/question/search") //질문들 조회
+    @GetMapping //질문들 조회
     public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
                                        @Positive @RequestParam("size") int size,
                                        @RequestParam("sort") String sort) {
@@ -76,7 +74,7 @@ public class QuestionController {
                 pageQuestions), HttpStatus.OK);
     }
 
-    @GetMapping("question") //선택 질문페이지 이동
+    @GetMapping("/{question_id}") //선택 질문페이지 이동
     public ResponseEntity getQuestion(@Positive @RequestParam("page") int page,
                                        @Positive @RequestParam("size") int size,
                                        @RequestParam("sort") String sort) {
