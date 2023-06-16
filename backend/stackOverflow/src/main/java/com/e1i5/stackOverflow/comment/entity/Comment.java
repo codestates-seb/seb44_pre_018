@@ -62,7 +62,7 @@ public class Comment extends Auditable {
         ANSWER_COMMENT("채택된 댓글입니다."),
         ORIGIN_COMMENT("원본 댓글입니다."),
         MODIFIED_COMMENT("수정된 댓글입니다.");
-
+// CommentStatus 를 하나 더 만들면 테이블에서 수정과 채택이 중복되지 않을 것 같다.
 
         @Getter
         private String status;

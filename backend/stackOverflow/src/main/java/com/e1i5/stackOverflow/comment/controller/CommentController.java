@@ -86,8 +86,8 @@ public class CommentController {
     }
 
     //댓글 채택 > 질문자에게만 보인다.
-    @PostMapping("/choose/{comment-id}")
-    public ResponseEntity chooseComment(@PathVariable long commentId){
+    @PatchMapping("/choose/{comment-id}")
+    public ResponseEntity chooseComment(@PathVariable("comment-id") long commentId){
         commentService.chooseComment(commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

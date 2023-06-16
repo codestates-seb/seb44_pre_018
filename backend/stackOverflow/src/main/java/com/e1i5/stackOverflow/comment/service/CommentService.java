@@ -72,7 +72,7 @@ public class CommentService {
 
     }
 
-    // commentId에 해당하는 댓글을 찾는 메서드 보류. 더 간단하게 할 수 있을 듯
+    // commentId에 해당하는 댓글을 찾는 메서드
     @Transactional
     public Comment findVerifiedComment(long commentId){
         //
@@ -105,9 +105,9 @@ public class CommentService {
     public void chooseComment(long commentId){
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-        // 댓글> 질문자 채택글로 변경
         // if(질문 작성자라면)
         comment.setChoose(true);
+        comment.setCommentStatus(Comment.CommentStatus.ANSWER_COMMENT); // 댓글> 질문자 채택글로 변경
         commentRepository.save(comment);
 
     }
