@@ -42,16 +42,27 @@ public class Comment extends Auditable {
     private int likeCount;
     private int dislikeCount;
 
-    // 댓글 상태 추가
+    // 댓글 상태 추가 - 채택되지 않은 상태
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private CommentStatus ccommentStatus = CommentStatus.COMMENT;
+    private CommentStatus commentStatus = CommentStatus.COMMENT;
+
+    // 댓글 상태 추가 - 수정되지 않은 상태
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private CommentStatus commentStatus2 = CommentStatus.ORIGIN_COMMENT;
+
+
+
 
     public enum CommentStatus{
         COMMENT_NOT_EXIST("존재하지 않는 답변입니다."),
         COMMENT_EXIST("존재하는 답변입니다."),
         COMMENT("채택되지 않은 댓글입니다."),
-        ANSWER_COMMENT("채택된 댓글입니다.");
+        ANSWER_COMMENT("채택된 댓글입니다."),
+        ORIGIN_COMMENT("원본 댓글입니다."),
+        MODIFIED_COMMENT("수정된 댓글입니다.");
+
 
         @Getter
         private String status;

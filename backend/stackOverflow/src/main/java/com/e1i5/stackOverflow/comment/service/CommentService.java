@@ -39,8 +39,20 @@ public class CommentService {
 
     // 댓글 수정 - 해당 댓글 작성자만 수정 가능
     public Comment updateComment(Comment comment){
+        // 요청된 답이 db에 존재하는지 확인
+        Comment findComment = findVerifiedComment(comment.getCommentId());
+        // 내용 수정
+        Optional.ofNullable(comment.getContent())
+                .ifPresent(commentContent -> findComment.setContent(commentContent));
+        // 업데이트 날짜 수정
+        Optional.ofNullable(comment.getModifiedAt())
+                .ifPresent(commentModifiedAt ->findComment.setModifiedAt(commentModifiedAt));
+        // 상태정보 업데이트  ORIGIN > MODIFIED
+        Optional.ofNullable(comment.getCommentStatus2())
+                .ifPresent(commentStatus2 -> findComment.setCommentStatus(commentStatus2.MODIFIED_COMMENT));
+        Comment modifiedComment = commentRepository.save(findComment);
 
-        return null;
+        return modifiedComment;
     }
 
     // 댓글 생성 - 회원만 생성 가능
