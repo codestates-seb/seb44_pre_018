@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 // 1. 회원 & 비회원 구분없이 조회 가능하기
 // 2. 질문 & 답변 불러오기(GET)
 // 3. 답변 추가하기 (POST)
@@ -12,6 +11,7 @@
 import { useState, useEffect } from 'react';
 import ItemView from '../components/global/ItemView';
 import ItemAnswer from '../components/global/ItemAnswer';
+import Tag from '../components/global/Tag';
 
 const DetailPage = () => {
   const [, setViewCount] = useState(0);
@@ -26,21 +26,28 @@ const DetailPage = () => {
 
   return (
     <div className="inner">
-      <div className="flex items-center justify-between">
+      <div>
         <h3 className="maintitle">
           How to generate a key when you know how to check the key?
         </h3>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-5">
           <ItemView />
           <ItemAnswer />
-          <p>Asked: 2023. 06. 13.</p>
+          <p className="ml-auto">Asked: 2023. 06. 13.</p>
         </div>
-        <p>
-          I am trying to use math kernel library of intel along with the intel
-          fortran compiler, which comes built into the oneAPI basekit. However,
-          I am not able to use ifort since the terminal complains ...
-        </p>
-        <p>태그: 태그</p>
+        <ul className="border-t-[1px] border-black/[.3] border-solid">
+          <p className="text-sm font-light py-2">
+            I have a list of bean objects passed into my JSP page, and one of
+            them is a comment field. <br />
+            This field may contain newlines, and I want to replace them with
+            semicolons using JSTL,
+            <br />
+            so that the field can be displayed in a text input. I have found one
+            solution, but it&apos;s not very elegant. <br />
+            I&apos;ll post below as a possibility.
+          </p>
+          <Tag />
+        </ul>
       </div>
       {/* 댓글 구조 */}
       <h2>댓글</h2>
