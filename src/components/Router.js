@@ -9,6 +9,7 @@ import Navbar from '../components/global/Navbar';
 import Footer from '../components/global/Footer';
 import login_bg from './assets/login_bg.png';
 import Tag from '../pages/Tag';
+import User from '../pages/User';
 
 const Router = () => {
   const hideNavbar = ['/login', '/Login', '/register', '/Register'];
@@ -36,6 +37,7 @@ const Router = () => {
                 <Route path="/detail/:id" element={<DetailPage />} />
                 <Route path="/noticewrite" element={<NoticeWrite />} />
                 <Route path="/tag" element={<Tag />} />
+                <Route path="/user" element={<User />} />
               </Routes>
             </div>
           </section>

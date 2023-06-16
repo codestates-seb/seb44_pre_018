@@ -1,6 +1,6 @@
 import SearchBar from '../components/SearchBar';
 import TagItem from '../components/TagItem';
-
+import Pagination from '../components/global/Pagination';
 const Tag = () => {
   return (
     <div className="inner">
@@ -13,6 +13,7 @@ const Tag = () => {
       </p>
       <SearchBar />
       <TagItem />
+      <Pagination />
     </div>
   );
 };
