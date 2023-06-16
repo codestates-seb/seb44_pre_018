@@ -1,7 +1,6 @@
 // 1. 비회원일 때, login signup 버튼 출력
 // 2. 회원일 경우, mypage logout 버튼 출력
 // 3. 태블릿 사이즈로 줄일 경우, navbar사라지고 햄버거 버튼 출력
-import { BrowserRouter } from 'react-router-dom';
 import Button from './Button';
 
 import styled from 'styled-components';
@@ -9,6 +8,7 @@ import logo from '../assets/logo-w.png';
 import profile from '../assets/profile_image1.jpeg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -68,13 +68,13 @@ const HeaderContainer = styled.header`
 
 const Header = () => {
   return (
-    <BrowserRouter>
+    <>
       <HeaderContainer>
         <FontAwesomeIcon icon={faBars} className="menu-icon" />
         <div className="header-wrapper">
-          <a href="/">
+          <Link to="/">
             <img src={logo} alt="logo" className="logo-img" />
-          </a>
+          </Link>
           <div className="right-section">
             <Button />
             <img src={profile} alt="profile" className="profile-img" />
@@ -82,7 +82,7 @@ const Header = () => {
           </div>
         </div>
       </HeaderContainer>
-    </BrowserRouter>
+    </>
   );
 };
 
