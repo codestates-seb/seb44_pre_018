@@ -51,7 +51,7 @@ public class QuestionController {
 
     }
 
-    @PatchMapping("/{question_id}") //질문 수정
+    @PatchMapping("/question/{question_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question-id") @Positive long questionId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
         questionPatchDto.setQuestionId(questionId);
@@ -74,20 +74,14 @@ public class QuestionController {
                 pageQuestions), HttpStatus.OK);
     }
 
-    @GetMapping("/{question_id}") //선택 질문페이지 이동
-    public ResponseEntity getQuestion(@Positive @RequestParam("page") int page,
-                                       @Positive @RequestParam("size") int size,
-                                       @RequestParam("sort") String sort) {
-
-        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size, sort);
-        List<Question> questions = pageQuestions.getContent();
-
-        return new ResponseEntity<>(new MultiResponseDto<>(
-                mapper.questionsToQuestionResponseDtos(questions),
-                pageQuestions), HttpStatus.OK);
+    @GetMapping("/{question_id}") //선택 질문확인
+    public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId){
+        Question findquestion = questionService.findQuestion(questionId);
+        return new ResponseEntity<>(mapper.questionToQuestionResponseDto(findquestion), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{question_id}") //질문 삭제
+
+    @DeleteMapping("/delete/{question_id}") //질문 삭제
     public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId) {
         questionService.deleteQuestion(questionId);
 
