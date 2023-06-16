@@ -51,7 +51,7 @@ public class QuestionController {
 
     }
 
-    @PatchMapping("/question/{question_id}") //질문 수정
+    @PatchMapping("/{question_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question-id") @Positive long questionId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
         questionPatchDto.setQuestionId(questionId);

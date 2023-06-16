@@ -26,7 +26,8 @@ public class QuestionDto {
     @Getter
     public static class QuestionPatchDto{
         @Pattern(regexp = "^[a-zA-Z가-힣]+$")
-        private String body;
+        private String content;
+        private String title;
         private long memberId;
         private long questionId;
 
