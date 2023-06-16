@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/member")
 @Slf4j
 @Validated
-public class MemberController {
+public class MemberController{
     private final MemberMapper mapper;
     private final MemberService memberService;
 
@@ -56,7 +56,7 @@ public class MemberController {
             // ...
         } catch (Exception e) {
             // 예외가 발생한 경우에 대한 처리
-            e.printStackTrace(); // 예시로 예외를 출력하는 처리 방법
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }
 
         MemberDto.Response response = mapper.memberToMemberResponseDto(member);

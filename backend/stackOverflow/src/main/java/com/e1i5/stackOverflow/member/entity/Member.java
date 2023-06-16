@@ -1,13 +1,15 @@
 package com.e1i5.stackOverflow.member.entity;
 
 import com.e1i5.stackOverflow.audit.Auditable;
+import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -56,5 +58,12 @@ public class Member extends Auditable {
             this.status = status;
         }
     }
+
+
+    //@OneToMany(mappedBy = "commentId")
+    //List<comment> commentList= new ArrayList<MemberDto>;
+
+    //@OneToMany(mappedBy = "questionId")
+    //List<question> questionList= new ArrayList<MemberDto>;
 
 }
