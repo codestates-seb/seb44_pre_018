@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.member.entity;
 
 import com.e1i5.stackOverflow.audit.Auditable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Member extends Auditable {
     private String email;
 
     @Column(length = 20, nullable = false, unique = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(value = EnumType.STRING)

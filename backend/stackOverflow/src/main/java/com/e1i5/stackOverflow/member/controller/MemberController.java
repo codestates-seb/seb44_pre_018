@@ -40,10 +40,34 @@ public class MemberController {
 //        return new ResponseEntity<>(member, HttpStatus.OK);
 //    }
 
-    @PostMapping
-    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody){
-        Member member = memberService.createMember(mapper.memberPostDtoToMember(requestBody));
+    @PostMapping("/signup")
+    public ResponseEntity signupMember(@Valid @RequestBody MemberDto.SignupPost requestBody){
+        Member member = memberService.signupMember(mapper.memberSignupPostDtoToMember(requestBody));
         MemberDto.Response response = mapper.memberToMemberResponseDto(member);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity loginMember(@Valid @RequestBody MemberDto.LoginPost requestBody) {
+        Member member = null;
+        try {
+            member = memberService.loginMember(mapper.memberLoginPostDtoToMember(requestBody));
+            // 예외가 발생하지 않은 경우에 대한 처리
+            // ...
+        } catch (Exception e) {
+            // 예외가 발생한 경우에 대한 처리
+            e.printStackTrace(); // 예시로 예외를 출력하는 처리 방법
+        }
+
+        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
+
+
+//        jwy 토큰 발행
+//        예시)
+//        String token = jwtTokenProvider.createToken(response.getEmail(), response.getRoles());
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Authorization", "Bearer " + token);
+
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
