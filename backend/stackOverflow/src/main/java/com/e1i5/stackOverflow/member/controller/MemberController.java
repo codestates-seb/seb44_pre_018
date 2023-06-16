@@ -1,5 +1,7 @@
 package com.e1i5.stackOverflow.member.controller;
 
+import com.e1i5.stackOverflow.dto.MultiResponseDto;
+import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.mapper.MemberMapper;
@@ -22,7 +24,7 @@ import java.util.List;
 @RequestMapping("/member")
 @Slf4j
 @Validated
-public class MemberController {
+public class MemberController{
     private final MemberMapper mapper;
     private final MemberService memberService;
 
@@ -38,11 +40,35 @@ public class MemberController {
 //        return new ResponseEntity<>(member, HttpStatus.OK);
 //    }
 
-    @PostMapping
-    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody){
-        Member member = memberService.createMember(mapper.memberPostDtoToMember(requestBody));
+    @PostMapping("/signup")
+    public ResponseEntity signupMember(@Valid @RequestBody MemberDto.SignupPost requestBody){
+        Member member = memberService.signupMember(mapper.memberSignupPostDtoToMember(requestBody));
+        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(mapper.memberToMemberResponseDto(member), HttpStatus.OK);
+    @PostMapping("/login")
+    public ResponseEntity loginMember(@Valid @RequestBody MemberDto.LoginPost requestBody) {
+        Member member = null;
+        try {
+            member = memberService.loginMember(mapper.memberLoginPostDtoToMember(requestBody));
+            // 예외가 발생하지 않은 경우에 대한 처리
+            // ...
+        } catch (Exception e) {
+            // 예외가 발생한 경우에 대한 처리
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
+        }
+
+        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
+
+
+//        jwy 토큰 발행
+//        예시)
+//        String token = jwtTokenProvider.createToken(response.getEmail(), response.getRoles());
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Authorization", "Bearer " + token);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{memberId}")
@@ -50,8 +76,8 @@ public class MemberController {
                                       @Valid @RequestBody MemberDto.Patch requestBody){
         requestBody.setMemberId(memberId);
         Member findMember = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
-
-        return new ResponseEntity<>(mapper.memberToMemberResponseDto(findMember), HttpStatus.OK);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping
@@ -60,13 +86,16 @@ public class MemberController {
         Page<Member> pageMembers = memberService.findMembers(page-1, size);
         List<Member> members = pageMembers.getContent();
 
-        return new ResponseEntity<>(mapper.membersToMemberResponseDtos(members), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(mapper.membersToMemberResponseDtos(members),
+                pageMembers), HttpStatus.OK);
     }
 
     @GetMapping("/{member_id}")
     public ResponseEntity getMember(@PathVariable("member_id") @Positive long memberId){
         Member findMember = memberService.findMember(memberId);
-        return new ResponseEntity<>(mapper.memberToMemberResponseDto(findMember), HttpStatus.OK);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @DeleteMapping("/{member_id}")
