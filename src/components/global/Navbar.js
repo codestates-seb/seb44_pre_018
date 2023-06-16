@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavbarContainer = styled.div`
@@ -26,16 +27,16 @@ const Navbar = () => {
       <div className="fixed top-24 left-0 w-52 h-screen bg-pointCol03">
         <ul className="flex flex-col justify-center">
           <li>
-            <a href="/questions">Questions</a>
+            <Link to="/questions">Questions</Link>
           </li>
           <li>
-            <a href="/user">User</a>
+            <Link to="/user">User</Link>
           </li>
           <li>
-            <a href="/tag">Tag</a>
+            <Link to="/write">Tag</Link>
           </li>
           <li>
-            <a href="/mypage">MyPage</a>
+            <Link to="/mypage">MyPage</Link>
           </li>
         </ul>
       </div>
