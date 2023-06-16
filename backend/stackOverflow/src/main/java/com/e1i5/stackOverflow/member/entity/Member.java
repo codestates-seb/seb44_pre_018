@@ -54,4 +54,5 @@ public class Member extends Auditable {
             this.status = status;
         }
     }
+
 }

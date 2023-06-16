@@ -25,19 +25,19 @@ public class MemberService {
 
     public Member createMember(Member member){
         verifyExistsEmail(member.getEmail());
-        Member saveMember = memberRepository.save(member);
+        //Member saveMember = memberRepository.save(member);
 
         //회원가입 이메일 추가부분
-        return saveMember;
+        return memberRepository.save(member);
     }
 
     public Member updateMember(Member member){
         Member findMember = findVerifiedMember(member.getMemberId());
 
+        Optional.ofNullable(member.getName())
+                .ifPresent(name -> findMember.setName(name));
         Optional.ofNullable(member.getPhone())
                 .ifPresent(phone -> findMember.setPhone(phone));
-        Optional.ofNullable(member.getEmail())
-                .ifPresent(email -> findMember.setEmail(email));
 
         return memberRepository.save(findMember);
     }
