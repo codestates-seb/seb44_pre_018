@@ -1,5 +1,7 @@
 package com.e1i5.stackOverflow.question.entity;
 
+import com.e1i5.stackOverflow.audit.Auditable;
+import com.e1i5.stackOverflow.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,18 +14,46 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Question {
+public class Question extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
-    @Column(nullable = false)
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "STATUS")
+    private QuestionStatus questionStatus = QuestionStatus.QUESTION_EXIST;
+
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-    private int viewsCount;
-    private int answerCount;
+    @Column(nullable = false)
+    private int view;
+
+    public Question(String title, String content, int view) {
+        this.title = title;
+        this.content = content;
+        this.view = view;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "memberId")
+    private Member member;
+
+    public enum QuestionStatus {
+        QUESTION_NOT_EXIST("존재하지 않는 질문"),
+        QUESTION_EXIST("존재하는 질문");
+
+        @Getter
+        private String status;
+
+        QuestionStatus(String status) {
+            this.status = status;
+        }
+    }
+
+
 
 
 
