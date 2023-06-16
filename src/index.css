@@ -18,4 +18,7 @@
   .inputBox {
     @apply border-[1px] border-black/[.3] border-solid w-full	 rounded-md h-9  pl-3;
   }
+  .labelText {
+    @apply text-base font-light pt-5 pb-2.5 block;
+  }
 }

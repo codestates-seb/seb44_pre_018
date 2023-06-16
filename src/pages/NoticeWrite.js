@@ -1,23 +1,33 @@
 import Editor from '../components/global/Editor';
+import Tag from '../components/global/Tag';
 
 const NoticeWrite = () => {
   return (
     <div className="inner">
       <h3 className="maintitle">Ask a public question</h3>
-      <form>
+      <div>
         <div>
-          <label htmlFor="title">Title</label>
+          <label className="labelText" htmlFor="title">
+            Title
+          </label>
           <input type="text" id="title" className="inputBox" />
         </div>
         <div>
-          <label htmlFor="body">Body</label>
-          <Editor />
+          <label className="labelText" htmlFor="body">
+            Body
+          </label>
+          <Editor height="400" />
         </div>
         <div>
-          <label htmlFor="tag">Tag</label>
-          <input type="text" id="tag" className="inputBox" />
+          <label className="labelText" htmlFor="tag">
+            Tag
+          </label>
+          <Tag />
         </div>
-      </form>
+        {/* <button type="submit" className="pointBu03 my-12">
+          Post your question
+        </button> */}
+      </div>
     </div>
   );
 };

@@ -3,11 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
 
-const QuillWrapper = ReactQuill(async () => await import('react-quill'), {
-  ssr: false,
-  loading: () => <p>Loading ...</p>,
-});
-const QuillEditor = styled(QuillWrapper)`
+const QuillEditor = styled(ReactQuill)`
   background: #fff;
   height: ${({ height }) => `${height}px`};
   .ql-container {
@@ -15,7 +11,7 @@ const QuillEditor = styled(QuillWrapper)`
   }
 `;
 
-const Editor = () => {
+const Editor = (height) => {
   const editorRef = useRef(null);
   const [contents, setContents] = useState('');
   const modules = useMemo(
@@ -46,6 +42,7 @@ const Editor = () => {
         ref={editorRef}
         value={contents}
         onChange={setContents}
+        height={height.height}
         modules={modules}
         theme="snow"
         placeholder="내용을 입력해주세요."
