@@ -1,6 +1,6 @@
-import Tag from './global/Tag';
 import ItemView from './global/ItemView';
 import ItemAnswer from './global/ItemAnswer';
+import TagList from './global/TagList';
 import { styled } from 'styled-components';
 
 const Item = styled.li`
@@ -51,7 +51,7 @@ const ListItem = () => {
           fortran compiler, which comes built into the oneAPI basekit. However,
           I am not able to use ifort since the terminal complains ...
         </p>
-        <Tag />
+        <TagList />
       </div>
       <div className="w-1/5 text-right">
         <ItemView />
