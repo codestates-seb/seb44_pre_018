@@ -24,9 +24,9 @@ const NoticeWrite = () => {
           </label>
           <Tag />
         </div>
-        {/* <button type="submit" className="pointBu03 my-12">
+        <button type="submit" className="pointBu03 my-12">
           Post your question
-        </button> */}
+        </button>
       </div>
     </div>
   );
