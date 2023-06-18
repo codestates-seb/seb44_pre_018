@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // 주어진 질문 id에 해당하는 모든 댓글 조회
-    List<Comment> findAllByQuestionId(Question question);
+    List<Comment> findAllByQuestion(Question question);
 
 
 }

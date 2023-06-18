@@ -31,20 +31,27 @@ public class Comment extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    public void addMember(Member member){  // 멤버 변경사항 설정
-        this.member = member;
-    }
+//    public void setMember(long memberId){ // post
+//        this.member = new Member();
+//        this.member.setMemberId(memberId);
+//    }
 
-//    public Member getMember() {
-//        return this.member;
+//    public void addMember(Member member){  // 멤버 변경사항 설정
+//        this.member = member;
 //    }
 
     @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
-    public void addQuestion(Question question){  // 질문 변경사항 설정
-        this.question = question;
-    }
+
+//    public void setQuestion(long questionId){
+//        this.question = new Question();
+//        this.question.setQuestionId(questionId);
+//    }
+    //    public void addQuestion(Question question){  // 질문 변경사항 설정
+//        this.question = question;
+//    }
+
 
     private boolean choose; // f = comment t = answercomment
 

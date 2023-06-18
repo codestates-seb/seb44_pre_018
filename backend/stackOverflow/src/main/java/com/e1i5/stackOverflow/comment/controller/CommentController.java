@@ -102,11 +102,11 @@ public class CommentController {
     }
 
     //댓글 채택 > 질문자에게만 보인다.
-    @PatchMapping("/choose/{comment-id}")
-    public ResponseEntity chooseComment(@PathVariable("comment-id") long commentId){
+    @PatchMapping("/choose/{comment-id}/{member-id}")
+    public ResponseEntity chooseComment(@PathVariable("comment-id") long commentId,
+                                        @PathVariable("member-id") long memberId){
         // 질문자인지 검사
-
-
+        commentService.VerifyQuestionAuthor(commentId, memberId);
         commentService.chooseComment(commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

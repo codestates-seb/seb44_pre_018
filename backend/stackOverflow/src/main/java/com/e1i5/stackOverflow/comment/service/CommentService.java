@@ -35,7 +35,7 @@ public class CommentService {
     public List<Comment> findCommentList(long questionId){
         Question question = new Question(); // 객체 생성 후 questionId 전달
         question.setQuestionId(questionId);
-        List<Comment> commentPage = commentRepository.findAllByQuestionId(question);
+        List<Comment> commentPage = commentRepository.findAllByQuestion(question);
         return commentPage;
     }
 

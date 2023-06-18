@@ -22,9 +22,12 @@ public class CommentDto {
     @AllArgsConstructor
     public static class Post {
 
+
         @NotNull
         private Question question;
 
+
+        @NotNull
         private Member member;
 
 
@@ -52,7 +55,8 @@ public class CommentDto {
     @AllArgsConstructor
     public static class Response {
         private long commentId; // 댓글 id
-        private Question question;
+        private long questionId;
+        private long memberId;
         private String content;  // 댓글 내용
         private boolean choose; // 댓글 채택 여부
 
