@@ -26,16 +26,25 @@ public class Comment extends Auditable {
     @Column(nullable = false, columnDefinition = "TEXT CHECK (LENGTH(content) <= 500)")
     private String content;
 
-    private long questionId; // mapping 후 생략> 충돌 발생함
 
-//    // member와
-//    @ManyToOne
-//    @JoinColumn(name = "MEMBER_ID")
-//    private Member member;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "QUESTION_ID")
-//    private Question question;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    public void addMember(Member member){  // 멤버 변경사항 설정
+        this.member = member;
+    }
+
+//    public Member getMember() {
+//        return this.member;
+//    }
+
+    @ManyToOne
+    @JoinColumn(name = "QUESTION_ID")
+    private Question question;
+    public void addQuestion(Question question){  // 질문 변경사항 설정
+        this.question = question;
+    }
 
     private boolean choose; // f = comment t = answercomment
 

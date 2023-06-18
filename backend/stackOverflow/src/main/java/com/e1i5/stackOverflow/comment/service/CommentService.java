@@ -6,6 +6,7 @@ import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.comment.repository.CommentRepository;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
+import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,25 +21,28 @@ import java.util.Optional;
 public class CommentService {
      private final CommentRepository commentRepository;
      private final MemberService memberService;
-//     private final QuestionService questionService;
+     private final QuestionService questionService;
 
     public CommentService(CommentRepository commentRepository,
-//                          QuestionService questionService,
+                          QuestionService questionService,
                           MemberService memberService){
-//       this.questionService = questionService;
+       this.questionService = questionService;
         this.memberService = memberService;
         this.commentRepository = commentRepository;
     }
 
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
     public List<Comment> findCommentList(long questionId){
-        List<Comment> commentPage = commentRepository.findAllByQuestionId(questionId);
+        Question question = new Question(); // 객체 생성 후 questionId 전달
+        question.setQuestionId(questionId);
+        List<Comment> commentPage = commentRepository.findAllByQuestionId(question);
         return commentPage;
     }
 
 
-    // 댓글 수정 - 해당 댓글 작성자만 수정 가능
+    // 댓글 수정 - 해당 댓글 작성자만 수정 가능 엔드포인트에서 멤버id, userid를 전달받음
     public Comment updateComment(Comment comment){
+        // 질문에서 등록된 memberId와
         // 요청된 답이 db에 존재하는지 확인
         Comment findComment = findVerifiedComment(comment.getCommentId());
         // 내용 수정
@@ -58,10 +62,12 @@ public class CommentService {
     // 댓글 생성 - 회원만 생성 가능
     public Comment createComment(Comment comment){
         // 회원인지 파악
+        memberService.findVerifiedMemberById(comment.getMember().getMemberId());
+
         return commentRepository.save(comment);
     }
 
-    //댓글 삭제 - 해당 댓글 작성자, 질문글 작성자 모두 삭제 가능하다.
+    //댓글 삭제 - 해당 댓글 작성자, 질문글 작성자 모두 삭제 가능.
     public void deleteComment(long commentId) {
         // if(댓글 작성자 || 질문작성자) 삭제 else 예외발생
 
@@ -72,10 +78,9 @@ public class CommentService {
 
     }
 
-    // commentId에 해당하는 댓글을 찾는 메서드
+    // commentId에 해당하는 댓글을 찾는 메서드. 댓글이 존재하는지 확인한다.
     @Transactional
     public Comment findVerifiedComment(long commentId){
-        //
         Optional<Comment> optionalComment =
                 commentRepository.findById(commentId);
         Comment findComment =
@@ -113,8 +118,24 @@ public class CommentService {
     }
 
     //질문 작성자인지 판단하는 메서드
+    public void VerifyQuestionAuthor(long commentId, long memberId){
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        Question question = comment.getQuestion(); // 찾은 답변의 질문정보를 가져온다.
+        if(question.getMember().getMemberId() != memberId){ // 동일인인지 비교
+            throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
+        }
+    }
 
     //댓글 작성자인지 판단하는 메서드
-
+    //전달 받은 memberId가 comment에 저장된 memberId와 같은지 비교
+    public void VerifyCommentAuthor(long commentId, long memberId){
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        // 댓글 작성자의 memberId와 전달받은 memberId가 같은지 비교
+        if (comment.getMember().getMemberId() != memberId) {
+            throw new BusinessLogicException(ExceptionCode.NOT_A_COMMENT_WRITER);
+        }
+    }
 
 }
