@@ -27,7 +27,7 @@ const Navbar = () => {
       <div className="fixed top-24 left-0 w-52 h-screen bg-pointCol03">
         <ul className="flex flex-col justify-center">
           <li>
-            <Link to="/questions">Questions</Link>
+            <Link to="/">Questions</Link>
           </li>
           <li>
             <Link to="/user">User</Link>
