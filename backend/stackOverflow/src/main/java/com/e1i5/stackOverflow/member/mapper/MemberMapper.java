@@ -13,6 +13,6 @@ public interface MemberMapper {
     Member memberLoginPostDtoToMember(MemberDto.LoginPost requestBody);
 
     Member memberPatchDtoToMember(MemberDto.Patch requestBody);
-    MemberDto.Response memberToMemberResponseDto(Member member);
-    List<MemberDto.Response> membersToMemberResponseDtos(List<Member> members);
+    MemberDto.NomalResponse memberToMemberResponseDto(Member member);
+    List<MemberDto.NomalResponse> membersToMemberResponseDtos(List<Member> members);
 }

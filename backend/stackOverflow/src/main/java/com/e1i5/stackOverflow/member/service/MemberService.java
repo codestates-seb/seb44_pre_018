@@ -1,10 +1,12 @@
 package com.e1i5.stackOverflow.member.service;
 
+import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
+import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,9 +19,13 @@ import java.util.Optional;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final QuestionService questionService;
+    private final CommentService commentService;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, QuestionService questionService, CommentService commentService) {
         this.memberRepository = memberRepository;
+        this.questionService = questionService;
+        this.commentService = commentService;
     }
 
     public Member signupMember(Member member){
@@ -72,7 +78,7 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
-    private Member findVerifiedMemberById(long memberId){
+    public Member findVerifiedMemberById(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember =
                 optionalMember.orElseThrow(() ->

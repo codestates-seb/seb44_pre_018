@@ -1,5 +1,10 @@
 package com.e1i5.stackOverflow.member.dto;
 
+import com.e1i5.stackOverflow.comment.dto.CommentDto;
+import com.e1i5.stackOverflow.comment.entity.Comment;
+import com.e1i5.stackOverflow.question.dto.QuestionDto;
+import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
+import com.e1i5.stackOverflow.question.entity.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,6 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.awt.*;
+import java.util.List;
 
 public class MemberDto {
     @AllArgsConstructor
@@ -57,10 +63,12 @@ public class MemberDto {
 
     @AllArgsConstructor
     @Getter
-    public static class Response{
+    public static class NomalResponse {
         private String name;
         private String phone;
         private String email;
         private Image profile_image;
+//        private long questions;
+//        private List<CommentDto> comments;
     }
 }

@@ -5,16 +5,13 @@ import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.mapper.MemberMapper;
-import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -43,8 +40,8 @@ public class MemberController{
     @PostMapping("/signup")
     public ResponseEntity signupMember(@Valid @RequestBody MemberDto.SignupPost requestBody){
         Member member = memberService.signupMember(mapper.memberSignupPostDtoToMember(requestBody));
-        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(member);
+        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -59,7 +56,7 @@ public class MemberController{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }
 
-        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
+        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(member);
 
 
 //        jwy 토큰 발행
@@ -68,7 +65,7 @@ public class MemberController{
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.add("Authorization", "Bearer " + token);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
     }
 
     @PatchMapping("/{memberId}")
@@ -76,8 +73,8 @@ public class MemberController{
                                       @Valid @RequestBody MemberDto.Patch requestBody){
         requestBody.setMemberId(memberId);
         Member findMember = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
-        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(findMember);
+        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
     }
 
     @GetMapping
@@ -94,8 +91,8 @@ public class MemberController{
     @GetMapping("/{member_id}")
     public ResponseEntity getMember(@PathVariable("member_id") @Positive long memberId){
         Member findMember = memberService.findMember(memberId);
-        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(findMember);
+        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
     }
 
     @DeleteMapping("/{member_id}")

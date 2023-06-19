@@ -10,6 +10,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -43,9 +45,8 @@ public class Question extends Auditable {
     private Member member;
 
     //질문-댓글 1:n
-    @ManyToOne
-    @JoinColumn(name = "commentId")
-    private Comment comment;
+    @OneToMany(mappedBy = "commentId")
+    private List<Comment> commentList = new ArrayList<>();
 
     public enum QuestionStatus {
         QUESTION_NOT_EXIST("존재하지 않는 질문"),
