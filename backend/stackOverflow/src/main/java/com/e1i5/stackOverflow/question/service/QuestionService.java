@@ -49,7 +49,7 @@ public class QuestionService {
         Optional.ofNullable(question.getTitle()) //제목수정
                 .ifPresent(questionTitle->findQuestion.setTitle(questionTitle));
         Optional.ofNullable(question.getContent()) //내용수정
-                .ifPresent(questionBody->findQuestion.setContent(questionBody));
+                .ifPresent(questionContent->findQuestion.setContent(questionContent));
         Optional.ofNullable(question.getQuestionStatus()) //글 삭제
                 .ifPresent(questionStatus->findQuestion.setQuestionStatus(questionStatus));
 
@@ -69,7 +69,7 @@ public class QuestionService {
 
         return findQuestion;
     }
-    public Page<Question> findQuestions(int page, int size, String sort) { //여러 질문 검색(페이지 단위)
+    public Page<Question> findQuestions(int page, int size, String sort) { //여러 질문 검색
         Page<Question> questionPage = questionRepository.findAllByQuestionStatus
                 (PageRequest.of(page, size,
                 Sort.by(sort).descending()),
