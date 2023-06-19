@@ -19,13 +19,9 @@ import java.util.Optional;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final QuestionService questionService;
-    private final CommentService commentService;
 
-    public MemberService(MemberRepository memberRepository, QuestionService questionService, CommentService commentService) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.questionService = questionService;
-        this.commentService = commentService;
     }
 
     public Member signupMember(Member member){
