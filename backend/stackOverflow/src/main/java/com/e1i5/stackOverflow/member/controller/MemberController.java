@@ -69,7 +69,7 @@ public class MemberController{
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PatchMapping("/{memberId}")
+    @PatchMapping("/upload/{memberId}")
     public ResponseEntity memberIamgeUpload(@PathVariable("memberId") @Positive long memberId,
                                             @RequestParam("file") MultipartFile multipartFile){
         memberService.imageUpload(memberId, multipartFile);
