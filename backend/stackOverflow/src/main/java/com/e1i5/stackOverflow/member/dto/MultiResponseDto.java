@@ -1,11 +1,14 @@
-package com.e1i5.stackOverflow.dto;
+package com.e1i5.stackOverflow.member.dto;
 
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 952e5b466be848b163551b59bb9c3e30081c5e24
 @Getter
 public class MultiResponseDto<T> {
     private List<T> data;
