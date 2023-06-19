@@ -40,6 +40,7 @@ const Router = () => {
                 <Route path="/write" element={<NoticeWrite />} />
                 <Route path="/detail/:id" element={<DetailPage />} />
                 <Route path="/noticewrite" element={<NoticeWrite />} />
+                <Route path="/mypage" element={<Mypage />} />
                 <Route path="/tag" element={<Tag />} />
                 <Route path="/user" element={<User />} />
               </Routes>
