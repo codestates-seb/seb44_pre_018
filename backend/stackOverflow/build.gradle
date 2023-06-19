@@ -42,7 +42,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 
 	//mysql - 'mysql:mysql-connector-java:{mysql버전}'
-	//implementation 'mysql:mysql-connector-java:{버전을 써주세요}'
+	implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
 tasks.named('test') {

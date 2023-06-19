@@ -12,8 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,6 +46,28 @@ public class MemberService {
 
 
         return memberRepository.save(findMember);
+    }
+
+    public void imageUpload(long memberId, MultipartFile multipartFile){
+        //image upload
+        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\files";
+        UUID uuid = UUID.randomUUID();
+        String fileName = uuid + "_" + multipartFile.getOriginalFilename();
+        File savefile = new File(projectPath, fileName);
+
+        try {
+            multipartFile.transferTo(savefile);
+            // 파일 업로드 성공
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 파일 업로드 실패 처리 로직 작성
+        }
+
+        Member findMember = findVerifiedMemberById(memberId);
+        findMember.setProfileImagePath(projectPath);
+        findMember.setProfileImageName(fileName);
+
+        memberRepository.save(findMember);
     }
 
     public Member updateMember(Member member){

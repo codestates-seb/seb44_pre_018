@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -65,6 +66,15 @@ public class MemberController{
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.add("Authorization", "Bearer " + token);
 
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{memberId}")
+    public ResponseEntity memberIamgeUpload(@PathVariable("memberId") @Positive long memberId,
+                                            @RequestParam("file") MultipartFile multipartFile){
+        memberService.imageUpload(memberId, multipartFile);
+        Member findMember = memberService.findMember(memberId);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 

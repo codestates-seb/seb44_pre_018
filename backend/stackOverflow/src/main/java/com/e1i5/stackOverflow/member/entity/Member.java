@@ -38,8 +38,9 @@ public class Member extends Auditable {
     @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
-    @Column(length = 100)
     private String profileImageName;
+
+    private String profileImagePath;
 
     public Member(String name, String phone, String email, String password) {
         this.email = email;
