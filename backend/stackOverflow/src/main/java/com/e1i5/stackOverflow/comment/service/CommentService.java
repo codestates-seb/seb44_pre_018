@@ -6,6 +6,7 @@ import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.comment.repository.CommentRepository;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
+import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,8 +32,8 @@ public class CommentService {
     }
 
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
-    public List<Comment> findCommentList(long questionId){
-        List<Comment> commentPage = commentRepository.findAllByQuestionId(questionId);
+    public List<Comment> findCommentList(Question question){
+        List<Comment> commentPage = commentRepository.findAllByQuestion(question);
         return commentPage;
     }
 

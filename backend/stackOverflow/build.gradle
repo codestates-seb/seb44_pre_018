@@ -41,7 +41,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.h2database:h2'
 
-
+	//mysql - 'mysql:mysql-connector-java:{mysql버전}'
+	//implementation 'mysql:mysql-connector-java:{버전을 써주세요}'
 }
 
 tasks.named('test') {

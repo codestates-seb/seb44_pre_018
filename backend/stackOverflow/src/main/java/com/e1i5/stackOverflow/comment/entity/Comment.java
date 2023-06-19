@@ -26,8 +26,6 @@ public class Comment extends Auditable {
     @Column(nullable = false, columnDefinition = "TEXT CHECK (LENGTH(content) <= 500)")
     private String content;
 
-    private long questionId; // mapping 후 생략> 충돌 발생함
-
     // member와
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
