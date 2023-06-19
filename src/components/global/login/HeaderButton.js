@@ -33,7 +33,7 @@ const Button = () => {
           <Link className="pointBu01" to="/login">
             Login
           </Link>
-          <Link className="pointBu02" to="/">
+          <Link className="pointBu02" to="/register">
             Signup
           </Link>
         </>

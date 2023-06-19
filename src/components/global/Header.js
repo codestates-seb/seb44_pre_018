@@ -2,7 +2,7 @@
 // 2. 회원일 경우, mypage logout 버튼 출력
 // 3. 태블릿 사이즈로 줄일 경우, navbar사라지고 햄버거 버튼 출력
 import { Link } from 'react-router-dom';
-import Button from 'components/global/login/HeaderButton';
+import HeaderButton from 'components/global/login/HeaderButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -78,7 +78,7 @@ const Header = () => {
             />
           </Link>
           <div className="right-section">
-            <Button />
+            <HeaderButton />
             <img
               src={require('assets/profile_image1.jpeg')}
               alt="profile"
