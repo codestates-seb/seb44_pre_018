@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const TagWrap = styled.ul`
+const TagBox = styled.ul`
   display: grid;
   grid-gap: 10px;
   gap: 10px;
@@ -58,9 +58,9 @@ const TagWrap = styled.ul`
   }
 `;
 
-const TagItem = () => {
+const TagWrap = () => {
   return (
-    <TagWrap>
+    <TagBox>
       <li>
         <a className="pointBu01" href="!#">
           javascript
@@ -81,8 +81,8 @@ const TagItem = () => {
           </li>
         </ol>
       </li>
-    </TagWrap>
+    </TagBox>
   );
 };
 
-export default TagItem;
+export default TagWrap;

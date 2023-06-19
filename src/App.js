@@ -1,8 +1,8 @@
 import Router from './components/Router';
 
-import './index.css';
-import './style/global.scss';
-import './style/reset.scss';
+import 'index.css';
+import 'style/global.scss';
+import 'style/reset.scss';
 
 function App() {
   return (

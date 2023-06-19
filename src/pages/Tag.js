@@ -1,6 +1,7 @@
-import SearchBar from '../components/SearchBar';
-import TagItem from '../components/TagItem';
-import Pagination from '../components/global/Pagination';
+import SearchBar from 'components/SearchBar';
+import TagItem from 'components/TagWrap';
+import Pagination from 'components/global/Pagination';
+
 const Tag = () => {
   return (
     <div className="inner">

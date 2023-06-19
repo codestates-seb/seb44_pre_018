@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import Filter from '../components/Filter';
-import SearchBar from '../components/SearchBar';
-import ListItem from '../components/ListItem';
-import Pagination from '../components/global/Pagination';
+import Filter from 'components/Filter';
+import SearchBar from 'components/SearchBar';
+import ListItem from 'components/ListItem';
+import Pagination from 'components/global/Pagination';
 
 const MainList = () => {
   return (

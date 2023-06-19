@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
-// import loginlogo from '../components/assets/login_logo.png';
-import LoginGoogle from '../components/global/LoginGoogle';
-import LoginGithub from '../components/global/LoginGithub';
+import LoginGoogle from 'components/global/login/LoginGoogle';
+import LoginGithub from 'components/global/login/LoginGithub';
 
 const Register = () => {
   return (
     <div className="flex flex-col items-center w-[26rem]">
-      {/* <img src={loginlogo} alt="logo" className="logo-img" /> */}
       <form className="LoginForm">
         <label className="labelText pt-0" htmlFor="name">
           Display name

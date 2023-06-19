@@ -33,7 +33,7 @@ const Navbar = () => {
             <Link to="/user">User</Link>
           </li>
           <li>
-            <Link to="/write">Tag</Link>
+            <Link to="/tag">Tag</Link>
           </li>
           <li>
             <Link to="/mypage">MyPage</Link>

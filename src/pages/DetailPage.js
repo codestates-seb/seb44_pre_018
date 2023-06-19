@@ -10,11 +10,11 @@
 // 10. 답변 채택 기능 구현하기
 
 import { useState, useEffect } from 'react';
-import ItemView from '../components/global/ItemView';
-import ItemAnswer from '../components/global/ItemAnswer';
-import TagList from '../components/global/TagList';
-import AnswerItem from '../components/AnswerItem';
-import Editor from '../components/global/Editor';
+import ItemView from 'components/global/questionItem/ItemView';
+import ItemAnswer from 'components/global/questionItem/ItemAnswer';
+import TagList from 'components/global/tag/TagList';
+import AnswerItem from 'components/AnswerItem';
+import Editor from 'components/global/questionItem/Editor';
 
 const DetailPage = () => {
   const [, setViewCount] = useState(0);

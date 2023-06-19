@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import LikeButton from 'components/global/questionItem/LikeButton';
 import styled from 'styled-components';
-
-import profile from '../components/assets/profile_image1.jpeg';
-import LikeButton from '../components/global/LikeButton';
 
 const Answer = styled.div`
   margin-top: 2rem;
@@ -91,7 +89,10 @@ const AnswerItem = () => {
     <Answer>
       <div className="answerContainer">
         <div className="left-section">
-          <img src={profile} alt="프로필 이미지" />
+          <img
+            src={require('assets/profile_image1.jpeg')}
+            alt="프로필 이미지"
+          />
           <span className="username text-sm py-2">냥냥씨</span>
         </div>
         <div className="comment text-sm font-light py-2">

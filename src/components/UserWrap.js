@@ -1,15 +1,12 @@
 import styled from 'styled-components';
-import profile from '../components/assets/profile_image1.jpeg';
-import TagList from './global/TagList';
-import logo from '../components/assets/login_logo.png';
+import TagList from 'components/global/tag/TagList';
 
-const UserWrap = styled.ul`
+const UserBox = styled.ul`
   display: grid;
   grid-gap: 10px;
   gap: 10px;
   grid-template-columns: repeat(3, 1fr);
   margin: 20px 0;
-
   > li {
     position: relative;
     transition: all 0.3s;
@@ -58,14 +55,18 @@ const UserWrap = styled.ul`
   }
 `;
 
-const UserItem = ({ users }) => {
+const UserWrap = ({ users }) => {
   return (
-    <UserWrap>
+    <UserBox>
       {users.map((user) => {
         return (
           <li>
             <div className="userImgWrap">
-              <img src={profile} alt="profile" className="profile-img" />
+              <img
+                src={require('assets/profile_image1.jpeg')}
+                alt="profile"
+                className="profile-img"
+              />
             </div>
             <div className="userInfo">
               <p>{user.name}</p>
@@ -74,13 +75,17 @@ const UserItem = ({ users }) => {
                 <li>답변수 : 10개</li>
               </ol>
               <TagList />
-              <img src={logo} alt="profile" className="logoImg" />
+              <img
+                src={require('assets/login_logo.png')}
+                alt="profile"
+                className="logoImg"
+              />
             </div>
           </li>
         );
       })}
-    </UserWrap>
+    </UserBox>
   );
 };
 
-export default UserItem;
+export default UserWrap;
