@@ -58,23 +58,27 @@ const UserWrap = styled.ul`
   }
 `;
 
-const UserItem = () => {
+const UserItem = ({ users }) => {
   return (
     <UserWrap>
-      <li>
-        <div className="userImgWrap">
-          <img src={profile} alt="profile" className="profile-img" />
-        </div>
-        <div className="userInfo">
-          <p>장근실</p>
-          <ol>
-            <li>질문수 : 1개</li>
-            <li>답변수 : 10개</li>
-          </ol>
-          <TagList />
-          <img src={logo} alt="profile" className="logoImg" />
-        </div>
-      </li>
+      {users.map((user) => {
+        return (
+          <li>
+            <div className="userImgWrap">
+              <img src={profile} alt="profile" className="profile-img" />
+            </div>
+            <div className="userInfo">
+              <p>{user.name}</p>
+              <ol>
+                <li>질문수 : 1개</li>
+                <li>답변수 : 10개</li>
+              </ol>
+              <TagList />
+              <img src={logo} alt="profile" className="logoImg" />
+            </div>
+          </li>
+        );
+      })}
     </UserWrap>
   );
 };

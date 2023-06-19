@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import MainList from '../pages/MainList';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -10,14 +10,18 @@ import Footer from '../components/global/Footer';
 import login_bg from './assets/login_bg.png';
 import Tag from '../pages/Tag';
 import User from '../pages/User';
-
+import { useEffect, useState } from 'react';
 const Router = () => {
   const hideNavbar = ['/login', '/Login', '/register', '/Register'];
+  const [isNav, setIsNav] = useState(
+    hideNavbar.includes(window.location.pathname)
+  );
   return (
     <>
       <BrowserRouter>
         <Header />
-        {hideNavbar.includes(window.location.pathname) ? (
+        <LocationCheck setIsNav={setIsNav} hideNavbar={hideNavbar} />
+        {isNav ? (
           <div
             className="LoginBox"
             style={{ backgroundImage: `url(${login_bg})` }}
@@ -36,6 +40,7 @@ const Router = () => {
                 <Route path="/write" element={<NoticeWrite />} />
                 <Route path="/detail/:id" element={<DetailPage />} />
                 <Route path="/noticewrite" element={<NoticeWrite />} />
+                <Route path="/mypage" element={<Mypage />} />
                 <Route path="/tag" element={<Tag />} />
                 <Route path="/user" element={<User />} />
               </Routes>
@@ -47,6 +52,13 @@ const Router = () => {
       </BrowserRouter>
     </>
   );
+};
+export const LocationCheck = ({ setIsNav, hideNavbar }) => {
+  const location = useLocation();
+  useEffect(() => {
+    setIsNav(hideNavbar.includes(window.location.pathname));
+  }, [location]);
+  return null;
 };
 
 export default Router;
