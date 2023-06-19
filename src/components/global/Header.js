@@ -18,7 +18,7 @@ const HeaderContainer = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 8rem;
+  padding: 0 2rem;
   background-color: #ffffff;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
