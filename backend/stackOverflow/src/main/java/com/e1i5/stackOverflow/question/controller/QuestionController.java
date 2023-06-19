@@ -1,6 +1,6 @@
 package com.e1i5.stackOverflow.question.controller;
 
-import com.e1i5.stackOverflow.member.dto.MultiResponseDto;
+import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
 import com.e1i5.stackOverflow.question.entity.Question;

@@ -1,4 +1,4 @@
-package com.e1i5.stackOverflow.member.dto;
+package com.e1i5.stackOverflow.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +10,5 @@ public class PageInfo {
     private int size;
     private long totalElements;
     private int totalPages;
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> 952e5b466be848b163551b59bb9c3e30081c5e24

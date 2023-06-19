@@ -1,7 +1,10 @@
 package com.e1i5.stackOverflow.question.service;
 
+import com.e1i5.stackOverflow.comment.repository.CommentRepository;
+import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
+import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,16 +23,16 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
-    //private final CommentRepository commentRepository;
-    //private final MemberService memberService;
+    private final CommentService commentService;
+    private final MemberService memberService;
 
-    public QuestionService(QuestionRepository questionRepository
-                           //      CommentRepository commentRepository
-                           //                  MemberService memberService
+    public QuestionService(QuestionRepository questionRepository,
+                                 CommentService commentService ,
+                                           MemberService memberService
     ) {
         this.questionRepository = questionRepository;
-        // this.memberService = memberService;
-        // this.commentRepository = commentRepository;
+         this.memberService = memberService;
+         this.commentService = commentService;
 
     }
 
@@ -55,6 +58,8 @@ public class QuestionService {
         return updatedQuestion;
 
     }
+
+
 
     public Question findQuestion(long questionId) { //질문 검색
         Question findQuestion = findVerifiedQuestion(questionId); //요청된 질문이 DB에 없으면 에러
