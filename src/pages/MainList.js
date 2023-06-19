@@ -6,6 +6,8 @@ import Pagination from 'components/global/Pagination';
 import SearchArea from 'components/SearchArea';
 
 const MainList = () => {
+  const [filterValue, setFilterValue] = useState('latest');
+  const [queryValue, setQueryValue] = useState('');
   const [boardList, setBoardList] = useState([]);
 
   const getBoardList = async () => {
@@ -19,7 +21,7 @@ const MainList = () => {
 
   useEffect(() => {
     getBoardList();
-  }, []);
+  }, [filterValue, queryValue]);
 
   return (
     <div className="inner">
@@ -29,11 +31,18 @@ const MainList = () => {
           Ask Qustion
         </Link>
       </div>
-      <div className="flex items-center justify-between">
-        <SearchArea />
-      </div>
+
+      <SearchArea
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+        queryValue={queryValue}
+        setQueryValue={setQueryValue}
+      />
+
       <ul className="border-t-[1px] border-black/[.3] border-solid">
-        <ListItem boardList={boardList} />
+        {boardList.map((item, idx) => {
+          return <ListItem key={item.questionId} value={item} />;
+        })}
       </ul>
       <Pagination />
     </div>

@@ -41,35 +41,26 @@ const Item = styled.li`
   }
 `;
 
-const ListItem = ({ boardList }) => {
+const ListItem = ({ value }) => {
   return (
-    <>
-      {boardList.map((item) => {
-        return (
-          <Item
-            key={item.questionId}
-            className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3"
-          >
-            <Link
-              className="flex items-center justify-between"
-              to={`/detail/${item.questionId}`}
-            >
-              <div className="w-4/5">
-                <h3 className="itemTitle text-base ">
-                  <span>{item.title}</span>
-                </h3>
-                <p className="text-sm font-light py-2">{item.content}</p>
-                <TagList />
-              </div>
-              <div className="w-1/5 text-right">
-                <ItemView />
-                <ItemAnswer />
-              </div>
-            </Link>
-          </Item>
-        );
-      })}
-    </>
+    <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3">
+      <Link
+        className="flex items-center justify-between"
+        to={`/detail/${value.questionId}`}
+      >
+        <div className="w-4/5">
+          <h3 className="itemTitle text-base ">
+            <span>{value.title}</span>
+          </h3>
+          <p className="text-sm font-light py-2">{value.content}</p>
+          <TagList />
+        </div>
+        <div className="w-1/5 text-right">
+          <ItemView />
+          <ItemAnswer />
+        </div>
+      </Link>
+    </Item>
   );
 };
 

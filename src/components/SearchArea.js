@@ -1,12 +1,17 @@
 import Filter from 'components/Filter';
 import SearchBar from 'components/SearchBar';
 
-const SearchArea = () => {
+const SearchArea = ({
+  filterValue,
+  setFilterValue,
+  queryValue,
+  setQueryValue,
+}) => {
   return (
-    <>
-      <Filter />
-      <SearchBar />
-    </>
+    <div className="flex items-center justify-between">
+      <Filter filterValue={filterValue} setFilterValue={setFilterValue} />
+      <SearchBar queryValue={queryValue} setQueryValue={setQueryValue} />
+    </div>
   );
 };
 
