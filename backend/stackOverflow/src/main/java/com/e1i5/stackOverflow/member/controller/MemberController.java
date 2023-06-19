@@ -40,8 +40,8 @@ public class MemberController{
     @PostMapping("/signup")
     public ResponseEntity signupMember(@Valid @RequestBody MemberDto.SignupPost requestBody){
         Member member = memberService.signupMember(mapper.memberSignupPostDtoToMember(requestBody));
-        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(member);
-        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -56,7 +56,7 @@ public class MemberController{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }
 
-        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(member);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(member);
 
 
 //        jwy 토큰 발행
@@ -65,7 +65,7 @@ public class MemberController{
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.add("Authorization", "Bearer " + token);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @PatchMapping("/{memberId}")
@@ -73,8 +73,8 @@ public class MemberController{
                                       @Valid @RequestBody MemberDto.Patch requestBody){
         requestBody.setMemberId(memberId);
         Member findMember = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
-        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(findMember);
-        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @GetMapping
@@ -91,8 +91,8 @@ public class MemberController{
     @GetMapping("/{member_id}")
     public ResponseEntity getMember(@PathVariable("member_id") @Positive long memberId){
         Member findMember = memberService.findMember(memberId);
-        MemberDto.NomalResponse nomalResponse = mapper.memberToMemberResponseDto(findMember);
-        return new ResponseEntity<>(new SingleResponseDto<>(nomalResponse), HttpStatus.OK);
+        MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @DeleteMapping("/{member_id}")

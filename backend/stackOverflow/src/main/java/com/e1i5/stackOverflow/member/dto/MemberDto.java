@@ -1,10 +1,7 @@
 package com.e1i5.stackOverflow.member.dto;
 
 import com.e1i5.stackOverflow.comment.dto.CommentDto;
-import com.e1i5.stackOverflow.comment.entity.Comment;
-import com.e1i5.stackOverflow.question.dto.QuestionDto;
-import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
-import com.e1i5.stackOverflow.question.entity.Question;
+import com.e1i5.stackOverflow.member.entity.MemberComment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -63,12 +60,12 @@ public class MemberDto {
 
     @AllArgsConstructor
     @Getter
-    public static class NomalResponse {
+    public static class Response {
         private String name;
         private String phone;
         private String email;
         private Image profile_image;
-//        private long questions;
-//        private List<CommentDto> comments;
+        private List<MemberQuestionDto.Response> questions;
+        private List<MemberCommentDto.Response> comments;
     }
 }
