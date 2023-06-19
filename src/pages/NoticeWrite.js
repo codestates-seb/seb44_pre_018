@@ -1,5 +1,5 @@
-import Editor from '../components/global/Editor';
-import Tag from '../components/global/Tag';
+import Editor from 'components/global/questionItem/Editor';
+import Tag from 'components/global/tag/AddTag';
 
 const NoticeWrite = () => {
   return (

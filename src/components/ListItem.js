@@ -1,6 +1,6 @@
-import ItemView from './global/ItemView';
-import ItemAnswer from './global/ItemAnswer';
-import TagList from './global/TagList';
+import ItemView from 'components/global/questionItem/ItemView';
+import ItemAnswer from 'components/global/questionItem/ItemAnswer';
+import TagList from 'components/global/tag/TagList';
 import { styled } from 'styled-components';
 
 const Item = styled.li`

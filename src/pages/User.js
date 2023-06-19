@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import SearchBar from '../components/SearchBar';
-import UserItem from '../components/UserItem';
-import Pagination from '../components/global/Pagination';
 import axios from 'axios';
+import SearchBar from 'components/SearchBar';
+import UserItem from 'components/UserWrap';
+import Pagination from 'components/global/Pagination';
 
 const User = () => {
   const [users, setUsers] = useState([]);

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import logo2 from '../assets/logo-h.png';
 
 const FooterContainer = styled.div`
   background-color: rgba(130, 130, 170, 0.12);
@@ -35,7 +34,7 @@ const FooterContainer = styled.div`
 const Footer = () => {
   return (
     <FooterContainer>
-      <img src={logo2} alt="logo2" />
+      <img src={require('assets/logo-h.png')} alt="logo2" />
       <p>Site desing / logo @ 2023 CodeStates_44_E1I5</p>
     </FooterContainer>
   );

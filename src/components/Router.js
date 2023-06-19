@@ -1,17 +1,16 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import MainList from '../pages/MainList';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import DetailPage from '../pages/DetailPage';
-import NoticeWrite from '../pages/NoticeWrite';
-import MyPage from '../pages/MyPage';
-import Header from '../components/global/Header';
-import Navbar from '../components/global/Navbar';
-import Footer from '../components/global/Footer';
-import login_bg from './assets/login_bg.png';
-import Tag from '../pages/Tag';
-import User from '../pages/User';
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import Header from 'components/global/Header';
+import Navbar from 'components/global/Navbar';
+import Footer from 'components/global/Footer';
+import MainList from 'pages/MainList';
+import Login from 'pages/Login';
+import Register from 'pages/Register';
+import DetailPage from 'pages/DetailPage';
+import NoticeWrite from 'pages/NoticeWrite';
+import MyPage from 'pages/MyPage';
+import Tag from 'pages/Tag';
+import User from 'pages/User';
 
 const Router = () => {
   const hideNavbar = ['/login', '/Login', '/register', '/Register'];
@@ -26,7 +25,9 @@ const Router = () => {
         {isNav ? (
           <div
             className="LoginBox"
-            style={{ backgroundImage: `url(${login_bg})` }}
+            style={{
+              backgroundImage: `url(${require('assets/login_bg.png')})`,
+            }}
           >
             <Routes>
               <Route path="/login" element={<Login />} />

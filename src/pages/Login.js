@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import LoginGoogle from '../components/global/LoginGoogle';
-import LoginGithub from '../components/global/LoginGithub';
+import LoginGoogle from 'components/global/login/LoginGoogle';
+import LoginGithub from 'components/global/login/LoginGithub';
 
 const Login = () => {
   return (

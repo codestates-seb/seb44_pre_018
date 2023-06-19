@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
-import profile from '../components/assets/profile_image1.jpeg';
 
 const Container = styled.div`
   display: flex;
@@ -48,7 +47,7 @@ const MyPage = () => {
       <h1 className="mt-3">Hello,Nickname!</h1>
       <Container>
         <div className="left-section">
-          <img src={profile} alt="Profile" />
+          <img src={require('assets/profile_image1.jpeg')} alt="Profile" />
           <Button className="pointBu01">
             <FontAwesomeIcon icon={faArrowUpFromBracket} />
             change picture
