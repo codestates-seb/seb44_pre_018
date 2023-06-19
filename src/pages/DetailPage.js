@@ -7,11 +7,14 @@
 // 7. 해당 답변 작성자만 답변 수정하기(권한 확인 필요)
 // 8. 회원 확인 후 추천 비추천 투표 가능하게 하기
 // 9. 무한 스크롤 기능 구현하기 (로드 할 데이터 없을 시 멈추기?)
+// 10. 답변 채택 기능 구현하기
 
 import { useState, useEffect } from 'react';
 import ItemView from '../components/global/ItemView';
 import ItemAnswer from '../components/global/ItemAnswer';
-import Tag from '../components/global/Tag';
+import TagList from '../components/global/TagList';
+import AnswerItem from '../components/AnswerItem';
+import Editor from '../components/global/Editor';
 
 const DetailPage = () => {
   const [, setViewCount] = useState(0);
@@ -30,10 +33,14 @@ const DetailPage = () => {
         <h3 className="maintitle">
           How to generate a key when you know how to check the key?
         </h3>
-        <div className="flex items-center justify-between mt-5">
-          <ItemView />
-          <ItemAnswer />
-          <p className="ml-auto">Asked: 2023. 06. 13.</p>
+        <div className="flex mt-5">
+          <div className="mr-3">
+            <ItemView />
+          </div>
+          <div className="mx-3">
+            <ItemAnswer />
+          </div>
+          <p className="ml-auto font-light">Asked: 2023. 06. 13.</p>
         </div>
         <ul className="border-t-[1px] border-black/[.3] border-solid">
           <p className="text-sm font-light py-2">
@@ -46,31 +53,22 @@ const DetailPage = () => {
             solution, but it&apos;s not very elegant. <br />
             I&apos;ll post below as a possibility.
           </p>
-          <Tag />
+          <TagList />
         </ul>
       </div>
-      {/* 댓글 구조 */}
-      <h2>댓글</h2>
-      <div>
-        <p>I have a list of bean objects passed into my JSP page.</p>
-        <p>작성자: 냥냥씨 </p>
-        <p>작성일: 2023. 06. 13.</p>
-        <button>추천</button>
-        <button>비추천</button>
 
-        {/* hover 시 */}
-        <div>
-          <button>수정</button>
-          <button>삭제</button>
-        </div>
-      </div>
+      {/* 댓글 구조 */}
+      <AnswerItem />
 
       {/* 답변 폼 */}
-      <div>
+      <div className="mt-10">
         <h2>Your Answer</h2>
-        <form>
-          <button type="submit">Edit your Answer</button>
-        </form>
+        <div>
+          <Editor height="200" />
+          <button className="pointBu03" type="submit">
+            Edit your Answer
+          </button>
+        </div>
       </div>
     </div>
   );
