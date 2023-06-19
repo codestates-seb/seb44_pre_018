@@ -1,10 +1,26 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Filter from 'components/Filter';
-import SearchBar from 'components/SearchBar';
+import axios from 'axios';
 import ListItem from 'components/ListItem';
 import Pagination from 'components/global/Pagination';
+import SearchArea from 'components/SearchArea';
 
 const MainList = () => {
+  const [boardList, setBoardList] = useState([]);
+
+  const getBoardList = async () => {
+    try {
+      const result = await axios.get('/data/data.json');
+      setBoardList(result.data.questions);
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
+
+  useEffect(() => {
+    getBoardList();
+  }, []);
+
   return (
     <div className="inner">
       <div className="flex items-center justify-between">
@@ -14,11 +30,10 @@ const MainList = () => {
         </Link>
       </div>
       <div className="flex items-center justify-between">
-        <Filter />
-        <SearchBar />
+        <SearchArea />
       </div>
       <ul className="border-t-[1px] border-black/[.3] border-solid">
-        <ListItem />
+        <ListItem boardList={boardList} />
       </ul>
       <Pagination />
     </div>

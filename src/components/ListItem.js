@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
@@ -28,6 +29,7 @@ const Item = styled.li`
       }
     }
   }
+
   :hover {
     .itemTitle {
       span {
@@ -39,25 +41,35 @@ const Item = styled.li`
   }
 `;
 
-const ListItem = () => {
+const ListItem = ({ boardList }) => {
   return (
-    <Item className="transition flex items-center justify-between border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3">
-      <div className="w-4/5">
-        <h3 className="itemTitle text-base ">
-          <span>How to generate a key when you know how to check the key?</span>
-        </h3>
-        <p className="text-sm font-light py-2">
-          I am trying to use math kernel library of intel along with the intel
-          fortran compiler, which comes built into the oneAPI basekit. However,
-          I am not able to use ifort since the terminal complains ...
-        </p>
-        <TagList />
-      </div>
-      <div className="w-1/5 text-right">
-        <ItemView />
-        <ItemAnswer />
-      </div>
-    </Item>
+    <>
+      {boardList.map((item) => {
+        return (
+          <Item
+            key={item.questionId}
+            className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3"
+          >
+            <Link
+              className="flex items-center justify-between"
+              to={`/detail/${item.questionId}`}
+            >
+              <div className="w-4/5">
+                <h3 className="itemTitle text-base ">
+                  <span>{item.title}</span>
+                </h3>
+                <p className="text-sm font-light py-2">{item.content}</p>
+                <TagList />
+              </div>
+              <div className="w-1/5 text-right">
+                <ItemView />
+                <ItemAnswer />
+              </div>
+            </Link>
+          </Item>
+        );
+      })}
+    </>
   );
 };
 
