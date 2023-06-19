@@ -22,17 +22,20 @@ public class CommentDto {
     @AllArgsConstructor
     public static class Post {
 
+        private long questionId;
 
-        @NotNull
-        private Question question;
-
-
-        @NotNull
-        private Member member;
-
+        private long authenticatedMemberId;
 
         @NotBlank(message = "내용을 작성해주세요")
         private String content;
+
+        public void addQuestionId(long questionId){
+            this.questionId = questionId;
+        }
+
+        public void addAuthenticatedMemberId(long authenticatedMemberId){
+            this.authenticatedMemberId = authenticatedMemberId;
+        }
 
     }
 
