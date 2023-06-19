@@ -1,15 +1,11 @@
 package com.e1i5.stackOverflow.question.controller;
 
-import com.e1i5.stackOverflow.Dto.MultiResponseDto;
-import com.e1i5.stackOverflow.Dto.SingleResponseDto;
+import com.e1i5.stackOverflow.dto.MultiResponseDto;
+import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
-import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.mapper.QuestionMapper;
 import com.e1i5.stackOverflow.question.service.QuestionService;
-import com.e1i5.stackOverflow.utils.UriCreator;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.net.URI;
 import java.util.List;
 
 
@@ -75,7 +70,7 @@ public class QuestionController {
     }
 
     @GetMapping("/{question_id}") //선택 질문확인
-    public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId){
+    public ResponseEntity getCommentList(@PathVariable("question_id") @Positive long questionId){
         Question findquestion = questionService.findQuestion(questionId);
         return new ResponseEntity<>(mapper.questionToQuestionResponseDto(findquestion), HttpStatus.OK);
     }
