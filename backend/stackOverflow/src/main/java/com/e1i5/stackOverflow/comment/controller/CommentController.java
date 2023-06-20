@@ -89,7 +89,7 @@ public class CommentController {
         // 질문 작성자인지 확인 > 수정 여부
         commentService.VerifyQuestionAuthor(commentId, memberId);
 
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(commentId,memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
