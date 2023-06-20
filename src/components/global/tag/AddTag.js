@@ -73,4 +73,4 @@ const AddTag = () => {
   );
 };
 
-export default Tag;
+export default AddTag;
