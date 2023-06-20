@@ -9,15 +9,25 @@ const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
 
   const getAnswerData = async () => {
     try {
+      // 서버에서 데이터 가져오기
       const result = await axios.get('/data/answers.json');
-      setAnswers(result.data.answers);
+      const answers = result.data.answers;
+      // 가져온 데이터를 localStorage에 저장
+      localStorage.setItem('answers', JSON.stringify(answers));
+      // 상태 업데이트
+      setAnswers(answers);
     } catch (err) {
       console.log('Error getting answer data:', err);
     }
   };
+  
 
   const addAnswer = (newAnswer) => {
-    setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers, newAnswer];
+      localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+      return updatedAnswers;
+    });
   };
 
   const editAnswer = (answerId, content) => {
@@ -39,7 +49,14 @@ const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
   };
 
   useEffect(() => {
-    getAnswerData();
+    // localStorage에서 데이터 확인
+    const storedAnswers = localStorage.getItem('answers');
+    if (storedAnswers) {
+      setAnswers(JSON.parse(storedAnswers));
+    } else {
+      // localStorage에 데이터가 없으면 서버에서 가져오기
+      getAnswerData();
+    }
   }, []);
 
   return (
@@ -55,7 +72,7 @@ const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
       <div className="mt-10">
         <h2>Your Answer</h2>
         <div>
-          <Editor height="200" value={commentInput} onChange={handleCommentChange} />
+          <Editor height={200} value={commentInput} onChange={setCommentInput} />
           <button
             className="pointBu03"
             type="submit"

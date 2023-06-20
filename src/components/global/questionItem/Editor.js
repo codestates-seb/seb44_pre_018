@@ -11,9 +11,10 @@ const QuillEditor = styled(ReactQuill)`
   }
 `;
 
-const Editor = (height) => {
+const Editor = ({ height, onChange }) => { // Destructure the height and onChange props
   const editorRef = useRef(null);
   const [contents, setContents] = useState('');
+
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -36,13 +37,18 @@ const Editor = (height) => {
     []
   );
 
+  const handleContentChange = (content) => {
+    setContents(content);
+    onChange(content);
+  };
+
   return (
     <>
       <QuillEditor
         ref={editorRef}
         value={contents}
-        onChange={setContents}
-        height={height.height}
+        onChange={handleContentChange}
+        height={height} 
         modules={modules}
         theme="snow"
         placeholder="내용을 입력해주세요."
@@ -50,4 +56,5 @@ const Editor = (height) => {
     </>
   );
 };
+
 export default Editor;
