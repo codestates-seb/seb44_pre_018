@@ -53,7 +53,6 @@ public class MemberService {
         String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\files";
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + multipartFile.getOriginalFilename();
-        File savefile = new File(projectPath, fileName);
 
         try {
             // 경로가 없을시 경로 추가
@@ -64,15 +63,21 @@ public class MemberService {
                     System.out.println("디렉토리가 생성되었습니다.");
                 } else {
                     System.out.println("디렉토리를 생성할 수 없습니다.");
-                    // 디렉토리 생성 실패 처리 로직 작성
+                    throw new IllegalArgumentException("경로가 존재하지 않습니다.");
                 }
             }
+            if(multipartFile.getContentType().startsWith("image/")){
+                File savefile = new File(projectPath, fileName);
+                multipartFile.transferTo(savefile);
+                // 파일 업로드 성공
+            }else {
+                throw new IllegalArgumentException("이미지파일만 프로필로 설정할 수 있습니다.");
+            }
 
-            multipartFile.transferTo(savefile);
-            // 파일 업로드 성공
         } catch (IOException e) {
             e.printStackTrace();
-            // 파일 업로드 실패 처리 로직 작성
+            // 파일 업로드 실패 처리 로직
+            throw new IllegalArgumentException("이미지 업로드에 실패했습니다.");
         }
 
         Member findMember = findVerifiedMemberById(memberId);
