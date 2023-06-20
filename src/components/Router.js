@@ -7,7 +7,7 @@ import MainList from 'pages/MainList';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
 import DetailPage from 'pages/DetailPage';
-import NoticeWrite from 'pages/NoticeWrite';
+import NoticeWrite from 'pages/QuestionWrite';
 import MyPage from 'pages/MyPage';
 import Tag from 'pages/Tag';
 import User from 'pages/User';
@@ -40,7 +40,7 @@ const Router = () => {
             <div className="mainWrap">
               <Routes>
                 <Route path="/" element={<MainList />} />
-                <Route path="/write" element={<NoticeWrite />} />
+                <Route path="/write" element={<QuestionWrite />} />
                 <Route path="/detail/:id" element={<DetailPage />} />
                 <Route path="/noticewrite" element={<NoticeWrite />} />
                 <Route path="/mypage" element={<MyPage />} />

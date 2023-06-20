@@ -20,8 +20,7 @@ const HashName = styled.h3`
   margin-right: 5px;
 `;
 
-const InputBox = styled.input`
-  min-height: 2.25rem;
+const TagInput = styled.input`
   border: none;
   font-size: 12px;
   &:focus {
@@ -29,7 +28,7 @@ const InputBox = styled.input`
   }
 `;
 
-const Tag = () => {
+const AddTag = () => {
   const [tags, setTags] = useState([]);
   const [tag, setTag] = useState('');
   const removeTag = (i) => {
@@ -37,7 +36,7 @@ const Tag = () => {
     clonetags.splice(i, 1);
     setTags(clonetags);
   };
-  const addTag = (e) => {
+  const changeTag = (e) => {
     setTag(e.target.value);
   };
   const handleKeyPress = (e) => {
@@ -64,10 +63,10 @@ const Tag = () => {
         </TagWrap>
       ))}
 
-      <InputBox
+      <TagInput
         placeholder="Press enter to add tags"
-        onChange={(e) => addTag(e)}
-        onKeyPress={(e) => handleKeyPress(e)}
+        onChange={changeTag}
+        onKeyPress={handleKeyPress}
         value={tag}
       />
     </div>

@@ -1,7 +1,7 @@
 import Editor from 'components/global/questionItem/Editor';
 import Tag from 'components/global/tag/AddTag';
 
-const NoticeWrite = () => {
+const QuestionWrite = () => {
   return (
     <div className="inner">
       <h3 className="maintitle">Ask a public question</h3>
@@ -32,4 +32,4 @@ const NoticeWrite = () => {
   );
 };
 
-export default NoticeWrite;
+export default QuestionWrite;

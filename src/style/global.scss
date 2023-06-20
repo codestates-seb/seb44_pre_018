@@ -5,4 +5,7 @@
 }
 .mainWrap {
   width: calc(100% - 13rem);
+  @media (max-width: 981px) {
+    width: 100%;
+  }
 }
