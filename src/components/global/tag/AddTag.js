@@ -28,7 +28,7 @@ const TagInput = styled.input`
   }
 `;
 
-const Tag = () => {
+const AddTag = () => {
   const [tags, setTags] = useState([]);
   const [tag, setTag] = useState('');
   const removeTag = (i) => {
@@ -36,7 +36,7 @@ const Tag = () => {
     clonetags.splice(i, 1);
     setTags(clonetags);
   };
-  const addTag = (e) => {
+  const changeTag = (e) => {
     setTag(e.target.value);
   };
   const handleKeyPress = (e) => {
@@ -65,8 +65,8 @@ const Tag = () => {
 
       <TagInput
         placeholder="Press enter to add tags"
-        onChange={(e) => addTag(e)}
-        onKeyPress={(e) => handleKeyPress(e)}
+        onChange={changeTag}
+        onKeyPress={handleKeyPress}
         value={tag}
       />
     </div>

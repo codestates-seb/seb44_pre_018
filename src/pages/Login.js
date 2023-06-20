@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { loginUser } from 'store';
 import axios from 'axios';
 import LoginGoogle from 'components/global/login/LoginGoogle';
 import LoginGithub from 'components/global/login/LoginGithub';
@@ -8,8 +9,8 @@ import LoginGithub from 'components/global/login/LoginGithub';
 const Login = () => {
   const dispatch = useDispatch();
 
-  const [email, setemail] = useState('');
-  const [password, setPasword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [msg, setMsg] = useState('');
 
@@ -22,15 +23,16 @@ const Login = () => {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    console.log('Email', email);
-    console.log('Password', password);
-
     let body = {
       email: email,
       password: password,
     };
+    // const result = await axios.post('/api/login', body);
+    // const member_no = result.data.member_no;
+    // const result2 = await axios.get(`/api/member/${member_no}`);
+    // dispatch(loginUser({...result2.data, isLogin : true}))
 
-    dispatch(body);
+    dispatch(loginUser(body));
   };
   useEffect(() => {
     if (msg) {
