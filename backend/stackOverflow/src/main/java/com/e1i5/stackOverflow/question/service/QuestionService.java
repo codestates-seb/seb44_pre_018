@@ -67,15 +67,8 @@ public class QuestionService {
         return findQuestion;
     }
     public Page<Question> findQuestions(int page, int size) { //여러 질문 검색
-        Page<Question> questionPage = questionRepository.findAllByQuestionStatus
-                (PageRequest.of(page, size),
-                Question.QuestionStatus.QUESTION_EXIST);
-
-
-        List<Question> questions = questionPage.getContent();
-
-
-        return questionPage;
+        return questionRepository.findAll(PageRequest.of(page, size,
+                Sort.by("questionId").descending()));
     }
 
     public void deleteQuestion(long questionId) {

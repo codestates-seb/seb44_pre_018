@@ -59,7 +59,6 @@ public class QuestionController {
     public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
                                        @Positive @RequestParam("size") int size                                     ) {
         Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
-
         List<Question> questions = pageQuestions.getContent();
 
 
