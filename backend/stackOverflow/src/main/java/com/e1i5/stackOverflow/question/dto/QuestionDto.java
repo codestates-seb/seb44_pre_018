@@ -25,7 +25,10 @@ public class QuestionDto {
     @Getter
     public static class QuestionPatchDto{
 
+
+        @NotBlank(message = "내용을 작성해야 합니다")
         private String content;
+        @NotBlank(message = "제목을 작성해야 합니다")
         private String title;
         private long memberId;
         private long questionId;

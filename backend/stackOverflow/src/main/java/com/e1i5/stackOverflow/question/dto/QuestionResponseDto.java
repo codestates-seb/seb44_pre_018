@@ -15,6 +15,7 @@ public class QuestionResponseDto {
     private long memberId;
     private String title;
     private String content;
+    private int view;
 
 }
 

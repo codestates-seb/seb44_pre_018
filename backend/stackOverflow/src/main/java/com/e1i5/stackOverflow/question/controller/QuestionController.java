@@ -40,16 +40,19 @@ public class QuestionController {
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
 
         Question question = questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
-
+// 회원인지 판단 --> 시큐리티 토큰(jwt)
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(question)), HttpStatus.CREATED);
 
 
     }
 
-    @PatchMapping("/update/{question_id}") //질문 수정
+    @PatchMapping("/update/{question_id}/{member_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive long questionId,
+                                        @PathVariable("member_id") @Positive long memberId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
+        questionService.QuestionByAuthor(questionId,memberId ); // 댓글 작성자메서드 호출
         questionPatchDto.setQuestionId(questionId);
+        questionPatchDto.setMemberId(memberId);
         Question patchQuestion = questionService.updateQuestion(mapper.questionPatchDtoToQuestion(questionPatchDto));
 
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(patchQuestion)), HttpStatus.OK);
@@ -74,8 +77,11 @@ public class QuestionController {
     }
 
 
-    @DeleteMapping("/delete/{question_id}") //질문 삭제
-    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId) {
+    @DeleteMapping("/delete/{question_id}/{member_id}") //질문 삭제
+    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId,
+            @PathVariable("member_id") @Positive long memberId){
+
+    questionService.QuestionByAuthor(questionId,memberId);
         questionService.deleteQuestion(questionId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

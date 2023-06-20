@@ -3,6 +3,7 @@ package com.e1i5.stackOverflow.question.service;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
+import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -35,10 +35,13 @@ public class QuestionService {
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
         verifyExistsTitle(question.getTitle());
-        return questionRepository.save(question);
-
+        memberService.findVerifiedMemberById(question.getMember().getMemberId()); //회원인지 확인
+            return questionRepository.save(question);
 
     }
+
+
+
 
     public Question updateQuestion(Question question) { //질문 수정 (질문 수정은 작성자만 가능)
         Question findQuestion = findVerifiedQuestion(question.getQuestionId());//요청된 질문이 DB에 없으면 에러
@@ -88,6 +91,17 @@ public class QuestionService {
         Question findQuestion = optionalQuestion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
         return findQuestion;
 
+    }
+
+
+    //질문글 수정,삭제시 질문 작성자만 가능하게하도록하는 메서드
+    public void QuestionByAuthor(long questionId, long memberId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
+        if (question.getMember().getMemberId() != memberId) {
+            throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
+        }
     }
 }
 
