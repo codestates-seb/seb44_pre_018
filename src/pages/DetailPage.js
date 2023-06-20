@@ -13,20 +13,40 @@ import { useState, useEffect } from 'react';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
-import AnswerItem from 'components/AnswerItem';
+import AnswerItem from 'components/global/answerdetail/AnswerItem';
 import Editor from 'components/global/questionItem/Editor';
 
 const DetailPage = () => {
+  // 조회수 관리를 위한 상태 변수
   const [, setViewCount] = useState(0);
+  // 댓글 목록 관리를 위한 상태 변수
+  const [answerList, setAnswerList] = useState([]);
+  // 댓글 입력값을 관리를 위한 상태 변수
+  const [commentInput, setCommentInput] = useState('');
 
-  useEffect(() => {
-    increaseViewCount(); // 초기 렌더링 시에 조회수 증가
-  }, []);
-
+  // 조회수 변경시
   const increaseViewCount = () => {
     setViewCount((prevCount) => prevCount + 1);
   };
 
+  // 댓글 입력값 변경시
+  const handleCommentChange = (event) => {
+    setCommentInput(event.target.value);
+  };
+
+  // 새로운 댓글 추가
+  const handleAddAnswer = () => {
+  const newAnswer = {
+    id: Date.now(),
+    content: commentInput,
+  };
+  setAnswerList((prevList) => [...prevList, newAnswer]);
+  setCommentInput('');
+}
+  // 초기 렌더링 시에 조회수 증가
+  useEffect(() => {
+    increaseViewCount(); 
+  }, []);
   return (
     <div className="inner">
       <div>
@@ -57,19 +77,8 @@ const DetailPage = () => {
         </ul>
       </div>
 
-      {/* 댓글 구조 */}
-      <AnswerItem />
-
-      {/* 답변 폼 */}
-      <div className="mt-10">
-        <h2>Your Answer</h2>
-        <div>
-          <Editor height="200" />
-          <button className="pointBu03" type="submit">
-            Edit your Answer
-          </button>
-        </div>
-      </div>
+      {/* 댓글 */}
+      <AnswerItem/>
     </div>
   );
 };

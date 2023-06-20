@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-const LikesContainer = styled.div`
+const VoteContainer = styled.div`
   display: flex;
   align-items: center;
   margin-right: 1rem;
@@ -17,7 +17,7 @@ const LikesContainer = styled.div`
   }
 `;
 
-const LikeButton = () => {
+const VoteButton = () => {
   const [likes, setLikes] = useState(() => {
     const storedLikes = localStorage.getItem('likes');
     return storedLikes ? Number(storedLikes) : 0;
@@ -62,16 +62,16 @@ const LikeButton = () => {
 
   return (
     <>
-      <LikesContainer onClick={handleLikeClick}>
+      <VoteContainer onClick={handleLikeClick}>
         <FontAwesomeIcon icon={faThumbsUp} />
         <span>{likes}</span>
-      </LikesContainer>
-      <LikesContainer onClick={handleDislikeClick}>
+      </VoteContainer>
+      <VoteContainer onClick={handleDislikeClick}>
         <FontAwesomeIcon icon={faThumbsDown} />
         <span>{dislikes}</span>
-      </LikesContainer>
+      </VoteContainer>
     </>
   );
 };
 
-export default LikeButton;
+export default VoteButton;

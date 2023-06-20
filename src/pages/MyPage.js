@@ -16,6 +16,7 @@ const Container = styled.div`
   .light-section {
     display: flex;
     flex-direction: column;
+    margin-left: 2rem;
   }
 
   img {
@@ -26,6 +27,7 @@ const Container = styled.div`
 
   span {
     border-bottom: 2px solid #ccc;
+    margin: 2rem 2rem 0 0;
   }
 `;
 
@@ -48,10 +50,10 @@ const MyPage = () => {
       <Container>
         <div className="left-section">
           <img src={require('assets/profile_image1.jpeg')} alt="Profile" />
-          <Button className="pointBu01">
-            <FontAwesomeIcon icon={faArrowUpFromBracket} />
-            change picture
-          </Button>
+          <Button className="pointBu01 w-50 text-sm">
+            <FontAwesomeIcon icon={faArrowUpFromBracket} className="mr-1"/>
+              change picture
+            </Button>
           <Button className="pointBu03">Edit Profile</Button>
         </div>
         <div className="light-section">
@@ -59,8 +61,6 @@ const MyPage = () => {
             <span>Name: 냥냥씨</span>
             <span>Email: nyang@google.com</span>
             <span>Phone: 123-456-7890</span>
-            <span>Address: 서울특별시</span>
-            <span>Intro: 안녕,나는 냥이야.</span>
           </ProfileDetails>
           <Button className="pointBu01">Save</Button>
         </div>

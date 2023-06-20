@@ -9,7 +9,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = () => {
-  // 로그인 상태를 저장하는 상태 변수
+  // 로그인 상태를 저장하는 상태 변수(로그인 되지 않은 상태)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // 로그아웃 시 상태 변경
