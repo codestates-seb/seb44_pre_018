@@ -20,7 +20,7 @@ const Login = () => {
   const onPasswordHandler = (event) => {
     setPassword(event.currentTarget.value);
   };
-  const onSubmitHandler = (event) => {
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
 
     let body = {
@@ -32,7 +32,15 @@ const Login = () => {
     // const result2 = await axios.get(`/api/member/${member_no}`);
     // dispatch(loginUser({...result2.data, isLogin : true}))
 
-    dispatch(loginUser(body));
+    dispatch(
+      loginUser({
+        name: 'test',
+        email: email,
+        isLoading: false,
+        isLogin: true,
+      })
+    );
+    location.push('/');
   };
   useEffect(() => {
     if (msg) {
