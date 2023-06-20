@@ -21,6 +21,7 @@ const HashName = styled.h3`
 `;
 
 const InputBox = styled.input`
+  min-height: 2.25rem;
   border: none;
   font-size: 12px;
   &:focus {
