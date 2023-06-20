@@ -38,12 +38,16 @@ public class CommentController {
 
 
     // 댓글 조회 - 비회원도 조회 가능, 질문의 id를 전달받는다.
-//    @GetMapping("/{question-id}")
-//    public ResponseEntity<List<Comment>> getCommentList(@PathVariable("question-id") @Positive long questionId){
-//        List<Comment> comments = commentService.findCommentList(questionId);
-//        return new ResponseEntity<>(comments, HttpStatus.OK);
-//
-//    }
+    // 무한 스크롤 적용. 마지막 댓글 id 전달받는다.
+    // 페이지 사이즈는 클라이언트에서 전달
+    @GetMapping("/{question-id}")
+    public ResponseEntity<List<Comment>> getCommentList(@PathVariable("question-id") @Positive long questionId,
+                                                        @RequestParam("lastCommentId") long lastCommentId,
+                                                        @RequestParam("size") int size){
+        List<Comment> comments = commentService.findCommentList(questionId, lastCommentId, size);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+
+    }
 
 
     // 댓글 수정 - 해당 댓글 작성자만 수정 가능

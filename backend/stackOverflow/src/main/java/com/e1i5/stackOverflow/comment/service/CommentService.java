@@ -10,6 +10,7 @@ import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +33,12 @@ public class CommentService {
     }
 
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
-    public List<Comment> findCommentList(long questionId){
+    public List<Comment> findCommentList(long questionId, long lastCommentId, int size){
         Question question = new Question(); // 객체 생성 후 questionId 전달
-        question.setQuestionId(questionId);
-        List<Comment> commentPage = commentRepository.findAllByQuestion(question);
+        question.setQuestionId(questionId);// 변경사항 저장
+        Pageable pageable = PageRequest.of(0, size);
+        // lastCommentId도 같이 전달해 다음 페이지 댓글 목록을 조회한다.
+        List<Comment> commentPage = commentRepository.findAllByQuestion(question, lastCommentId, pageable);
         return commentPage;
     }
 
