@@ -62,7 +62,7 @@ const DetailPage = () => {
           </div>
           <p className="ml-auto font-light">Asked: 2023. 06. 13.</p>
         </div>
-        <ul className="border-t-[1px] border-black/[.3] border-solid">
+        <div className="border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2">
           <p className="text-sm font-light py-2">
             I have a list of bean objects passed into my JSP page, and one of
             them is a comment field. <br />
@@ -73,8 +73,8 @@ const DetailPage = () => {
             solution, but it&apos;s not very elegant. <br />
             I&apos;ll post below as a possibility.
           </p>
-          <TagList />
-        </ul>
+          <TagList/>
+        </div>
       </div>
 
       {/* 댓글 */}

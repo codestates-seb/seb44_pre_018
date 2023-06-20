@@ -6,16 +6,21 @@ const NavbarContainer = styled.div`
   @media (max-width: 981px) {
     display: none;
   }
+
   li {
     padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 10px;
-    &:hover {
+
+    &:hover,
+    &.active {
       background: linear-gradient(to right, #b5c4ea 95%, #002075 5%);
     }
   }
+
   a {
     color: #000;
+
     &:hover {
       color: #fff;
     }
@@ -23,31 +28,34 @@ const NavbarContainer = styled.div`
 `;
 
 const Navbar = () => {
-  // 로그인 상태를 저장하는 상태 변수(로그인 되지 않은 상태)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeLink, setActiveLink] = useState('');
 
-  // 로그인 상태 변경 함수
   const handleLogin = () => {
     setIsLoggedIn(true);
+  };
+
+  const handleLinkClick = (link) => {
+    setActiveLink(link);
   };
 
   return (
     <NavbarContainer className="w-52 h-screen bg-pointCol03">
       <div className="fixed top-24 left-0 w-52 h-screen bg-pointCol03">
         <ul className="flex flex-col justify-center">
-          <li>
-            <Link to="/">Questions</Link>
-          </li>
-          <li>
-            <Link to="/user">User</Link>
-          </li>
-          <li>
-            <Link to="/tag">Tag</Link>
-          </li>
+          <Link to="/" onClick={() => handleLinkClick('questions')}>
+            <li className={activeLink === 'questions' ? 'active' : ''}>Questions</li>
+          </Link>
+          <Link to="/user" onClick={() => handleLinkClick('user')}>
+            <li className={activeLink === 'user' ? 'active' : ''}>User</li>
+          </Link>
+          <Link to="/tag" onClick={() => handleLinkClick('tag')}>
+            <li className={activeLink === 'tag' ? 'active' : ''}>Tag</li>
+          </Link>
           {isLoggedIn ? (
-            <li>
-              <Link to="/mypage">MyPage</Link>
-            </li>
+            <Link to="/mypage" onClick={() => handleLinkClick('mypage')}>
+              <li className={activeLink === 'mypage' ? 'active' : ''}>MyPage</li>
+            </Link>
           ) : null}
         </ul>
       </div>

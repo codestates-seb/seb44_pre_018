@@ -7,13 +7,17 @@ const VoteContainer = styled.div`
   display: flex;
   align-items: center;
   margin-right: 1rem;
-  border: 2px solid #002075;
+  border: 1.5px solid #002075;
   color: #002075;
   padding: 0.5rem;
   cursor: pointer;
 
   span {
     margin-left: 0.5rem;
+    font-size: 0.7rem;
+  }
+  .icon {
+    font-size: 0.8rem;
   }
 `;
 
