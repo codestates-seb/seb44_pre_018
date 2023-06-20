@@ -118,6 +118,8 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
     }
   };
 
+
+  
   return (
     <AnswerContainer>
       <div className="answerContainer">
@@ -148,7 +150,7 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
               </div>
             )}
           </div>
-          <VoteButton />
+          <VoteButton answerId={answer.answerId} />
           {editMode && (
             <button className="pointBu03" type="button" onClick={handleSaveEdit}>
               Save

@@ -17,21 +17,21 @@ const VoteContainer = styled.div`
   }
 `;
 
-const VoteButton = () => {
+const VoteButton = ({ answerId }) => {
   const [likes, setLikes] = useState(() => {
-    const storedLikes = localStorage.getItem('likes');
+    const storedLikes = localStorage.getItem(`likes_${answerId}`);
     return storedLikes ? Number(storedLikes) : 0;
   });
 
   const [dislikes, setDislikes] = useState(() => {
-    const storedDislikes = localStorage.getItem('dislikes');
+    const storedDislikes = localStorage.getItem(`dislikes_${answerId}`);
     return storedDislikes ? Number(storedDislikes) : 0;
   });
 
   const handleLikeClick = () => {
     setLikes((prevLikes) => {
       const newLikes = prevLikes + 1;
-      localStorage.setItem('likes', newLikes);
+      localStorage.setItem(`likes_${answerId}`, newLikes);
       return newLikes;
     });
   };
@@ -39,26 +39,10 @@ const VoteButton = () => {
   const handleDislikeClick = () => {
     setDislikes((prevDislikes) => {
       const newDislikes = prevDislikes + 1;
-      localStorage.setItem('dislikes', newDislikes);
+      localStorage.setItem(`dislikes_${answerId}`, newDislikes);
       return newDislikes;
     });
   };
-
-  useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event.key === 'likes') {
-        setLikes(Number(event.newValue));
-      } else if (event.key === 'dislikes') {
-        setDislikes(Number(event.newValue));
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
 
   return (
     <>
