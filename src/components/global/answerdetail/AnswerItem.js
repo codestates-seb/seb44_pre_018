@@ -20,7 +20,6 @@ const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
       console.log('Error getting answer data:', err);
     }
   };
-  
 
   const addAnswer = (newAnswer) => {
     setAnswers((prevAnswers) => {
@@ -30,12 +29,8 @@ const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
     });
   };
 
-  const editAnswer = (answerId, content) => {
-    setAnswers((prevAnswers) =>
-      prevAnswers.map((answer) =>
-        answer.answerId === answerId ? { ...answer, content: content } : answer
-      )
-    );
+  const handleEditAnswer = (answerId, content) => {
+    onEditAnswer(answerId, content);
   };
 
   const handleCommentChange = (value) => {
@@ -66,13 +61,13 @@ const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
           key={answer.answerId}
           answer={answer}
           onDeleteAnswer={onDeleteAnswer}
-          onEditAnswer={onEditAnswer}
+          onEditAnswer={handleEditAnswer} 
         />
       ))}
       <div className="mt-10">
         <h2>Your Answer</h2>
         <div>
-          <Editor height={200} value={commentInput} onChange={setCommentInput} />
+          <Editor height={200} value={commentInput} onChange={handleCommentChange} />
           <button
             className="pointBu03"
             type="submit"
