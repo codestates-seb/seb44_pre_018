@@ -1,7 +1,9 @@
 package com.e1i5.stackOverflow.member.entity;
 
 import com.e1i5.stackOverflow.audit.Auditable;
+import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
+import com.e1i5.stackOverflow.question.entity.Question;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,10 +62,10 @@ public class Member extends Auditable {
     }
 
 
-    //@OneToMany(mappedBy = "commentId")
-    //List<comment> commentList= new ArrayList<MemberDto>;
+    @OneToMany(mappedBy = "commentId")
+    List<Comment> commentList= new ArrayList<Comment>();
 
-    //@OneToMany(mappedBy = "questionId")
-    //List<question> questionList= new ArrayList<MemberDto>;
+    @OneToMany(mappedBy = "questionId")
+    List<Question> questionList= new ArrayList<Question>();
 
 }

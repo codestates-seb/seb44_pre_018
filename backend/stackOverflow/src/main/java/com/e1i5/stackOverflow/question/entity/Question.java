@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.question.entity;
 
 import com.e1i5.stackOverflow.audit.Auditable;
+import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -40,6 +43,10 @@ public class Question extends Auditable {
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
+
+    //질문-댓글 1:n
+    @OneToMany(mappedBy = "commentId")
+    private List<Comment> commentList = new ArrayList<>();
 
     public enum QuestionStatus {
         QUESTION_NOT_EXIST("존재하지 않는 질문"),

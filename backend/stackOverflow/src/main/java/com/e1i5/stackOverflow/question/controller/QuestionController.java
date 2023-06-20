@@ -70,7 +70,7 @@ public class QuestionController {
     }
 
     @GetMapping("/{question_id}") //선택 질문확인
-    public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId){
+    public ResponseEntity getCommentList(@PathVariable("question_id") @Positive long questionId){
         Question findquestion = questionService.findQuestion(questionId);
         return new ResponseEntity<>(mapper.questionToQuestionResponseDto(findquestion), HttpStatus.OK);
     }

@@ -38,12 +38,12 @@ public class CommentController {
 
 
     // 댓글 조회 - 비회원도 조회 가능, 질문의 id를 전달받는다.
-    @GetMapping("/{question-id}")
-    public ResponseEntity<List<Comment>> getCommentList(@PathVariable("question-id") @Positive long questionId){
-        List<Comment> comments = commentService.findCommentList(questionId);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
-
-    }
+//    @GetMapping("/{question-id}")
+//    public ResponseEntity<List<Comment>> getCommentList(@PathVariable("question-id") @Positive long questionId){
+//        List<Comment> comments = commentService.findCommentList(questionId);
+//        return new ResponseEntity<>(comments, HttpStatus.OK);
+//
+//    }
 
 
     // 댓글 수정 - 해당 댓글 작성자만 수정 가능

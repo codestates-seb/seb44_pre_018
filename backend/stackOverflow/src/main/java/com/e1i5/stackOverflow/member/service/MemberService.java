@@ -1,10 +1,12 @@
 package com.e1i5.stackOverflow.member.service;
 
+import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
+import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
