@@ -20,8 +20,7 @@ const HashName = styled.h3`
   margin-right: 5px;
 `;
 
-const InputBox = styled.input`
-  min-height: 2.25rem;
+const TagInput = styled.input`
   border: none;
   font-size: 12px;
   &:focus {
@@ -64,7 +63,7 @@ const Tag = () => {
         </TagWrap>
       ))}
 
-      <InputBox
+      <TagInput
         placeholder="Press enter to add tags"
         onChange={(e) => addTag(e)}
         onKeyPress={(e) => handleKeyPress(e)}
