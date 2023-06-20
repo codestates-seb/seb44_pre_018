@@ -16,7 +16,6 @@ public class QuestionDto {
         @NotBlank(message = "제목을 작성해야 합니다")
         private String title;
         @NotBlank(message = "내용을 작성해야 합니다")
-        @Pattern(regexp = "^[a-zA-Z가-힣]+$")
         private String content;
         private long memberId;
     }
@@ -25,7 +24,7 @@ public class QuestionDto {
     @Setter
     @Getter
     public static class QuestionPatchDto{
-        @Pattern(regexp = "^[a-zA-Z가-힣]+$")
+
         private String content;
         private String title;
         private long memberId;

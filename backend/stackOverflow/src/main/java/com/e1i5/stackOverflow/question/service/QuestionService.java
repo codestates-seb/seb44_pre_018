@@ -1,6 +1,5 @@
 package com.e1i5.stackOverflow.question.service;
 
-import com.e1i5.stackOverflow.comment.repository.CommentRepository;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
@@ -14,9 +13,7 @@ import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -69,10 +66,9 @@ public class QuestionService {
 
         return findQuestion;
     }
-    public Page<Question> findQuestions(int page, int size, String sort) { //여러 질문 검색
+    public Page<Question> findQuestions(int page, int size) { //여러 질문 검색
         Page<Question> questionPage = questionRepository.findAllByQuestionStatus
-                (PageRequest.of(page, size,
-                Sort.by(sort).descending()),
+                (PageRequest.of(page, size),
                 Question.QuestionStatus.QUESTION_EXIST);
 
 
