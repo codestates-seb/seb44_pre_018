@@ -6,12 +6,12 @@ import styled from 'styled-components';
 const TagWrap = styled.span`
   button {
     color: #fff;
+    transition: all 0.2s;
   }
   &:hover {
     background-color: #002075;
     button {
-      rotate: 30deg;
-      transition: all 0.2s;
+      rotate: 90deg;
     }
   }
 `;
@@ -28,13 +28,13 @@ const TagInput = styled.input`
   }
 `;
 
-const AddTag = () => {
-  const [tags, setTags] = useState([]);
+const AddTag = ({ tags, setTags }) => {
+  const [tagArray, setTagArray] = useState([]);
   const [tag, setTag] = useState('');
   const removeTag = (i) => {
     const clonetags = tags.slice();
     clonetags.splice(i, 1);
-    setTags(clonetags);
+    setTagArray(clonetags);
   };
   const changeTag = (e) => {
     setTag(e.target.value);
@@ -45,13 +45,13 @@ const AddTag = () => {
     }
   };
   const handleClick = () => {
-    setTags([...tags, tag]);
+    setTagArray([...tagArray, tag]);
     setTag('');
   };
 
   return (
-    <div className="inputBox flex h-auto py-1">
-      {tags.map((e, i) => (
+    <div className="inputBox flex h-auto py-1 items-center flex-wrap">
+      {tagArray.map((e, i) => (
         <TagWrap
           className="pointBu03 text-xxs px-2 py-1 mr-1 font-extralight h-6 "
           key={i}
