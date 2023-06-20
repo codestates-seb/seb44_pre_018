@@ -1,9 +1,10 @@
 package com.e1i5.stackOverflow.question.service;
 
+import com.e1i5.stackOverflow.comment.entity.Comment;
+import com.e1i5.stackOverflow.comment.repository.CommentRepository;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
-import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,14 +25,17 @@ public class QuestionService {
     private final CommentService commentService;
     private final MemberService memberService;
 
+    private  final  CommentRepository commentRepository;
+
     public QuestionService(QuestionRepository questionRepository,
                                  CommentService commentService ,
-                                           MemberService memberService
-    ) {
+                                           MemberService memberService,
+                           CommentRepository commentRepository) {
         this.questionRepository = questionRepository;
          this.memberService = memberService;
          this.commentService = commentService;
 
+        this.commentRepository = commentRepository;
     }
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
@@ -74,10 +79,10 @@ public class QuestionService {
                 Sort.by("questionId").descending()));
     }
 
-    public void deleteQuestion(long questionId) {
-        Question findQuestion = findQuestion(questionId);
-        questionRepository.delete(findQuestion);
-    }
+//    public void deleteQuestion(long questionId) {
+//        Question findQuestion = findQuestion(questionId);
+//        questionRepository.delete(findQuestion);
+//    }
 
 
     private void verifyExistsTitle(String title) {//이미 글이 존재하면 에러
@@ -102,6 +107,20 @@ public class QuestionService {
         if (question.getMember().getMemberId() != memberId) {
             throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
         }
+    }
+
+    // 질문글 삭제시 답변도 같이 삭제하는 메서드
+    public void deleteQuestionWithComments(long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
+        List<Comment> comments = commentRepository.findAllByQuestion(question);
+
+        // 질문과 연관된 답변들을 삭제
+        commentRepository.deleteAll(comments);
+
+        // 질문 삭제
+        questionRepository.delete(question);
     }
 }
 
