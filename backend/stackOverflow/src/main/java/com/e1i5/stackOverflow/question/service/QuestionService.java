@@ -1,7 +1,9 @@
 package com.e1i5.stackOverflow.question.service;
 
+import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
+import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,25 +13,23 @@ import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
-    //private final CommentRepository commentRepository;
-    //private final MemberService memberService;
+    private final CommentService commentService;
+    private final MemberService memberService;
 
-    public QuestionService(QuestionRepository questionRepository
-                           //      CommentRepository commentRepository
-                           //                  MemberService memberService
+    public QuestionService(QuestionRepository questionRepository,
+                                 CommentService commentService ,
+                                           MemberService memberService
     ) {
         this.questionRepository = questionRepository;
-        // this.memberService = memberService;
-        // this.commentRepository = commentRepository;
+         this.memberService = memberService;
+         this.commentService = commentService;
 
     }
 
@@ -46,7 +46,7 @@ public class QuestionService {
         Optional.ofNullable(question.getTitle()) //제목수정
                 .ifPresent(questionTitle->findQuestion.setTitle(questionTitle));
         Optional.ofNullable(question.getContent()) //내용수정
-                .ifPresent(questionBody->findQuestion.setContent(questionBody));
+                .ifPresent(questionContent->findQuestion.setContent(questionContent));
         Optional.ofNullable(question.getQuestionStatus()) //글 삭제
                 .ifPresent(questionStatus->findQuestion.setQuestionStatus(questionStatus));
 
@@ -56,6 +56,8 @@ public class QuestionService {
 
     }
 
+
+
     public Question findQuestion(long questionId) { //질문 검색
         Question findQuestion = findVerifiedQuestion(questionId); //요청된 질문이 DB에 없으면 에러
 
@@ -64,17 +66,9 @@ public class QuestionService {
 
         return findQuestion;
     }
-    public Page<Question> findQuestions(int page, int size, String sort) { //여러 질문 검색(페이지 단위)
-        Page<Question> questionPage = questionRepository.findAllByQuestionStatus
-                (PageRequest.of(page, size,
-                Sort.by(sort).descending()),
-                Question.QuestionStatus.QUESTION_EXIST);
-
-
-        List<Question> questions = questionPage.getContent();
-
-
-        return questionPage;
+    public Page<Question> findQuestions(int page, int size) { //여러 질문 검색
+        return questionRepository.findAll(PageRequest.of(page, size,
+                Sort.by("questionId").descending()));
     }
 
     public void deleteQuestion(long questionId) {
