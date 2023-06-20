@@ -56,6 +56,18 @@ public class MemberService {
         File savefile = new File(projectPath, fileName);
 
         try {
+            // 경로가 없을시 경로 추가
+            File directory = new File(projectPath);
+            if (!directory.exists()) {
+                boolean created = directory.mkdirs();
+                if (created) {
+                    System.out.println("디렉토리가 생성되었습니다.");
+                } else {
+                    System.out.println("디렉토리를 생성할 수 없습니다.");
+                    // 디렉토리 생성 실패 처리 로직 작성
+                }
+            }
+
             multipartFile.transferTo(savefile);
             // 파일 업로드 성공
         } catch (IOException e) {

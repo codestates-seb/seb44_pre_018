@@ -64,7 +64,6 @@ public class MemberDto {
         private String name;
         private String phone;
         private String email;
-        private Image profile_image;
         private List<MemberQuestionDto.Response> questions;
         private List<MemberCommentDto.Response> comments;
         private String profileImageName;
