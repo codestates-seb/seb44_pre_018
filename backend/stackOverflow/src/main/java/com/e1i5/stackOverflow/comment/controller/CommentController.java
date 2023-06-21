@@ -11,6 +11,7 @@ import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import com.e1i5.stackOverflow.utils.UriCreator;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,9 @@ import java.net.URI;
 import java.util.*;
 
 @RestController
-@RequestMapping("/v1/comment")
+@RequestMapping("v1/comment")
 @Validated
+@Slf4j
 public class CommentController {
     private final static String COMMENT_DEFAULT_URL = "v1/comment";
     private CommentService commentService;
@@ -73,9 +75,9 @@ public class CommentController {
     }
 
     // 댓글 생성 - 회원만 생성 가능 / 특정 질문에 대해 답변을 하는 것이라 하위 설정을 한다.
-    @PostMapping("/{question-id}/{memeber-id}/question-answer")
+    @PostMapping("/{question-id}/{member-id}")
     public ResponseEntity postComment(@PathVariable("question-id") long questionId,
-                                      @PathVariable("memeber-id") long authenticatedMemberId,
+                                      @PathVariable("member-id") long authenticatedMemberId,
                                       @Valid @RequestBody CommentDto.Post requestBody){
         // 회원인지 판단 - > jwt 토큰을 받던지 해야할듯
 //        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId();  // 인가된 사용자를 전달받는다.
