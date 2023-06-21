@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import AnswerDeleteModal from 'components/global/answerdetail/AnswerDeleteModal';
 
 const ToggleButton = styled.button`
   position: relative;
@@ -22,6 +23,8 @@ const ToggleButton = styled.button`
 
 const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
   const [isOpenStatus, setIsOpenStatus] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
 
 
   const toggleDropdown = () => {
@@ -34,11 +37,21 @@ const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
   };
 
   const handleDeleteAnswer = () => {
-    onDeleteAnswer();
+    setShowConfirmationModal(true);
     toggleDropdown();
   };
 
+  const handleCancelDelete = () => {
+    setShowConfirmationModal(false);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowConfirmationModal(false);
+    onDeleteAnswer();
+  };
+
   return (
+    <>
     <div className="dropdown">
       <ToggleButton className="dropdown-toggle" onClick={toggleDropdown} >
         <FontAwesomeIcon icon={faEllipsis} />
@@ -54,6 +67,14 @@ const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
         </div>
       )}
     </div>
+    {showConfirmationModal && (
+        <AnswerDeleteModal
+        isOpen={true}
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+  </>
   );
 };
 
