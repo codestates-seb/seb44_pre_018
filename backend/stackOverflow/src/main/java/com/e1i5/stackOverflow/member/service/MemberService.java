@@ -24,11 +24,11 @@ import java.util.UUID;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder encoder;
+    //private final BCryptPasswordEncoder encoder;
 
     public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder encoder) {
         this.memberRepository = memberRepository;
-        this.encoder = encoder;
+        //this.encoder = encoder;
     }
 
     public Member signupMember(Member member){

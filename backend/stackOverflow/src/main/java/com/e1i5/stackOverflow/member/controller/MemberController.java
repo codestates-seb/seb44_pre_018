@@ -29,12 +29,12 @@ public class MemberController{
     private final MemberMapper mapper;
     private final MemberService memberService;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    //private final JwtTokenProvider jwtTokenProvider;
 
-    public MemberController(MemberMapper mapper, MemberService memberService, JwtTokenProvider jwtTokenProvider) {
+    public MemberController(MemberMapper mapper, MemberService memberService) {
         this.mapper = mapper;
         this.memberService = memberService;
-        this.jwtTokenProvider = jwtTokenProvider;
+       // this.jwtTokenProvider = jwtTokenProvider;
     }
 
 //    @PatchMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -68,12 +68,12 @@ public class MemberController{
         MemberDto.Response response = mapper.memberToMemberResponseDto(member);
 
 //        jwy 토큰 발행
-        String token = jwtTokenProvider.createToken(member.getEmail());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Barer " + token);
-
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
-    }
+//        String token = jwtTokenProvider.createToken(member.getEmail());
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Authorization", "Barer " + token);
+//
+//        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+//    }
 
     @PatchMapping("/upload/{memberId}")
     public ResponseEntity memberIamgeUpload(@PathVariable("memberId") @Positive long memberId,

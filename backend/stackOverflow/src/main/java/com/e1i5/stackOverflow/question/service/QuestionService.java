@@ -11,6 +11,7 @@ import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class QuestionService {
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
         verifyExistsTitle(question.getTitle());
-      // memberService.findVerifiedMemberById(question.getMember().getMemberId()); //회원인지 확인
+        //memberService.findVerifiedMemberById(question.getMember().getMemberId()); //회원인지 확인
 
             return questionRepository.save(question);
 
@@ -117,7 +118,7 @@ public class QuestionService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
-        List<Comment> comments = commentRepository.findAllByQuestion(question);
+        List<Comment> comments = commentRepository.findAllByQuestions(questionId);
 
         // 질문과 연관된 답변들을 삭제
         commentRepository.deleteAll(comments);

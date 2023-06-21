@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.question.dto;
 
+import com.e1i5.stackOverflow.member.dto.MemberDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,8 @@ public class QuestionResponseDto {
     private String title;
     private String content;
     private int view;
+private MemberDto.Response member;
+private LocalDateTime createdAt;
 
 }
 
