@@ -1,6 +1,8 @@
 package com.e1i5.stackOverflow.comment.dto;
 
 import com.e1i5.stackOverflow.comment.entity.Comment;
+import com.e1i5.stackOverflow.member.entity.Member;
+import com.e1i5.stackOverflow.question.entity.Question;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,12 +22,20 @@ public class CommentDto {
     @AllArgsConstructor
     public static class Post {
 
-        @NotNull
         private long questionId;
 
+        private long authenticatedMemberId;
 
         @NotBlank(message = "내용을 작성해주세요")
         private String content;
+
+        public void addQuestionId(long questionId){
+            this.questionId = questionId;
+        }
+
+        public void addAuthenticatedMemberId(long authenticatedMemberId){
+            this.authenticatedMemberId = authenticatedMemberId;
+        }
 
     }
 
@@ -35,6 +45,9 @@ public class CommentDto {
 
         @Setter
         private long commentId;
+
+        @Setter
+        private long memberId;
 
         @NotBlank(message = "내용을 적어주세요.")
         private String content;
@@ -46,10 +59,9 @@ public class CommentDto {
     public static class Response {
         private long commentId; // 댓글 id
         private long questionId;
+        private long authenticatedMemberId;
         private String content;  // 댓글 내용
         private boolean choose; // 댓글 채택 여부
-//        private LocalDateTime createdAt;  // 댓글 생성일
-//        private LocalDateTime modifiedAt;  // 댓글 수정일
 
         @Positive
         private int likeCount;  // 댓글 좋아요 카운트
