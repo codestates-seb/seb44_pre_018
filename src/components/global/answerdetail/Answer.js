@@ -91,7 +91,7 @@ const AnswerContainer = styled.div`
 
 
 
-const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
+const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.content);
 
@@ -101,6 +101,9 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
 
   const handleContentChange = (content) => {
     setEditedContent(content);
+    if (setValue) {
+      setValue(content);
+    }
   };
 
   const handleSaveEdit = () => {
@@ -120,16 +123,14 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
           <img src={require('assets/profile_image1.jpeg')} alt="프로필 이미지" />
           <span className="username text-sm py-2">{answer.username}</span>
         </div>
-        
 
         <div className="comment text-sm font-light py-2">
           {editMode ? (
-            <Editor height="200" value={editedContent} onChange={handleContentChange} />
+            <Editor height="200" value={editedContent} setValue={handleContentChange} />
           ) : (
             <p dangerouslySetInnerHTML={{ __html: answer.content }}></p>
           )}
         </div>
-        
 
         <div className="right-section">
           <VoteButton answerId={answer.answerId} />

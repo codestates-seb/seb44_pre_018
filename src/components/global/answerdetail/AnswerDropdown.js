@@ -21,10 +21,11 @@ const ToggleButton = styled.button`
 `;
 
 const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isOpenStatus, setIsOpenStatus] = useState(false);
+
 
   const toggleDropdown = () => {
-    setDropdownOpen((prevState) => !prevState);
+    setIsOpenStatus((prevStatus) => !prevStatus);
   };
 
   const handleEditAnswer = () => {
@@ -39,10 +40,10 @@ const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
 
   return (
     <div className="dropdown">
-      <ToggleButton className="dropdown-toggle" onClick={toggleDropdown} isOpen={dropdownOpen}>
+      <ToggleButton className="dropdown-toggle" onClick={toggleDropdown} >
         <FontAwesomeIcon icon={faEllipsis} />
       </ToggleButton>
-      {dropdownOpen && (
+      {isOpenStatus && (
         <div className="dropdown-menu">
           <div className="dropdown-menu-item" onClick={handleEditAnswer}>
             댓글 수정

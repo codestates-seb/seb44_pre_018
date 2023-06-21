@@ -77,16 +77,17 @@ useEffect(() => {
     <>
     {answers.map((answer) => (
       <Answer
-      key={answer.key} 
+      key={answer.answerId} 
       answer={answer}
       onDeleteAnswer={handleDeleteAnswer}
       onEditAnswer={handleEditAnswer}
+      setValue={handleCommentChange}
       />
     ))}
         <div className="mt-10">
           <h2>Your Answer</h2>
         <div>
-      <Editor height={200} value={commentInput} onChange={handleCommentChange} />
+      <Editor height={200} value={commentInput} setValue={handleCommentChange} />
       <button className="pointBu03" type="submit" onClick={handleSubmitAnswer}>
       Submit your Answer
       </button>
