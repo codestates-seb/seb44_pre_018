@@ -75,24 +75,21 @@ public class CommentController {
     }
 
     // 댓글 생성 - 회원만 생성 가능 / 특정 질문에 대해 답변을 하는 것이라 하위 설정을 한다.
-    @PostMapping("/{question-id}/{memeber-id}/question-answer")
+    @PostMapping("/{question-id}/{member-id}/question-answer")
     public ResponseEntity postComment(@PathVariable("question-id") long questionId,
-                                      @PathVariable("memeber-id") long authenticatedMemberId,
+                                      @PathVariable("member-id") long authenticatedMemberId,
                                       @Valid @RequestBody CommentDto.Post requestBody){
         // 회원인지 판단 - > jwt 토큰을 받던지 해야할듯
 //        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId();  // 인가된 사용자를 전달받는다.
 //        requestBody.addQuestionId(questionId);
 //        requestBody.addAuthenticatedMemberId(authenticatedMemberId);
 
+        System.out.println("댓글 요청");
         Comment comment = mapper.commentPostDtoToComment(requestBody);
+        System.out.println("댓글 객체 생성");
 
-        Question question = questionService.findQuestion(questionId);
-        comment.setQuestion(question);
+        Comment createComment = commentService.createComment(comment, questionId, authenticatedMemberId);
 
-        Member member = memberService.findMember(authenticatedMemberId);
-        comment.setMember(member);
-
-        Comment createComment = commentService.createComment(comment);
         CommentDto.Response response = mapper.commentToCommentResponseDto(createComment);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
