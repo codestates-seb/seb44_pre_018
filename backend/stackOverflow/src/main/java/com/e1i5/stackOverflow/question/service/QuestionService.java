@@ -20,17 +20,13 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
-    private final CommentService commentService;
     private final MemberService memberService;
 
     public QuestionService(QuestionRepository questionRepository,
-                                 CommentService commentService ,
                                            MemberService memberService
     ) {
         this.questionRepository = questionRepository;
          this.memberService = memberService;
-         this.commentService = commentService;
-
     }
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)

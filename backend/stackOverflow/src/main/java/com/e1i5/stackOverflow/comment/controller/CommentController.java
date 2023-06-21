@@ -80,6 +80,7 @@ public class CommentController {
 //        requestBody.addAuthenticatedMemberId(authenticatedMemberId);
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
+        // setQuestionId
         Comment createComment = commentService.createComment(comment);
         return new ResponseEntity<>(createComment, HttpStatus.OK);
     }
