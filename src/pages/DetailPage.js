@@ -10,6 +10,7 @@
 // 10. 답변 채택 기능 구현하기
 
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
@@ -17,32 +18,39 @@ import AnswerItem from 'components/global/answerdetail/AnswerItem';
 import Editor from 'components/global/questionItem/Editor';
 
 const DetailPage = () => {
-  // 댓글 목록 관리를 위한 상태 변수
-  const [answerList, setAnswerList] = useState([]);
-  // 댓글 입력값을 관리를 위한 상태 변수
-  const [commentInput, setCommentInput] = useState('');
+  // 질문 관리를 위한 상태 변수
+  const [question, setQuestion] = useState({});
 
-  // 댓글 입력값 변경시
-  const handleCommentChange = (event) => {
-    setCommentInput(event.target.value);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/data/data.json');
+        const data = response.data;
+        if (data && data.questions && data.questions.length > 0) {
+          const question = data.questions[0];
+          setQuestion(question);
+        }
+      } catch (error) {
+        console.log('Error fetching question data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
   };
-
-  // 새로운 댓글 추가
-  const handleAddAnswer = () => {
-  const newAnswer = {
-    id: Date.now(),
-    content: commentInput,
-  };
-  setAnswerList((prevList) => [...prevList, newAnswer]);
-  setCommentInput('');
-}
-
   
   return (
     <div className="inner">
       <div>
         <h3 className="maintitle">
-          How to generate a key when you know how to check the key?
+        {question.title}
         </h3>
         <div className="flex mt-5">
           <div className="mr-3">
@@ -51,18 +59,11 @@ const DetailPage = () => {
           <div className="mx-3">
             <ItemAnswer />
           </div>
-          <p className="ml-auto font-light">Asked: 2023. 06. 13.</p>
+          <p className="ml-auto font-light">{formatDate(question.createdAt)}</p>
         </div>
         <div className="border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2">
-          <p className="text-sm font-light py-2">
-            I have a list of bean objects passed into my JSP page, and one of
-            them is a comment field. <br />
-            This field may contain newlines, and I want to replace them with
-            semicolons using JSTL,
-            <br />
-            so that the field can be displayed in a text input. I have found one
-            solution, but it&apos;s not very elegant. <br />
-            I&apos;ll post below as a possibility.
+          <p className="text-sm font-light py-2 content">
+          {question.content}
           </p>
           <TagList/>
         </div>
