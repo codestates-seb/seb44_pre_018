@@ -58,9 +58,13 @@ const DetailPage = () => {
           <div className="mx-3">
             <ItemAnswer />
           </div>
-          <p className="ml-auto font-light">Asked: {formatDate(question.createdAt)}</p>
+          <p className="ml-auto font-light">Asked:{formatDate(question.createdAt)}</p>
         </div>
-        <div className="border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2">
+        <div className="border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2 items-center">
+        <div className="font-light flex justify-end ml-auto mt-2">
+        <button className="mr-2">수정</button>
+          <button>삭제</button>
+          </div>
           <p className="text-sm font-light py-2 content">
           {question.content}
           </p>
