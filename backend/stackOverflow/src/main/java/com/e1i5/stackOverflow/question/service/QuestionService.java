@@ -23,19 +23,14 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
-    private final CommentService commentService;
+
     private final MemberService memberService;
 
     private  final  CommentRepository commentRepository;
 
-    public QuestionService(QuestionRepository questionRepository,
-                                 CommentService commentService ,
-                                           MemberService memberService,
-                           CommentRepository commentRepository) {
+    public QuestionService(QuestionRepository questionRepository, MemberService memberService, CommentRepository commentRepository) {
         this.questionRepository = questionRepository;
-         this.memberService = memberService;
-         this.commentService = commentService;
-
+        this.memberService = memberService;
         this.commentRepository = commentRepository;
     }
 
@@ -118,7 +113,7 @@ public class QuestionService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
-        List<Comment> comments = commentRepository.findAllByQuestions(questionId);
+        List<Comment> comments = question.getCommentList();
 
         // 질문과 연관된 답변들을 삭제
         commentRepository.deleteAll(comments);

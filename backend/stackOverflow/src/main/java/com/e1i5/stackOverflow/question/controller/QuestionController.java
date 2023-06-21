@@ -85,7 +85,7 @@ public class QuestionController {
             @PathVariable("member_id") @Positive long memberId){
 
     questionService.QuestionByAuthor(questionId,memberId);
-    questionService.deleteQuestionWithComments(questionId);
+    //questionService.deleteQuestionWithComments(questionId);
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

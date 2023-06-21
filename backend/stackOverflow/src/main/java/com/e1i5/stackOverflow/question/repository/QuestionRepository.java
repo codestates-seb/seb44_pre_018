@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.question.repository;
 
+import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.question.entity.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

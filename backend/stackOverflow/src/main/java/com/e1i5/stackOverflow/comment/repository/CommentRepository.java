@@ -16,7 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // 주어진 질문 id에 해당하는 모든 댓글 조회
     List<Comment> findAllByQuestion(long questionId, long lastCommentId, Pageable pageable);
-    List<Comment> findAllByQuestions(long questionId);
+    //List<Comment> findAllByQuestionId(long questionId);
 
 
 
