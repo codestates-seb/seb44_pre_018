@@ -51,6 +51,10 @@ const handleCommentChange = (value) => {
   };
 
 const handleSubmitAnswer = () => {
+  // 입력값이 비어있는 경우, 추가 작업을 막음
+  if (commentInput.trim() === '') {
+    return;
+  }
       const newAnswer = {
         questionId: '1',
         answerId: Date.now().toString(),
