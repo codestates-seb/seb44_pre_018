@@ -17,7 +17,6 @@ const Register = () => {
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
   const [checkPassword, setCheckPassword] = useState(false);
-  let emailTxt = '';
 
   const nameChange = (e) => {
     setCheckName(false);

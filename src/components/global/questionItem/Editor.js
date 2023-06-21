@@ -11,7 +11,7 @@ const QuillEditor = styled(ReactQuill)`
   }
 `;
 
-const Editor = ({ height, value, setValue }) => {
+const Editor = ({ height, value, setValue, checkBody }) => {
   // Destructure the height and onChange props
   const editorRef = useRef(null);
 
@@ -39,6 +39,7 @@ const Editor = ({ height, value, setValue }) => {
 
   const handleContentChange = (content) => {
     setValue(content);
+    checkBody(true);
   };
 
   return (
