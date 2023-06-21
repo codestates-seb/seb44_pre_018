@@ -3,9 +3,11 @@ package com.e1i5.stackOverflow.question.controller;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
+import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.mapper.QuestionMapper;
 import com.e1i5.stackOverflow.question.service.QuestionService;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -38,24 +40,28 @@ public class QuestionController {
 
     @PostMapping("/create") //질문 생성
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
-
-        Question question = questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
-
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(question)), HttpStatus.CREATED);
+        Question question =questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
+        QuestionResponseDto response = mapper.questionToQuestionResponseDto(question);
+   // 회원인지 판단 --> 시큐리티 토큰(jwt)
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
 
 
     }
 
-    @PatchMapping("/update/{question_id}") //질문 수정
-    public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive long questionId,
+    @PatchMapping("/update/{question_id}/{member_id}") //질문 수정
+    public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive @NonNull long questionId,
+                                        @PathVariable("member_id") @Positive long memberId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
+        questionService.QuestionByAuthor(questionId,memberId ); // 댓글 작성자메서드 호출
         questionPatchDto.setQuestionId(questionId);
+        questionPatchDto.setMemberId(memberId);
         Question patchQuestion = questionService.updateQuestion(mapper.questionPatchDtoToQuestion(questionPatchDto));
 
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(patchQuestion)), HttpStatus.OK);
+        return new ResponseEntity<>
+                (new SingleResponseDto<>(mapper.questionToQuestionResponseDto(patchQuestion)), HttpStatus.OK);
     }
 
-    @GetMapping //질문들 조회
+    @GetMapping ("/question/search")//질문들 조회
     public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
                                        @Positive @RequestParam("size") int size                                     ) {
         Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
@@ -74,9 +80,13 @@ public class QuestionController {
     }
 
 
-    @DeleteMapping("/delete/{question_id}") //질문 삭제
-    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId) {
-        questionService.deleteQuestion(questionId);
+    @DeleteMapping("/delete/{question_id}/{member_id}") //질문 삭제
+    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId,
+            @PathVariable("member_id") @Positive long memberId){
+
+    questionService.QuestionByAuthor(questionId,memberId);
+    questionService.deleteQuestionWithComments(questionId);
+
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
