@@ -5,10 +5,13 @@ import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.comment.mapper.CommentMapper;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
+import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
+import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import com.e1i5.stackOverflow.utils.UriCreator;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,18 +31,17 @@ public class CommentController {
     private CommentService commentService;
     private QuestionService questionService;
     private CommentMapper mapper;
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     public CommentController(CommentService commentService,
                              QuestionService questionService,
                              CommentMapper mapper,
-                             MemberRepository memberRepository){
+                             MemberService memberService) {
         this.commentService = commentService;
         this.questionService = questionService;
         this.mapper = mapper;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
-
 
     // 댓글 조회 - 비회원도 조회 가능, 질문의 id를 전달받는다.
     // 무한 스크롤 적용. 마지막 댓글 id 전달받는다.
@@ -71,17 +73,24 @@ public class CommentController {
     }
 
     // 댓글 생성 - 회원만 생성 가능 / 특정 질문에 대해 답변을 하는 것이라 하위 설정을 한다.
-    @PostMapping("/{question-id}/question-answer")
+    @PostMapping("/{question-id}/{memeber-id}/question-answer")
     public ResponseEntity postComment(@PathVariable("question-id") long questionId,
+                                      @PathVariable("memeber-id") long authenticatedMemberId,
                                       @Valid @RequestBody CommentDto.Post requestBody){
         // 회원인지 판단 - > jwt 토큰을 받던지 해야할듯
 //        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId();  // 인가된 사용자를 전달받는다.
-        requestBody.addQuestionId(questionId);
+//        requestBody.addQuestionId(questionId);
 //        requestBody.addAuthenticatedMemberId(authenticatedMemberId);
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
+        Question question = questionService.findQuestion(questionId);
+        comment.setQuestion(question);
+        Member member = memberService.findMember(authenticatedMemberId);
+        comment.setMember(member);
+
         Comment createComment = commentService.createComment(comment);
-        return new ResponseEntity<>(createComment, HttpStatus.OK);
+        CommentDto.Response response = mapper.commentToCommentResponseDto(createComment);
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     // 댓글 삭제 - 질문글 작성자와 답변 작성자 둘 다 삭제가 가능하다.
