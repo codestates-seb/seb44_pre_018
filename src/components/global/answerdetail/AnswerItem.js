@@ -7,6 +7,7 @@ const AnswerItem = () => {
   const [answers, setAnswers] = useState([]);
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
+  const [showInputMessage, setShowInputMessage] = useState(false);
 
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
@@ -59,10 +60,12 @@ const AnswerItem = () => {
 
   const handleCommentChange = (value) => {
     setCommentInput(value);
+    setShowInputMessage(value.trim() === ''); // Check if the value is empty
   };
 
   const handleSubmitAnswer = () => {
     if (commentInput.trim() === '') {
+      setShowInputMessage(true);
       return;
     }
     const newAnswer = {
@@ -90,12 +93,13 @@ const AnswerItem = () => {
 
   return (
     <>
-    {answers.map((answer, index) => (
-        <Answer 
-        key={`${answer.answerId}-${index}`} 
-        answer={answer} 
-        onDeleteAnswer={handleDeleteAnswer}
-        onEditAnswer={handleEditAnswer}/>
+      {answers.map((answer, index) => (
+        <Answer
+          key={`${answer.answerId}-${index}`}
+          answer={answer}
+          onDeleteAnswer={handleDeleteAnswer}
+          onEditAnswer={handleEditAnswer}
+        />
       ))}
       <div className="mt-10">
         <h2>Your Answer</h2>
@@ -106,6 +110,9 @@ const AnswerItem = () => {
             setValue={handleCommentChange}
             checkBody={handleCheckBody}
           />
+          {showInputMessage && (
+            <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
+          )}
           <button className="pointBu03" type="submit" onClick={handleSubmitAnswer}>
             Submit your Answer
           </button>
