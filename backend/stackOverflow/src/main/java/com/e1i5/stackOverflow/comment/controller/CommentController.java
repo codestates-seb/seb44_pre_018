@@ -5,6 +5,7 @@ import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.comment.mapper.CommentMapper;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
+import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import com.e1i5.stackOverflow.utils.UriCreator;
@@ -27,19 +28,23 @@ public class CommentController {
     private CommentService commentService;
     private QuestionService questionService;
     private CommentMapper mapper;
+    private MemberRepository memberRepository;
 
     public CommentController(CommentService commentService,
                              QuestionService questionService,
-                             CommentMapper mapper){
+                             CommentMapper mapper,
+                             MemberRepository memberRepository){
         this.commentService = commentService;
         this.questionService = questionService;
         this.mapper = mapper;
+        this.memberRepository = memberRepository;
     }
 
 
     // 댓글 조회 - 비회원도 조회 가능, 질문의 id를 전달받는다.
     // 무한 스크롤 적용. 마지막 댓글 id 전달받는다.
     // 페이지 사이즈는 클라이언트에서 전달
+    // 실제 객체를 가져와야한다.
     @GetMapping("/{question-id}")
     public ResponseEntity<List<Comment>> getCommentList(@PathVariable("question-id") @Positive long questionId,
                                                         @RequestParam("lastCommentId") long lastCommentId,
@@ -88,7 +93,6 @@ public class CommentController {
         commentService.VerifyCommentAuthor(commentId, memberId);
         // 질문 작성자인지 확인 > 수정 여부
         commentService.VerifyQuestionAuthor(commentId, memberId);
-
         commentService.deleteComment(commentId,memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -97,6 +101,7 @@ public class CommentController {
     @PatchMapping("/like/{comment-id}")
     public ResponseEntity<Void> likeComment(@PathVariable("comment-id") long commentId){
         // 로그인한 회원인지 검사
+
         commentService.likeCount(commentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

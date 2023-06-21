@@ -7,6 +7,7 @@ import com.e1i5.stackOverflow.comment.repository.CommentRepository;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
+import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,24 +22,28 @@ import java.util.Optional;
 @Service
 public class CommentService {
      private final CommentRepository commentRepository;
+     private final QuestionRepository questionRepository;
      private final MemberService memberService;
      private final QuestionService questionService;
 
     public CommentService(CommentRepository commentRepository,
                           QuestionService questionService,
-                          MemberService memberService){
+                          MemberService memberService,
+                          QuestionRepository questionRepository){
        this.questionService = questionService;
         this.memberService = memberService;
         this.commentRepository = commentRepository;
+        this.questionRepository = questionRepository;
     }
 
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
     public List<Comment> findCommentList(long questionId, long lastCommentId, int size){
-        Question question = new Question(); // 객체 생성 후 questionId 전달
-        question.setQuestionId(questionId);// 변경사항 저장
-        Pageable pageable = PageRequest.of(0, size);
-        // lastCommentId도 같이 전달해 다음 페이지 댓글 목록을 조회한다.
-        List<Comment> commentPage = commentRepository.findAllByQuestion(question, lastCommentId, pageable);
+        Question question = questionRepository.findById(questionId) // 전달받은 질문 id와 일치하는 질문을 질문테이블에서 가져옴
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(0, size); // No-offset방식 > 페이지를 항상 0으로 고정
+        // lastCommentId도 같이 전달해 다음 페이지 댓글 목록을 list로 조회한다.
+        List<Comment> commentPage = commentRepository.findAllByQuestion(questionId, lastCommentId, pageable);
         return commentPage;
     }
 
