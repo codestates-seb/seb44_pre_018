@@ -9,7 +9,7 @@ const [commentInput, setCommentInput] = useState('');
 
 const getAnswerData = async () => {
     try {
-      const result = await axios.get('/data/answers.json');
+      const result = await axios.fetch('/data/answers.json');
       const answers = result.data.answers.map((answer) => ({
         ...answer,
         key: answer.answerId, 
@@ -64,6 +64,7 @@ useEffect(() => {
       const storedAnswers = localStorage.getItem('answers');
     if (storedAnswers) {
     setAnswers(JSON.parse(storedAnswers));
+    getAnswerData();
   } else {
     getAnswerData();
   }

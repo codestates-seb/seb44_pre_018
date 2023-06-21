@@ -17,17 +17,10 @@ import AnswerItem from 'components/global/answerdetail/AnswerItem';
 import Editor from 'components/global/questionItem/Editor';
 
 const DetailPage = () => {
-  // 조회수 관리를 위한 상태 변수
-  const [, setViewCount] = useState(0);
   // 댓글 목록 관리를 위한 상태 변수
   const [answerList, setAnswerList] = useState([]);
   // 댓글 입력값을 관리를 위한 상태 변수
   const [commentInput, setCommentInput] = useState('');
-
-  // 조회수 변경시
-  const increaseViewCount = () => {
-    setViewCount((prevCount) => prevCount + 1);
-  };
 
   // 댓글 입력값 변경시
   const handleCommentChange = (event) => {
@@ -43,10 +36,8 @@ const DetailPage = () => {
   setAnswerList((prevList) => [...prevList, newAnswer]);
   setCommentInput('');
 }
-  // 초기 렌더링 시에 조회수 증가
-  useEffect(() => {
-    increaseViewCount(); 
-  }, []);
+
+  
   return (
     <div className="inner">
       <div>
