@@ -23,6 +23,7 @@ const AnswerContainer = styled.div`
 
   .right-section {
     display: flex;
+    margin-right: -0.2rem;
   }
   
   img {
@@ -47,7 +48,6 @@ const AnswerContainer = styled.div`
   .dislikes-container {
     display: flex;
     align-items: center;
-    margin-right: 1rem;
     border: 2px solid #002075;
     color: #002075;
     padding: 0.5rem;
@@ -67,7 +67,7 @@ const AnswerContainer = styled.div`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1;
   padding: 0.5rem;
-  margin-top: 1.6rem;
+  margin-top: 1rem;
   font-size: .7rem;
 }
 
