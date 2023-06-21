@@ -78,6 +78,7 @@ public class CommentService {
         Question findQuestion = questionService.findVerifiedQuestion(questionId);
         comment.setQuestion(findQuestion);
         System.out.println("질문 존재 확인");
+        findQuestion.getCommentList().add(comment);
 
         return commentRepository.save(comment);
     }

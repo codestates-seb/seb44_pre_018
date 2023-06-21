@@ -6,6 +6,7 @@ import com.e1i5.stackOverflow.question.dto.QuestionDto;
 import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,19 +22,24 @@ public interface QuestionMapper {
 //    @Mapping(source = "question.commentList", target = "commentList")
 //    QuestionResponseDto questionToQuestionResponseDto(Question question);
 
-    default List<QuestionCommentDto> commentListToQuestionResponseDtoList(List<Comment> commentList){
-        return commentList.stream()
-                .map(comment -> new QuestionCommentDto(
-                        comment.getMember().getName(),
-                        comment.getContent(),
-                        comment.getMember().getProfileImageName(),
-                        comment.getMember().getProfileImagePath(),
-                        comment.getLikeCount(),
-                        comment.getDislikeCount(),
-                        comment.getCreatedAt()
-                ))
-                .collect(Collectors.toList());
-    }
+//    default List<QuestionCommentDto> commentListToQuestionResponseDtoList(List<Comment> commentList){
+//        return commentList.stream()
+//                .map(comment -> new QuestionCommentDto(
+//                        comment.getMember().getName(),
+//                        comment.getContent(),
+//                        comment.getMember().getProfileImageName(),
+//                        comment.getMember().getProfileImagePath(),
+//                        comment.getLikeCount(),
+//                        comment.getDislikeCount(),
+//                        comment.getCreatedAt()
+//                ))
+//                .collect(Collectors.toList());
+//    }
+
+    @Mapping(source = "member.name", target = "name")
+    @Mapping(source = "member.profileImageName", target = "ImageName")
+    @Mapping(source = "member.profileImagePath", target = "ImagePath")
+    QuestionCommentDto commentToQuestionCommentDto(Comment comment);
 
     default QuestionResponseDto questionToQuestionResponseDto(Question question) {
         if (question == null) {
@@ -44,7 +50,10 @@ public interface QuestionMapper {
 
         questionResponseDto.setMemberName(question.getMember().getName());
 
-        questionResponseDto.setCommentList(commentListToQuestionResponseDtoList(question.getCommentList()));
+        questionResponseDto.setCommentList(question.getCommentList().stream()
+                .map(comment -> commentToQuestionCommentDto(comment))
+                .collect(Collectors.toList()));
+
         if (question.getQuestionId() != null) {
             questionResponseDto.setQuestionId(question.getQuestionId());
         }
