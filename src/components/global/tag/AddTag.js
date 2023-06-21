@@ -40,7 +40,7 @@ const AddTag = ({ tags, setTags }) => {
     setTag(e.target.value);
   };
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.code == 'Space') {
       handleClick();
     }
   };
