@@ -30,7 +30,7 @@ public class Member extends Auditable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
@@ -38,8 +38,9 @@ public class Member extends Auditable {
     @Column(length = 20, nullable = false)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 
-    @Column(length = 100)
     private String profileImageName;
+
+    private String profileImagePath;
 
     public Member(String name, String phone, String email, String password) {
         this.email = email;
