@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import AnswerDeleteModal from 'components/global/answerdetail/AnswerDeleteModal';
 
 const ToggleButton = styled.button`
   position: relative;
@@ -21,10 +22,13 @@ const ToggleButton = styled.button`
 `;
 
 const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isOpenStatus, setIsOpenStatus] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+
 
   const toggleDropdown = () => {
-    setDropdownOpen((prevState) => !prevState);
+    setIsOpenStatus((prevStatus) => !prevStatus);
   };
 
   const handleEditAnswer = () => {
@@ -33,16 +37,26 @@ const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
   };
 
   const handleDeleteAnswer = () => {
-    onDeleteAnswer();
+    setShowConfirmationModal(true);
     toggleDropdown();
   };
 
+  const handleCancelDelete = () => {
+    setShowConfirmationModal(false);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowConfirmationModal(false);
+    onDeleteAnswer();
+  };
+
   return (
+    <>
     <div className="dropdown">
-      <ToggleButton className="dropdown-toggle" onClick={toggleDropdown} isOpen={dropdownOpen}>
+      <ToggleButton className="dropdown-toggle" onClick={toggleDropdown} >
         <FontAwesomeIcon icon={faEllipsis} />
       </ToggleButton>
-      {dropdownOpen && (
+      {isOpenStatus && (
         <div className="dropdown-menu">
           <div className="dropdown-menu-item" onClick={handleEditAnswer}>
             댓글 수정
@@ -53,6 +67,14 @@ const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
         </div>
       )}
     </div>
+    {showConfirmationModal && (
+        <AnswerDeleteModal
+        isOpen={true}
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+  </>
   );
 };
 

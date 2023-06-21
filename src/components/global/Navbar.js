@@ -43,18 +43,18 @@ const Navbar = () => {
     <NavbarContainer className="w-52 h-screen bg-pointCol03">
       <div className="fixed top-24 left-0 w-52 h-screen bg-pointCol03">
         <ul className="flex flex-col justify-center">
-          <Link to="/" onClick={() => handleLinkClick('questions')}>
-            <li className={activeLink === 'questions' ? 'active' : ''}>Questions</li>
+          <Link key="questions" to="/" onClick={() => handleLinkClick('questions')}>
+            <li key="questions" className={activeLink === '/' ? 'active' : ''}>Questions</li>
           </Link>
-          <Link to="/user" onClick={() => handleLinkClick('user')}>
-            <li className={activeLink === 'user' ? 'active' : ''}>User</li>
+          <Link key="user" to="/user" onClick={() => handleLinkClick('user')}>
+            <li key="user" className={activeLink === 'user' ? 'active' : ''}>User</li>
           </Link>
-          <Link to="/tag" onClick={() => handleLinkClick('tag')}>
-            <li className={activeLink === 'tag' ? 'active' : ''}>Tag</li>
+          <Link key="tag" to="/tag" onClick={() => handleLinkClick('tag')}>
+            <li key="tag" className={activeLink === 'tag' ? 'active' : ''}>Tag</li>
           </Link>
           {isLoggedIn ? (
-            <Link to="/mypage" onClick={() => handleLinkClick('mypage')}>
-              <li className={activeLink === 'mypage' ? 'active' : ''}>MyPage</li>
+            <Link key="mypage" to="/mypage" onClick={() => handleLinkClick('mypage')}>
+              <li key="mypage" className={activeLink === 'mypage' ? 'active' : ''}>MyPage</li>
             </Link>
           ) : null}
         </ul>

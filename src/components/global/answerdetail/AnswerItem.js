@@ -9,7 +9,7 @@ const [commentInput, setCommentInput] = useState('');
 
 const getAnswerData = async () => {
     try {
-      const result = await axios.get('/data/answers.json');
+      const result = await axios.fetch('/data/answers.json');
       const answers = result.data.answers.map((answer) => ({
         ...answer,
         key: answer.answerId, 
@@ -51,6 +51,10 @@ const handleCommentChange = (value) => {
   };
 
 const handleSubmitAnswer = () => {
+  // 입력값이 비어있는 경우, 추가 작업을 막음
+  if (commentInput.trim() === '') {
+    return;
+  }
       const newAnswer = {
         questionId: '1',
         answerId: Date.now().toString(),
@@ -64,6 +68,7 @@ useEffect(() => {
       const storedAnswers = localStorage.getItem('answers');
     if (storedAnswers) {
     setAnswers(JSON.parse(storedAnswers));
+    getAnswerData();
   } else {
     getAnswerData();
   }
@@ -77,16 +82,17 @@ useEffect(() => {
     <>
     {answers.map((answer) => (
       <Answer
-      key={answer.key} 
+      key={answer.answerId} 
       answer={answer}
       onDeleteAnswer={handleDeleteAnswer}
       onEditAnswer={handleEditAnswer}
+      setValue={handleCommentChange}
       />
     ))}
         <div className="mt-10">
           <h2>Your Answer</h2>
         <div>
-      <Editor height={200} value={commentInput} onChange={handleCommentChange} />
+      <Editor height={200} value={commentInput} setValue={handleCommentChange} />
       <button className="pointBu03" type="submit" onClick={handleSubmitAnswer}>
       Submit your Answer
       </button>
