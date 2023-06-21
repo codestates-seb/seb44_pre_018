@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.member.controller;
 
+import com.e1i5.stackOverflow.auth.config.JwtTokenProvider;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
@@ -8,6 +9,7 @@ import com.e1i5.stackOverflow.member.mapper.MemberMapper;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.security.SecureRandom;
 import java.util.List;
 
 @RestController
@@ -26,9 +29,12 @@ public class MemberController{
     private final MemberMapper mapper;
     private final MemberService memberService;
 
-    public MemberController(MemberMapper mapper, MemberService memberService) {
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public MemberController(MemberMapper mapper, MemberService memberService, JwtTokenProvider jwtTokenProvider) {
         this.mapper = mapper;
         this.memberService = memberService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 //    @PatchMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -45,8 +51,10 @@ public class MemberController{
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login-form")
     public ResponseEntity loginMember(@Valid @RequestBody MemberDto.LoginPost requestBody) {
+        System.out.println("로그인 시도");
+
         Member member = null;
         try {
             member = memberService.loginMember(mapper.memberLoginPostDtoToMember(requestBody));
@@ -59,12 +67,10 @@ public class MemberController{
 
         MemberDto.Response response = mapper.memberToMemberResponseDto(member);
 
-
 //        jwy 토큰 발행
-//        예시)
-//        String token = jwtTokenProvider.createToken(response.getEmail(), response.getRoles());
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add("Authorization", "Bearer " + token);
+        String token = jwtTokenProvider.createToken(member.getEmail());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Barer " + token);
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
