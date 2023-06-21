@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { loginUser } from 'store';
 import axios from 'axios';
 import LoginGoogle from 'components/global/login/LoginGoogle';
@@ -12,15 +12,18 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [checkEmail, setCheckEmail] = useState(false);
+  const [checkPassword, setCheckPassword] = useState(false);
 
-  const [msg, setMsg] = useState('');
+  const emailChange = (e) => {
+    setCheckEmail(false);
+    setEmail(e.currentTarget.value);
+  };
+  const passwordChange = (e) => {
+    setCheckPassword(false);
+    setPassword(e.currentTarget.value);
+  };
 
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
@@ -32,6 +35,8 @@ const Login = () => {
     // const member_no = result.data.member_no;
     // const result2 = await axios.get(`/api/member/${member_no}`);
     // dispatch(loginUser({...result2.data, isLogin : true}))
+    setCheckEmail(email === '');
+    setCheckPassword(password === '');
 
     dispatch(
       loginUser({
@@ -41,15 +46,8 @@ const Login = () => {
         isLogin: true,
       })
     );
-    navigate('/');
+    //navigate('/');
   };
-  useEffect(() => {
-    if (msg) {
-      setTimeout(() => {
-        setMsg('');
-      }, 1500);
-    }
-  }, [msg]);
 
   return (
     <div className="flex flex-col items-center w-[26rem] pt-10">
@@ -62,22 +60,27 @@ const Login = () => {
         <input
           type="text"
           id="email"
-          className="inputBox"
-          onChange={onEmailHandler}
+          onChange={emailChange}
+          className={`inputBox ${checkEmail && 'disabledInput'}`}
         />
+        {checkEmail && <p className="notice">이메일은 필수 입력해야 합니다.</p>}
+
         <label className="labelText" htmlFor="password">
           Password
         </label>
         <input
           type="password"
           id="password"
-          className="inputBox"
-          onChange={onPasswordHandler}
+          onChange={passwordChange}
+          className={`inputBox ${checkPassword && 'disabledInput'}`}
         />
+        {checkPassword && (
+          <p className="notice">비밀번호는 필수 입력해야 합니다.</p>
+        )}
+
         <button type="submit" className="pointBu02 w-full mt-10">
           Log in
         </button>
-        {msg}
       </form>
       <p className="mb-7">
         <span>Don’t have an account?</span>

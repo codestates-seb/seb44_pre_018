@@ -18,8 +18,14 @@
   .inputBox {
     @apply transition border-[1px] border-black/[.3] border-solid w-full	 rounded-md h-9  pl-3 hover:outline-pointCol02 active:outline-pointCol02 min-h-[2.25rem];
   }
+  .disabledInput {
+    @apply border-[#ff3f3f] border-[2px];
+  }
+  .notice {
+    @apply text-[12px] mt-1.5 text-[#ff3f3f];
+  }
   .labelText {
-    @apply text-base font-light pt-5 pb-2.5 block;
+    @apply text-base font-light pt-5 pb-2 block;
   }
   .LoginBox {
     @apply flex flex-col items-center bg-cover pt-24 bg-center pb-24;
