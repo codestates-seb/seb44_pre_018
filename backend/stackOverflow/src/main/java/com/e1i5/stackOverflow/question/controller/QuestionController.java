@@ -46,8 +46,8 @@ public class QuestionController {
 
     }
 
-    @PatchMapping("/question/{question_id}") //질문 수정
-    public ResponseEntity patchQuestion(@PathVariable("question-id") @Positive long questionId,
+    @PatchMapping("/update/{question_id}") //질문 수정
+    public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive long questionId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
         questionPatchDto.setQuestionId(questionId);
         Question patchQuestion = questionService.updateQuestion(mapper.questionPatchDtoToQuestion(questionPatchDto));
@@ -57,10 +57,8 @@ public class QuestionController {
 
     @GetMapping //질문들 조회
     public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
-                                       @Positive @RequestParam("size") int size,
-                                       @RequestParam("sort") String sort) {
-        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size, sort);
-
+                                       @Positive @RequestParam("size") int size                                     ) {
+        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
         List<Question> questions = pageQuestions.getContent();
 
 
