@@ -27,7 +27,7 @@ const MainList = () => {
     <div className="inner">
       <div className="flex items-center justify-between">
         <h3 className="maintitle">All Questins</h3>
-        <Link className="pointBu01" to="/noticewrite">
+        <Link className="pointBu01" to="/questionwrite">
           Ask Qustion
         </Link>
       </div>

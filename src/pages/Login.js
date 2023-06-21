@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { loginUser } from 'store';
@@ -8,6 +8,7 @@ import LoginGithub from 'components/global/login/LoginGithub';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,7 +41,7 @@ const Login = () => {
         isLogin: true,
       })
     );
-    location.push('/');
+    navigate('/');
   };
   useEffect(() => {
     if (msg) {

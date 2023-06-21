@@ -11,9 +11,10 @@ const QuillEditor = styled(ReactQuill)`
   }
 `;
 
-const Editor = ({ height, value, setValue }) => {
+const Editor = ({ height, onChange }) => {
   // Destructure the height and onChange props
   const editorRef = useRef(null);
+  const [contents, setContents] = useState('');
 
   const modules = useMemo(
     () => ({
@@ -38,14 +39,15 @@ const Editor = ({ height, value, setValue }) => {
   );
 
   const handleContentChange = (content) => {
-    setValue(content);
+    setContents(content);
+    onChange(content);
   };
 
   return (
     <>
       <QuillEditor
         ref={editorRef}
-        value={value}
+        value={contents}
         onChange={handleContentChange}
         height={height}
         modules={modules}
