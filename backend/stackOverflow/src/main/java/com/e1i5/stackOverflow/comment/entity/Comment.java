@@ -44,10 +44,10 @@ public class Comment extends Auditable {
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 
-    public void setQuestion(long questionId){
-        this.question = new Question();
-        this.question.setQuestionId(questionId);
-    }
+//    public void setQuestion(long questionId){
+//        this.question = new Question();
+//        this.question.setQuestionId(questionId);
+//    }
 
     //    public void addQuestion(Question question){  // 질문 변경사항 설정
 //        this.question = question;

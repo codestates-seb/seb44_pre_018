@@ -52,6 +52,7 @@ public class QuestionService {
 
 
 
+
     public Question updateQuestion(Question question) { //질문 수정 (질문 수정은 작성자만 가능)
         Question findQuestion = findVerifiedQuestion(question.getQuestionId());//요청된 질문이 DB에 없으면 에러
 
@@ -100,6 +101,7 @@ public class QuestionService {
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         Question findQuestion = optionalQuestion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
         return findQuestion;
+
 
 
     }
