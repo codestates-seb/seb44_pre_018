@@ -40,7 +40,8 @@ public class QuestionService {
 
     public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
         verifyExistsTitle(question.getTitle());
-        memberService.findVerifiedMemberById(question.getMember().getMemberId()); //회원인지 확인
+      // memberService.findVerifiedMemberById(question.getMember().getMemberId()); //회원인지 확인
+
             return questionRepository.save(question);
 
     }
@@ -122,6 +123,10 @@ public class QuestionService {
         // 질문 삭제
         questionRepository.delete(question);
     }
+
+
+
+
 }
 
 

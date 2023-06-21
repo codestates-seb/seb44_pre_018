@@ -3,6 +3,7 @@ package com.e1i5.stackOverflow.question.controller;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
+import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.mapper.QuestionMapper;
 import com.e1i5.stackOverflow.question.service.QuestionService;
@@ -39,9 +40,10 @@ public class QuestionController {
     @PostMapping("/create") //질문 생성
     public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
 
-        Question question = questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
-// 회원인지 판단 --> 시큐리티 토큰(jwt)
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.questionToQuestionResponseDto(question)), HttpStatus.CREATED);
+        Question question =questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
+        QuestionResponseDto response = mapper.questionToQuestionResponseDto(question);
+   // 회원인지 판단 --> 시큐리티 토큰(jwt)
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
 
 
     }
