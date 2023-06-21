@@ -18,7 +18,6 @@ import AnswerItem from 'components/global/answerdetail/AnswerItem';
 import Editor from 'components/global/questionItem/Editor';
 
 const DetailPage = () => {
-  // 질문 관리를 위한 상태 변수
   const [question, setQuestion] = useState({});
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const DetailPage = () => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}.${month}.${day}`;
   };
-  
+
   return (
     <div className="inner">
       <div>
@@ -59,7 +58,7 @@ const DetailPage = () => {
           <div className="mx-3">
             <ItemAnswer />
           </div>
-          <p className="ml-auto font-light">{formatDate(question.createdAt)}</p>
+          <p className="ml-auto font-light">Asked: {formatDate(question.createdAt)}</p>
         </div>
         <div className="border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2">
           <p className="text-sm font-light py-2 content">
