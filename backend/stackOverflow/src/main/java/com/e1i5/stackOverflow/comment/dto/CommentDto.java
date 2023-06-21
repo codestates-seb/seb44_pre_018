@@ -21,21 +21,8 @@ public class CommentDto {
     @Getter
     @AllArgsConstructor
     public static class Post {
-
-//        private long questionId;
-
-//        private long authenticatedMemberId;
-
         @NotBlank(message = "내용을 작성해주세요")
         private String content;
-
-//        public void addQuestionId(long questionId){
-//            this.questionId = questionId;
-//        }
-//
-//        public void addAuthenticatedMemberId(long authenticatedMemberId){
-//            this.authenticatedMemberId = authenticatedMemberId;
-//        }
 
     }
 
@@ -58,8 +45,8 @@ public class CommentDto {
     @AllArgsConstructor
     public static class Response {
         private long commentId; // 댓글 id
-        private long questionId;
-        private long authenticatedMemberId;
+        private String questionTitle;
+        private String authenticatedMemberName;
         private String content;  // 댓글 내용
         private boolean choose; // 댓글 채택 여부
 

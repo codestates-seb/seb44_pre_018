@@ -85,8 +85,10 @@ public class CommentController {
 //        requestBody.addAuthenticatedMemberId(authenticatedMemberId);
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
+
         Question question = questionService.findQuestion(questionId);
         comment.setQuestion(question);
+
         Member member = memberService.findMember(authenticatedMemberId);
         comment.setMember(member);
 

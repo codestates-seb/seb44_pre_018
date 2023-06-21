@@ -109,8 +109,8 @@ public class QuestionService {
 
     //질문글 수정,삭제시 질문 작성자만 가능하게하도록하는 메서드
     public void QuestionByAuthor(long questionId, long memberId) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
+        Question question = findVerifiedQuestion(questionId);
 
         if (question.getMember().getMemberId() != memberId) {
             throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
@@ -119,13 +119,16 @@ public class QuestionService {
 
     // 질문글 삭제시 답변도 같이 삭제하는 메서드
     public void deleteQuestionWithComments(long questionId) {
+
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
         List<Comment> comments = question.getCommentList();
 
-        // 질문과 연관된 답변들을 삭제
-        commentRepository.deleteAll(comments);
+        for (Comment comment : comments) {
+            Long commentId = comment.getCommentId();
+            commentRepository.deleteById(commentId);
+        }
 
         // 질문 삭제
         questionRepository.delete(question);
