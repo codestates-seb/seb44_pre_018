@@ -38,9 +38,10 @@ public class QuestionController {
     }
 
 
-    @PostMapping("/create") //질문 생성
-    public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
-        Question question =questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto));
+    @PostMapping("/{member_id}/create") //질문 생성
+    public ResponseEntity postQuestion(@PathVariable("member_id") long memberId,
+            @Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
+        Question question =questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto),memberId);
         QuestionResponseDto response = mapper.questionToQuestionResponseDto(question);
    // 회원인지 판단 --> 시큐리티 토큰(jwt)
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
@@ -85,7 +86,7 @@ public class QuestionController {
             @PathVariable("member_id") @Positive long memberId){
 
     questionService.QuestionByAuthor(questionId,memberId);
-    questionService.deleteQuestionWithComments(questionId);
+    //questionService.deleteQuestionWithComments(questionId);
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

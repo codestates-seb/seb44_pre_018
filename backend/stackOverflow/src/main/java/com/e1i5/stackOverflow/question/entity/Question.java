@@ -40,6 +40,7 @@ public class Question extends Auditable {
     }
 
 
+
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;

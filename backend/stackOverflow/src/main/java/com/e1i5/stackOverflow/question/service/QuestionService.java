@@ -5,6 +5,7 @@ import com.e1i5.stackOverflow.comment.repository.CommentRepository;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
+import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
@@ -23,30 +24,31 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
-    private final CommentService commentService;
+
     private final MemberService memberService;
 
-    private  final  CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     public QuestionService(QuestionRepository questionRepository,
-                                 CommentService commentService ,
-                                           MemberService memberService,
+
+                           MemberService memberService,
                            CommentRepository commentRepository) {
         this.questionRepository = questionRepository;
-         this.memberService = memberService;
-         this.commentService = commentService;
+        this.memberService = memberService;
+
 
         this.commentRepository = commentRepository;
     }
 
-    public Question createQuestion(Question question) { //질문 생성 (회원만 질문작성가능)
+    public Question createQuestion(Question question, long memberId ) { //질문 생성 (회원만 질문작성가능)
         verifyExistsTitle(question.getTitle());
+        Member member = memberService.findVerifiedMemberById(memberId);
+        question.setMember(member);
         //memberService.findVerifiedMemberById(question.getMember().getMemberId()); //회원인지 확인
 
-            return questionRepository.save(question);
+        return questionRepository.save(question);
 
     }
-
 
 
 
@@ -54,11 +56,11 @@ public class QuestionService {
         Question findQuestion = findVerifiedQuestion(question.getQuestionId());//요청된 질문이 DB에 없으면 에러
 
         Optional.ofNullable(question.getTitle()) //제목수정
-                .ifPresent(questionTitle->findQuestion.setTitle(questionTitle));
+                .ifPresent(questionTitle -> findQuestion.setTitle(questionTitle));
         Optional.ofNullable(question.getContent()) //내용수정
-                .ifPresent(questionContent->findQuestion.setContent(questionContent));
+                .ifPresent(questionContent -> findQuestion.setContent(questionContent));
         Optional.ofNullable(question.getQuestionStatus()) //글 삭제
-                .ifPresent(questionStatus->findQuestion.setQuestionStatus(questionStatus));
+                .ifPresent(questionStatus -> findQuestion.setQuestionStatus(questionStatus));
 
         Question updatedQuestion = questionRepository.save(findQuestion);
 
@@ -67,15 +69,15 @@ public class QuestionService {
     }
 
 
-
     public Question findQuestion(long questionId) { //질문 검색
         Question findQuestion = findVerifiedQuestion(questionId); //요청된 질문이 DB에 없으면 에러
 
-        findQuestion.setView(findQuestion.getView()+1); //view 1증가
+        findQuestion.setView(findQuestion.getView() + 1); //view 1증가
         questionRepository.save(findQuestion); // 수정후 DB에 저장
 
         return findQuestion;
     }
+
     public Page<Question> findQuestions(int page, int size) { //여러 질문 검색
         return questionRepository.findAll(PageRequest.of(page, size,
                 Sort.by("questionId").descending()));
@@ -93,11 +95,11 @@ public class QuestionService {
             throw new BusinessLogicException(ExceptionCode.QUESTION_EXISTS);
         }
     }
+
     public Question findVerifiedQuestion(long questionId) { //요청된 질문이 DB에 없으면 에러
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         Question findQuestion = optionalQuestion.orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
         return findQuestion;
-
 
 
     }
@@ -118,7 +120,7 @@ public class QuestionService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
-        List<Comment> comments = commentRepository.findAllByQuestions(questionId);
+        List<Comment> comments = question.getCommentList();
 
         // 질문과 연관된 답변들을 삭제
         commentRepository.deleteAll(comments);
@@ -126,10 +128,11 @@ public class QuestionService {
         // 질문 삭제
         questionRepository.delete(question);
     }
-
-
-
-
 }
+
+
+
+
+
 
 

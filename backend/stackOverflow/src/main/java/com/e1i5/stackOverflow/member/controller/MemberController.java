@@ -1,6 +1,5 @@
 package com.e1i5.stackOverflow.member.controller;
 
-import com.e1i5.stackOverflow.auth.config.JwtTokenProvider;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
@@ -72,8 +71,8 @@ public class MemberController{
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.add("Authorization", "Barer " + token);
 //
-//        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
-//    }
+       return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
 
     @PatchMapping("/upload/{memberId}")
     public ResponseEntity memberIamgeUpload(@PathVariable("memberId") @Positive long memberId,
