@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
+
 import styled from 'styled-components';
 import Editor from 'components/global/questionItem/Editor';
 import VoteButton from 'components/global/questionItem/VoteButton';
+import AnswerDropdown from 'components/global/answerdetail/AnswerDropdown';
 
 const AnswerContainer = styled.div`
   border-bottom: 1px solid #ccc;
@@ -59,8 +59,8 @@ const AnswerContainer = styled.div`
 
   .dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+  top: 0%;
+  right: -3.7rem; 
   width: max-content;
   background-color: #c2d3ff;
   border-radius: 8px;
@@ -68,6 +68,7 @@ const AnswerContainer = styled.div`
   z-index: 1;
   padding: 0.5rem;
   margin-top: 1.6rem;
+  font-size: .7rem;
 }
 
 .dropdown-menu::after {
@@ -78,7 +79,7 @@ const AnswerContainer = styled.div`
  border-bottom: 10px solid #c2d3ff;
  position:absolute;
  top:-8px;
- right:12px;  
+ right:52px;  
 }
 
 .dropdown-menu-item {
@@ -88,31 +89,11 @@ const AnswerContainer = styled.div`
 }
 `;
 
-const ToggleButton = styled.button`
-  position: relative;
-  opacity: 0;
-  transition: opacity 0.3s;
-  position: absolute;
-  top: 20%;
-  right: 0;
-  transform: translate(50%, -50%); 
-  margin-right: 1rem;
-  margin-top: 1rem;
-  width: 2rem;
 
-  .dropdown:hover & {
-    opacity: 1;
-  }
-`;
 
-const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.content);
-
-  const toggleDropdown = () => {
-    setDropdownOpen((prevState) => !prevState);
-  };
 
   const toggleEditMode = () => {
     setEditMode((prevMode) => !prevMode);
@@ -120,6 +101,9 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
 
   const handleContentChange = (content) => {
     setEditedContent(content);
+    if (setValue) {
+      setValue(content);
+    }
   };
 
   const handleSaveEdit = () => {
@@ -128,39 +112,26 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer }) => {
   };
 
   const handleDeleteAnswer = () => {
-    console.log('Delete answer:', answer.answerId);
     onDeleteAnswer(answer.answerId);
   };
 
   return (
     <AnswerContainer>
-      <div className="dropdown">
-        <ToggleButton className="dropdown-toggle" onClick={toggleDropdown} isOpen={dropdownOpen}>
-          <FontAwesomeIcon icon={faEllipsis} />
-        </ToggleButton>
-        {dropdownOpen && (
-          <div className="dropdown-menu">
-            <div className="dropdown-menu-item" onClick={toggleEditMode}>
-              댓글 수정
-            </div>
-            <div className="dropdown-menu-item" onClick={handleDeleteAnswer}>
-              댓글 삭제
-            </div>
-          </div>
-        )}
-      </div>
+      <AnswerDropdown onEditAnswer={toggleEditMode} onDeleteAnswer={handleDeleteAnswer} />
       <div className="answerContainer">
         <div className="left-section">
           <img src={require('assets/profile_image1.jpeg')} alt="프로필 이미지" />
           <span className="username text-sm py-2">{answer.username}</span>
         </div>
+
         <div className="comment text-sm font-light py-2">
           {editMode ? (
-            <Editor height="200" value={editedContent} onChange={handleContentChange} />
+            <Editor height="200" value={editedContent} setValue={handleContentChange} />
           ) : (
             <p dangerouslySetInnerHTML={{ __html: answer.content }}></p>
           )}
         </div>
+
         <div className="right-section">
           <VoteButton answerId={answer.answerId} />
           {editMode && (
