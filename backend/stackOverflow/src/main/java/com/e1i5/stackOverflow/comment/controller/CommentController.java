@@ -11,6 +11,7 @@ import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import com.e1i5.stackOverflow.utils.UriCreator;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/v1/comment")
 @Validated
+@Slf4j
 public class CommentController {
     private final static String COMMENT_DEFAULT_URL = "v1/comment";
     private CommentService commentService;
@@ -83,8 +85,10 @@ public class CommentController {
 //        requestBody.addAuthenticatedMemberId(authenticatedMemberId);
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
+
         Question question = questionService.findQuestion(questionId);
         comment.setQuestion(question);
+
         Member member = memberService.findMember(authenticatedMemberId);
         comment.setMember(member);
 
