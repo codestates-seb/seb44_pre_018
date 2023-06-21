@@ -53,7 +53,7 @@ public class QuestionController {
     public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive @NonNull long questionId,
                                         @PathVariable("member_id") @Positive long memberId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
-        questionService.QuestionByAuthor(questionId,memberId ); // 댓글 작성자메서드 호출
+        questionService.QuestionByAuthor(questionId, memberId); // 댓글 작성자메서드 호출
         questionPatchDto.setQuestionId(questionId);
         questionPatchDto.setMemberId(memberId);
         Question patchQuestion = questionService.updateQuestion(mapper.questionPatchDtoToQuestion(questionPatchDto));
@@ -86,8 +86,8 @@ public class QuestionController {
     public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId,
             @PathVariable("member_id") @Positive long memberId){
 
-    questionService.QuestionByAuthor(questionId,memberId);
-    //questionService.deleteQuestionWithComments(questionId);
+        questionService.QuestionByAuthor(questionId, memberId);
+        questionService.deleteQuestionWithComments(questionId);
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
