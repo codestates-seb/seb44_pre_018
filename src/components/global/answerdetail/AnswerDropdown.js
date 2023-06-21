@@ -5,20 +5,14 @@ import styled from 'styled-components';
 import AnswerDeleteModal from 'components/global/answerdetail/AnswerDeleteModal';
 
 const ToggleButton = styled.button`
-  position: relative;
-  opacity: 0;
-  transition: opacity 0.3s;
   position: absolute;
+  opacity: 1;
   top: 100%;
   right: 0;
-  transform: translate(80%, -80%); 
+  transform: translate(80%, -160%); 
   margin-right: 1rem;
   margin-top: 1rem;
   width: 2rem;
-
-  .dropdown:hover & {
-    opacity: 1;
-  }
 `;
 
 const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {

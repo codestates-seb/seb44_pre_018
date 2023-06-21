@@ -17,6 +17,7 @@ const QuestionWrite = () => {
   };
   const bodyChange = (e) => {
     setCheckBody(false);
+    setBody(e.currentTarget.value);
   };
   const tagChange = (e) => {
     setCheckTag(false);
@@ -60,7 +61,7 @@ const QuestionWrite = () => {
             height="400"
             value={body}
             setValue={setBody}
-            checkBody={checkBody}
+            checkBody={setCheckBody}
           />
           {checkBody && <p className="notice">본문은 필수 입력해야 합니다.</p>}
         </div>

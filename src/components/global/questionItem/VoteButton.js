@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const VoteContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-right: 1rem;
+  margin-right: .3rem;
   border: 1.5px solid #002075;
   color: #002075;
   padding: 0.5rem;
