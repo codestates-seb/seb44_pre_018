@@ -15,7 +15,18 @@ public interface QuestionMapper {
 
     Question questionPatchDtoToQuestion(QuestionDto.QuestionPatchDto requestBody);
 
-    QuestionResponseDto questionToQuestionResponseDto(Question question);
+    default QuestionResponseDto questionToQuestionResponseDto(Question question){
+        QuestionResponseDto responseDto = new QuestionResponseDto();
+        responseDto.setQuestionId(question.getQuestionId());
+        responseDto.setMemberName(question.getMember().getName());
+        responseDto.setTitle(question.getTitle());
+        responseDto.setContent(question.getContent());
+        responseDto.setView(question.getView());
+        responseDto.setCreatedAt(question.getCreatedAt());
+        //dto변환 필요
+        responseDto.setCommentList(question.getCommentList());
+        return responseDto;
+    }
 
     default List<QuestionResponseDto> questionsToQuestionResponseDtos(List<Question> questions) {
         return questions.stream()
