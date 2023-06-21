@@ -40,11 +40,11 @@ public class Question extends Auditable {
     }
 
 
+
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
 
-    //질문-댓글 1:n
     @OneToMany(mappedBy = "commentId")
     private List<Comment> commentList = new ArrayList<>();
 

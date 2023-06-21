@@ -49,6 +49,9 @@ public class Comment extends Auditable {
 //        this.question.setQuestionId(questionId);
 //    }
 
+    //    public void addQuestion(Question question){  // 질문 변경사항 설정
+//        this.question = question;
+//    }
 
 
     private boolean choose; // f = comment t = answercomment
