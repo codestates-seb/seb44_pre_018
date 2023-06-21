@@ -3,82 +3,97 @@ import axios from 'axios';
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
 
-const AnswerItem = ({ answerList, onDeleteAnswer, onEditAnswer }) => {
-  const [answers, setAnswers] = useState([]);
-  const [commentInput, setCommentInput] = useState("");
+const AnswerItem = () => {
+const [answers, setAnswers] = useState([]);
+const [commentInput, setCommentInput] = useState('');
 
-  const getAnswerData = async () => {
+const getAnswerData = async () => {
     try {
-      // 서버에서 데이터 가져오기
       const result = await axios.get('/data/answers.json');
-      const answers = result.data.answers;
-      // 가져온 데이터를 localStorage에 저장
-      localStorage.setItem('answers', JSON.stringify(answers));
-      // 상태 업데이트
-      setAnswers(answers);
+      const answers = result.data.answers.map((answer) => ({
+        ...answer,
+        key: answer.answerId, 
+      }));
+    localStorage.setItem('answers', JSON.stringify(answers));
+    setAnswers(answers);
     } catch (err) {
       console.log('Error getting answer data:', err);
     }
   };
 
-  const addAnswer = (newAnswer) => {
-    setAnswers((prevAnswers) => {
-      const updatedAnswers = [...prevAnswers, newAnswer];
-      localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-      return updatedAnswers;
-    });
+const addAnswer = (newAnswer) => {
+  setAnswers((prevAnswers) => {
+    const updatedAnswers = [...prevAnswers, newAnswer];
+    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+    return updatedAnswers;
+  });
+};
+
+const handleDeleteAnswer = (answerId) => {
+  const updatedAnswers = answers.filter((answer) => answer.answerId !== answerId);
+    setAnswers(updatedAnswers);
+    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+};
+
+const handleEditAnswer = (answerId, editedContent) => {
+  const updatedAnswers = answers.map((answer) => {
+    if (answer.answerId === answerId) {
+    return { ...answer, content: editedContent };
+  }
+    return answer;
+  });
+    setAnswers(updatedAnswers);
+    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
   };
 
-  const handleEditAnswer = (answerId, content) => {
-    onEditAnswer(answerId, content);
-  };
-
-  const handleCommentChange = (value) => {
+const handleCommentChange = (value) => {
     setCommentInput(value);
   };
 
-  const handleSubmitAnswer = () => {
-    const newAnswer = { questionId: '1', answerId: '3', content: commentInput };
-    addAnswer(newAnswer);
-    setCommentInput("");
-  };
+const handleSubmitAnswer = () => {
+      const newAnswer = {
+        questionId: '1',
+        answerId: Date.now().toString(),
+        content: commentInput,
+      };
+        addAnswer(newAnswer);
+        setCommentInput('');
+      };
 
-  useEffect(() => {
-    // localStorage에서 데이터 확인
-    const storedAnswers = localStorage.getItem('answers');
+useEffect(() => {
+      const storedAnswers = localStorage.getItem('answers');
     if (storedAnswers) {
-      setAnswers(JSON.parse(storedAnswers));
-    } else {
-      // localStorage에 데이터가 없으면 서버에서 가져오기
-      getAnswerData();
-    }
+    setAnswers(JSON.parse(storedAnswers));
+  } else {
+    getAnswerData();
+  }
   }, []);
 
-  return (
+useEffect(() => {
+      localStorage.setItem('answers', JSON.stringify(answers));
+    }, [answers]);
+
+    return (
     <>
-      {answers.map((answer) => (
-        <Answer
-          key={answer.answerId}
-          answer={answer}
-          onDeleteAnswer={onDeleteAnswer}
-          onEditAnswer={handleEditAnswer} 
-        />
-      ))}
-      <div className="mt-10">
-        <h2>Your Answer</h2>
+    {answers.map((answer) => (
+      <Answer
+      key={answer.key} 
+      answer={answer}
+      onDeleteAnswer={handleDeleteAnswer}
+      onEditAnswer={handleEditAnswer}
+      />
+    ))}
+        <div className="mt-10">
+          <h2>Your Answer</h2>
         <div>
-          <Editor height={200} value={commentInput} onChange={handleCommentChange} />
-          <button
-            className="pointBu03"
-            type="submit"
-            onClick={handleSubmitAnswer}
-          >
-            Submit your Answer
-          </button>
-        </div>
-      </div>
-    </>
-  );
+      <Editor height={200} value={commentInput} onChange={handleCommentChange} />
+      <button className="pointBu03" type="submit" onClick={handleSubmitAnswer}>
+      Submit your Answer
+      </button>
+    </div>
+  </div>
+  </>
+);
 };
 
 export default AnswerItem;
