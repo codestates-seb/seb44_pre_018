@@ -78,7 +78,6 @@ public class QuestionController {
     public ResponseEntity getCommentList(@PathVariable("question_id") @Positive long questionId){
         Question findquestion = questionService.findQuestion(questionId);
 
-        System.out.println(findquestion.getCommentList().stream().count());
 
         QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(findquestion);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
@@ -86,7 +85,7 @@ public class QuestionController {
 
 
     @DeleteMapping("/delete/{question_id}/{member_id}") //질문 삭제
-    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId,
+    public ResponseEntity deleteQuestion(@PathVariable("question_id") @Positive long questionId,
             @PathVariable("member_id") @Positive long memberId){
 
         questionService.QuestionByAuthor(questionId, memberId);
@@ -94,6 +93,19 @@ public class QuestionController {
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity getQuestionWithTitle(@Positive @RequestParam("page") int page,
+                                               @Positive @RequestParam("size") int size,
+                                               @RequestParam("keyword") String keyword){
+
+        Page<Question> pageQuestions = questionService.getRelatedQuestions(page, size, keyword);
+        List<Question> questions = pageQuestions.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(
+                mapper.questionsToQuestionResponseDtos(questions),
+                pageQuestions), HttpStatus.OK);
     }
 
 
