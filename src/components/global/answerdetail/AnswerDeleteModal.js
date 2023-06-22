@@ -40,7 +40,6 @@ const ModalConfirmButton = styled.button`
   padding: 0.5rem 1rem;
   margin-right: 1rem;
   cursor: pointer;
-  
 `;
 
 const ModalCancelButton = styled.button`
@@ -57,12 +56,17 @@ const AnswerDeleteModal = ({ isOpen, onCancel, onConfirm }) => {
       <ModalContent className="modal-content">
         <ModalTitle className="modal-title">정말 삭제하시겠습니까?</ModalTitle>
         <ModalButtons className="modal-buttons">
-          <ModalConfirmButton className="modal-confirm-button pointBu02" onClick={onConfirm}>
-            <FontAwesomeIcon icon={faCheck} />
-            예
+          <ModalConfirmButton
+            className="modal-confirm-button pointBu02"
+            onClick={onConfirm}
+          >
+            <FontAwesomeIcon icon={faCheck} className="mr-[5px]" />예
           </ModalConfirmButton>
-          <ModalCancelButton className="modal-cancel-button pointBu01" onClick={onCancel}>
-            <FontAwesomeIcon icon={faTimes} />
+          <ModalCancelButton
+            className="modal-cancel-button pointBu01"
+            onClick={onCancel}
+          >
+            <FontAwesomeIcon icon={faTimes} className="mr-[5px]" />
             아니오
           </ModalCancelButton>
         </ModalButtons>

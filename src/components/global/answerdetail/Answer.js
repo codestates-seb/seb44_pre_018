@@ -54,43 +54,6 @@ const AnswerContainer = styled.div`
     color: #002075;
     padding: 0.5rem;
   }
-
-  .dropdown {
-    position: absolute;
-    right: 5px;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 8px;
-    right: -22px;
-    width: max-content;
-    background-color: #c2d3ff;
-    border-radius: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1;
-    padding: 0.5rem;
-    margin-top: 1rem;
-    font-size: 0.7rem;
-  }
-
-  .dropdown-menu::after {
-    content: '';
-    border-top: 0px solid transparent;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid #c2d3ff;
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .dropdown-menu-item {
-    padding: 0.5rem;
-    cursor: pointer;
-    text-align: center;
-  }
 `;
 
 const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
