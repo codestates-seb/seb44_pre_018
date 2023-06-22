@@ -6,11 +6,12 @@ import styled from 'styled-components';
 const VoteContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-right: .3rem;
+  margin-right: 0.3rem;
   border: 1.5px solid #002075;
   color: #002075;
-  padding: 0.5rem;
+  padding: 0.25rem 0.5rem;
   cursor: pointer;
+  max-height: 27px;
 
   span {
     margin-left: 0.5rem;
