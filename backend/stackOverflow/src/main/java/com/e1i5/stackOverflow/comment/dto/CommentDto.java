@@ -15,12 +15,16 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 
 
-@AllArgsConstructor
 public class CommentDto {
 
     @Getter
     @AllArgsConstructor
     public static class Post {
+
+        private long questionId;
+
+        private long authenticatedMemberId;
+
         @NotBlank(message = "내용을 작성해주세요")
         private String content;
 

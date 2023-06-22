@@ -29,14 +29,10 @@ public class QuestionService {
 
     private final CommentRepository commentRepository;
 
-    public QuestionService(QuestionRepository questionRepository,
 
-                           MemberService memberService,
-                           CommentRepository commentRepository) {
+    public QuestionService(QuestionRepository questionRepository, MemberService memberService, CommentRepository commentRepository) {
         this.questionRepository = questionRepository;
         this.memberService = memberService;
-
-
         this.commentRepository = commentRepository;
     }
 
@@ -125,9 +121,14 @@ public class QuestionService {
 
         List<Comment> comments = question.getCommentList();
 
-        for (Comment comment : comments) {
-            Long commentId = comment.getCommentId();
-            commentRepository.deleteById(commentId);
+        if (comments != null && !comments.isEmpty()) {
+            for (Comment comment : comments) {
+                Long commentId = comment.getCommentId();
+                Comment existingComment = commentRepository.findById(commentId).orElse(null);
+                if (existingComment != null) {
+                    commentRepository.delete(existingComment);
+                }
+            }
         }
 
         // 질문 삭제

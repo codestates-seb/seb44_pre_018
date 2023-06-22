@@ -68,9 +68,17 @@ public class CommentService {
     }
 
     // 댓글 생성 - 회원만 생성 가능
-    public Comment createComment(Comment comment){
+    public Comment createComment(Comment comment,  long questionId, long memberId){
         // 회원인지 파악
-        memberService.findVerifiedMemberById(comment.getMember().getMemberId());
+        Member findmember = memberService.findVerifiedMemberById(memberId);
+        comment.setMember(findmember);
+        System.out.println("멤버 존재 확인");
+
+        //존재 질문인지 파악
+        Question findQuestion = questionService.findVerifiedQuestion(questionId);
+        comment.setQuestion(findQuestion);
+        System.out.println("질문 존재 확인");
+        findQuestion.getCommentList().add(comment);
 
         return commentRepository.save(comment);
     }
