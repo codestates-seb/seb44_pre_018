@@ -50,19 +50,40 @@ const MyPage = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   
+  
   useEffect(() => {
     const fetchMemberData = async () => {
       try {
         const response = await axios.get('/data/member.json');
         const data = response.data;
-        setMember(data.member[0]);
-        setEditedMember(data.member[0]);
+        const storedMember = JSON.parse(localStorage.getItem('member'));
+
+        if (storedMember) {
+          setMember(storedMember);
+          setEditedMember(storedMember);
+          setPreviewImage(storedMember.profile_image);
+        } else {
+          setMember(data.member[0]);
+          setEditedMember(data.member[0]);
+          setPreviewImage(data.member[0].profile_image);
+        }
       } catch (error) {
         console.error('Error fetching member data:', error);
       }
     };
+
     fetchMemberData();
   }, []);
+
+  useEffect(() => {
+    if (editedMember) {
+      localStorage.setItem('member', JSON.stringify(editedMember));
+    }
+  }, [editedMember]);
+  
+  useEffect(() => {
+    setPreviewImage(editedMember?.profile_image || member?.profile_image);
+  }, [editedMember, member]);
 
   if (!member) {
     return <div>Loading...</div>;
@@ -101,13 +122,15 @@ const MyPage = () => {
     );
     setEditedMember(null);
     setIsEditing(false);
+    
   };
 
   const editProfile = () => {
-    setEditedMember(member);
+    setEditedMember({ ...member });
     setIsEditing(true); 
   };
 
+  
   return (
     <div className="inner">
       <h3 className="maintitle">MyPage</h3>
@@ -145,7 +168,7 @@ const MyPage = () => {
                 type="text"
                 value={isEditing ? editedMember.name : member.name}
                 onChange={(event) => handleInputChange(event, 'name')}
-                disabled={!isEditing} // 수정 모드가 아닐 때는 입력창 비활성화
+                disabled={!isEditing}
               />
             </span>
             <span>
@@ -154,7 +177,7 @@ const MyPage = () => {
                 type="text"
                 value={isEditing ? editedMember.email : member.email}
                 onChange={(event) => handleInputChange(event, 'email')}
-                disabled={!isEditing} // 수정 모드가 아닐 때는 입력창 비활성화
+                disabled={!isEditing}
               />
             </span>
             <span>
