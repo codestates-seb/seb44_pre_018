@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 
 
-@AllArgsConstructor
 public class CommentDto {
 
     @Getter

@@ -6,12 +6,8 @@ import com.e1i5.stackOverflow.question.entity.Question;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
-
-import java.time.LocalDateTime;
 
 
 @NoArgsConstructor

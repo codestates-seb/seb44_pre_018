@@ -48,6 +48,9 @@ public class Question extends Auditable {
     @OneToMany(mappedBy = "commentId")
     private List<Comment> commentList = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "question", cascade = CascadeType.PERSIST)
+//    private List<QuestionComment> questionComments = new ArrayList<>();
+
     public enum QuestionStatus {
         QUESTION_NOT_EXIST("존재하지 않는 질문"),
         QUESTION_EXIST("존재하는 질문");
