@@ -36,9 +36,7 @@ public class Comment extends Auditable {
 //        this.member.setMemberId(memberId);
 //    }
 
-//    public void addMember(Member member){  // 멤버 변경사항 설정
-//        this.member = member;
-//    }
+
 
     @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
@@ -53,6 +51,11 @@ public class Comment extends Auditable {
 //        this.question = question;
 //    }
 
+    // 댓글 수정부분 null exception 해결을 위해 초기화
+    public Comment(Member member, Question question) {
+        this.member = member;
+        this.question = question;
+    }
 
     private boolean choose; // f = comment t = answercomment
 

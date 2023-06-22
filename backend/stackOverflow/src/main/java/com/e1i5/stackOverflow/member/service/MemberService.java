@@ -56,6 +56,8 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+
+
     public void imageUpload(long memberId, MultipartFile multipartFile){
         //image upload
         String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\files";
