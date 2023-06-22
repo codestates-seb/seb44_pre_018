@@ -40,9 +40,6 @@ public class Comment extends Auditable {
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 
-//    @OneToMany(mappedBy = "coffee")
-//    private List<QuestionComment> questionComments = new ArrayList<>();
-
 //    public void setQuestion(long questionId){
 //        this.question = new Question();
 //        this.question.setQuestionId(questionId);
