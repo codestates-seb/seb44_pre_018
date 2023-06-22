@@ -105,7 +105,7 @@ public class CommentController {
         comment.setQuestion(question);
         Member member = memberService.findMember(authenticatedMemberId);
         comment.setMember(member);
-        Comment createComment = commentService.createComment(comment);
+        Comment createComment = commentService.createComment(comment, questionId, authenticatedMemberId);
         CommentDto.Response response = mapper.commentToCommentResponseDto(createComment);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }

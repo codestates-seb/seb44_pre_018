@@ -1,6 +1,5 @@
 package com.e1i5.stackOverflow.comment.service;
 
-import com.e1i5.stackOverflow.comment.dto.CommentDto;
 import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.comment.mapper.CommentMapper;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
@@ -72,10 +71,17 @@ public class CommentService {
     }
 
     // 댓글 생성 - 회원만 생성 가능
-    public Comment createComment(Comment comment){
+    public Comment createComment(Comment comment,  long questionId, long memberId){
         // 회원인지 파악
-        memberService.findVerifiedMemberById(comment.getMember().getMemberId());
-        // 질문 존재 여부 파악
+        Member findmember = memberService.findVerifiedMemberById(memberId);
+        comment.setMember(findmember);
+
+        //존재 질문인지 파악
+        Question findQuestion = questionService.findVerifiedQuestion(questionId);
+        comment.setQuestion(findQuestion);
+        findQuestion.getCommentList().add(comment);
+        questionRepository.save(findQuestion);
+
         return commentRepository.save(comment);
     }
 
@@ -128,6 +134,7 @@ public class CommentService {
     public void chooseComment(long commentId){
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+        // if(질문 작성자라면)
         comment.setChoose(true);
         comment.setCommentStatus(Comment.CommentStatus.ANSWER_COMMENT); // 댓글> 질문자 채택글로 변경
         commentRepository.save(comment);
