@@ -4,7 +4,7 @@ const LoginGoogle = () => {
       <img
         src={require('assets/ico_google.png')}
         alt="구글 아이콘"
-        className="mr-2"
+        className="mr-2 sm:w-[20px] sm:mr-1.5"
       />
       Sign in with Google
     </a>

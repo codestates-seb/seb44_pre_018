@@ -6,6 +6,12 @@ const TagBox = styled.ul`
   gap: 10px;
   grid-template-columns: repeat(4, 1fr);
   margin: 20px 0;
+  @media (max-width: 981px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
   > li {
     transition: all 0.3s;
     border: 1.5px solid rgba(0, 0, 0, 0.3);

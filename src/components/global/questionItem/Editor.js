@@ -9,6 +9,9 @@ const QuillEditor = styled(ReactQuill)`
   .ql-container {
     height: ${({ height }) => `${height - 41}px`};
   }
+  @media (max-width: 981px) {
+    margin-bottom: 40px;
+  }
 `;
 
 const Editor = ({ height, value, setValue, checkBody }) => {

@@ -10,6 +10,9 @@ module.exports = {
         pointCol04: '#E9EFFF',
         pointCol05: '#6991FC',
       },
+      screens: {
+        sm: { min: '390px', max: '981px' },
+      },
       fontSize: {
         xxs: '0.65rem',
       },

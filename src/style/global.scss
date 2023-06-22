@@ -2,6 +2,9 @@
   max-width: 80%;
   width: 100%;
   margin: 8rem auto 0;
+  @media (max-width: 981px) {
+    max-width: 90%;
+  }
 }
 .mainWrap {
   width: calc(100% - 13rem);

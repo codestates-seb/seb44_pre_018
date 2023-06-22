@@ -142,7 +142,7 @@ const Register = () => {
           Sign up
         </button>
       </form>
-      <p className="mb-7">
+      <p className="mb-7  sm:text-sm">
         <span>Already have an account?</span>
         <Link
           className="transition ml-2 text-pointCol05 border-b-[1px] border-pointCol05 hover:text-pointCol02 hover:border-pointCol02"
