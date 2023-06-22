@@ -72,13 +72,12 @@ public class CommentService {
         // 회원인지 파악
         Member findmember = memberService.findVerifiedMemberById(memberId);
         comment.setMember(findmember);
-        System.out.println("멤버 존재 확인");
 
         //존재 질문인지 파악
         Question findQuestion = questionService.findVerifiedQuestion(questionId);
         comment.setQuestion(findQuestion);
-        System.out.println("질문 존재 확인");
         findQuestion.getCommentList().add(comment);
+        questionRepository.save(findQuestion);
 
         return commentRepository.save(comment);
     }
