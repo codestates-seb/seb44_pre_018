@@ -11,12 +11,10 @@ const FooterContainer = styled.div`
   justify-content: center;
   align-items: center;
   img {
-    width: 8vw;
-    height: 13vh;
+    width: 100px;
 
     @media (max-width: 768px) {
-      width: 5vw;
-      height: 10vh;
+      width: 80px;
     }
   }
 

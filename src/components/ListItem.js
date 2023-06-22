@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
+import AnswerDropdown from 'components/global/answerdetail/AnswerDropdown';
 import { styled } from 'styled-components';
 
 const Item = styled.li`
@@ -42,8 +44,21 @@ const Item = styled.li`
 `;
 
 const ListItem = ({ value }) => {
+  const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
+  const toggleEditMode = () => {
+    navigate(`/questionwrite/${value.questionId}`);
+  };
+
+  const handleDeleteAnswer = () => {};
+
   return (
-    <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3">
+    <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3 relative">
+      <AnswerDropdown
+        onEditAnswer={toggleEditMode}
+        onDeleteAnswer={handleDeleteAnswer}
+      />
       <Link
         className="flex items-center justify-between"
         to={`/detail/${value.questionId}`}
@@ -55,7 +70,7 @@ const ListItem = ({ value }) => {
           <p className="text-sm font-light py-2">{value.content}</p>
           <TagList />
         </div>
-        <div className="w-1/5 text-right">
+        <div className="w-1/5 text-right flex align-center justify-end">
           <ItemView />
           <ItemAnswer />
         </div>

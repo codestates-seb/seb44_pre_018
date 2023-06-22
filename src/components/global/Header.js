@@ -56,10 +56,18 @@ const HeaderContainer = styled.header`
     display: none;
     @media (max-width: 981px) {
       display: block;
-      padding-right: 20rem;
+      /* padding-right: 20rem; */
       width: 5rem;
       height: 2rem;
       cursor: pointer;
+    }
+  }
+  @media (max-width: 981px) {
+    .headerLogo {
+      display: none;
+    }
+    .header-wrapper {
+      justify-content: flex-end;
     }
   }
 `;
@@ -70,7 +78,7 @@ const Header = () => {
       <HeaderContainer>
         <FontAwesomeIcon icon={faBars} className="menu-icon" />
         <div className="header-wrapper">
-          <Link to="/">
+          <Link to="/" className="headerLogo">
             <img
               src={require('assets/logo-w.png')}
               alt="logo"
@@ -84,7 +92,7 @@ const Header = () => {
               alt="profile"
               className="profile-img"
             />
-            <FontAwesomeIcon icon={faSortDown} className="text-2xl" />
+            {/* <FontAwesomeIcon icon={faSortDown} className="text-2xl" /> */}
           </div>
         </div>
       </HeaderContainer>
