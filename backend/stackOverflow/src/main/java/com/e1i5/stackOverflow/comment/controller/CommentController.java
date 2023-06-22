@@ -101,13 +101,10 @@ public class CommentController {
 //        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId();  // 인가된 사용자를 전달받는다.
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
-
         Question question = questionService.findQuestion(questionId);
         comment.setQuestion(question);
-
         Member member = memberService.findMember(authenticatedMemberId);
         comment.setMember(member);
-
         Comment createComment = commentService.createComment(comment);
         CommentDto.Response response = mapper.commentToCommentResponseDto(createComment);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
@@ -120,7 +117,7 @@ public class CommentController {
         // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
         // 댓글 작성자인지 확인
         commentService.VerifyCommentAuthor(commentId, memberId);
-        // 질문 작성자인지 확인 > 수정 여부
+        // 질문 작성자인지 확인
         commentService.VerifyQuestionAuthor(commentId, memberId);
         commentService.deleteComment(commentId,memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
