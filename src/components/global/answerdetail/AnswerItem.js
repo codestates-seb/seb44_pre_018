@@ -60,7 +60,7 @@ const AnswerItem = () => {
 
   const handleCommentChange = (value) => {
     setCommentInput(value);
-    setShowInputMessage(value.trim() === ''); // Check if the value is empty
+    setShowInputMessage(value.trim() === '');
   };
 
   const handleSubmitAnswer = () => {

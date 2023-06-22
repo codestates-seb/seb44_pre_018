@@ -48,6 +48,7 @@ const MyPage = () => {
   const [member, setMember] = useState(null);
   const [editedMember, setEditedMember] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -86,11 +87,11 @@ const MyPage = () => {
     inputElement.click();
   };
 
-  const handleInputChange = (event, field) => {
-    const value = event.target.value;
+  const handleInputChange = (e, f) => {
+    const value = e.target.value;
     setEditedMember((prevMember) => ({
       ...prevMember,
-      [field]: value,
+      [f]: value,
     }));
   };
 
@@ -99,10 +100,12 @@ const MyPage = () => {
       editedMember.profile_image ? editedMember : { ...prevMember }
     );
     setEditedMember(null);
+    setIsEditing(false);
   };
 
   const editProfile = () => {
     setEditedMember(member);
+    setIsEditing(true); 
   };
 
   return (
@@ -115,13 +118,24 @@ const MyPage = () => {
             src={previewImage || member.profile_image}
             alt="Profile"
           />
-          <Button className="pointBu01 w-50 text-sm" onClick={changePicture}>
-            <FontAwesomeIcon icon={faArrowUpFromBracket} className="mr-1" />
+          <Button 
+            className="pointBu01 w-50 text-sm" 
+            onClick={changePicture}
+          >
+            <FontAwesomeIcon 
+              icon={faArrowUpFromBracket} 
+              className="mr-1" 
+            />
             Change Picture
           </Button>
-          <Button className="pointBu03" onClick={editProfile}>
-            Edit Profile
-          </Button>
+          {isEditing ? null : (
+            <Button 
+              className="pointBu03" 
+              onClick={editProfile}
+            >
+              Edit Profile
+            </Button>
+          )}
         </div>
         <div className="light-section">
           <ProfileDetails>
@@ -129,30 +143,35 @@ const MyPage = () => {
               Name:
               <input
                 type="text"
-                value={editedMember ? editedMember.name : member.name}
+                value={isEditing ? editedMember.name : member.name}
                 onChange={(event) => handleInputChange(event, 'name')}
+                disabled={!isEditing} // 수정 모드가 아닐 때는 입력창 비활성화
               />
             </span>
             <span>
               Email:
               <input
                 type="text"
-                value={editedMember ? editedMember.email : member.email}
+                value={isEditing ? editedMember.email : member.email}
                 onChange={(event) => handleInputChange(event, 'email')}
+                disabled={!isEditing} // 수정 모드가 아닐 때는 입력창 비활성화
               />
             </span>
             <span>
               Phone:
               <input
                 type="text"
-                value={editedMember ? editedMember.phone : member.phone}
+                value={isEditing ? editedMember.phone : member.phone}
                 onChange={(event) => handleInputChange(event, 'phone')}
+                disabled={!isEditing} 
               />
             </span>
           </ProfileDetails>
-          <Button className="pointBu01" onClick={saveChanges}>
-            Save
-          </Button>
+          {isEditing ? (
+            <Button className="pointBu01" onClick={saveChanges}>
+              Save
+            </Button>
+          ) : null}
         </div>
       </Container>
     </div>

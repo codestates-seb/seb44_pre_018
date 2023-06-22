@@ -15,10 +15,6 @@ const QuestionWrite = () => {
     setCheckTitle(false);
     setTitle(e.currentTarget.value);
   };
-  const bodyChange = (e) => {
-    setCheckBody(false);
-    setBody(e.currentTarget.value);
-  };
   const tagChange = (e) => {
     setCheckTag(false);
   };
@@ -70,7 +66,8 @@ const QuestionWrite = () => {
           <label className="labelText" htmlFor="tag">
             Tag
           </label>
-          <AddTag tags={tags} setTags={setTags} />
+          <AddTag tags={tags} setTags={setTags} checkTag={setCheckTag} />
+          {checkTag && <p className="notice">태그는 필수 입력해야 합니다.</p>}
         </div>
         <button type="submit" className="pointBu03 my-12" onClick={submitForm}>
           Post your question
