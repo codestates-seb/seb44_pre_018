@@ -28,11 +28,11 @@ const TagInput = styled.input`
   }
 `;
 
-const AddTag = ({ tags, setTags }) => {
+const AddTag = ({ tags, setTags, checkTag }) => {
   const [tagArray, setTagArray] = useState([]);
   const [tag, setTag] = useState('');
   const removeTag = (i) => {
-    const clonetags = tags.slice();
+    const clonetags = tagArray.slice();
     clonetags.splice(i, 1);
     setTagArray(clonetags);
   };
@@ -41,6 +41,7 @@ const AddTag = ({ tags, setTags }) => {
   };
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' || e.code == 'Space') {
+      checkTag(false);
       handleClick();
     }
   };

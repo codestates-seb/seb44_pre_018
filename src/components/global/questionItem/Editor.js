@@ -39,7 +39,7 @@ const Editor = ({ height, value, setValue, checkBody }) => {
 
   const handleContentChange = (content) => {
     setValue(content);
-    checkBody(true);
+    checkBody(false);
   };
 
   return (
