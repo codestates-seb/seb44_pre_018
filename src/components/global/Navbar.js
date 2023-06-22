@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavbarContainer = styled.div`
-  @media (max-width: 981px) {
-    display: none;
-  }
-
-  li {
+   li {
     padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 10px;
@@ -27,6 +23,10 @@ const NavbarContainer = styled.div`
     &:hover {
       color: #fff;
     }
+  }
+
+  @media (max-width: 981px) {
+    transform: translateX(-300%);
   }
 `;
 

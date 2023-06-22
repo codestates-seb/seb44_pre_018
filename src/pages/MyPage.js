@@ -35,6 +35,7 @@ const Container = styled.div`
   
   input {
     background-color: #fff;
+    padding-bottom: 5px;
   }
 `;
 

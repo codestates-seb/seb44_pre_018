@@ -2,7 +2,9 @@
 // 2. 회원일 경우, mypage logout 버튼 출력
 // 3. 태블릿 사이즈로 줄일 경우, navbar사라지고 햄버거 버튼 출력
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import HeaderButton from 'components/global/login/HeaderButton';
+import Navbar from 'components/global/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSortDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -23,7 +25,7 @@ const HeaderContainer = styled.header`
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1;
+  z-index: 2;
 
   .header-wrapper {
     display: flex;
@@ -72,11 +74,38 @@ const HeaderContainer = styled.header`
   }
 `;
 
+const NavbarContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: -20px;
+  width: 100%;
+  height: calc(100vh - 6rem);
+  transform: ${({ isOpenNav }) => (isOpenNav ? 'translateY(0%)' : 'translateY(-100%)')};
+
+  @media (max-width: 981px) {
+    z-index: 1;
+    position: fixed;
+    width: 120%;
+    max-width: 40rem;
+    transform: ${({ isOpenNav }) => (isOpenNav ? 'translateX(0%)' : 'translateX(100%)')};
+  }
+`;
+
 const Header = () => {
+  const [isOpenNav, setIsOpenNav] = useState(false);
+
+  const toggleNav = () => {
+    setIsOpenNav(!isOpenNav);
+  };
+
   return (
     <>
       <HeaderContainer>
-        <FontAwesomeIcon icon={faBars} className="menu-icon" />
+        <FontAwesomeIcon 
+        icon={faBars} 
+        className="menu-icon"
+        onClick={toggleNav}
+         />
         <div className="header-wrapper">
           <Link to="/" className="headerLogo">
             <img
@@ -96,6 +125,9 @@ const Header = () => {
           </div>
         </div>
       </HeaderContainer>
+      <NavbarContainer isOpenNav={isOpenNav}>
+        <Navbar />
+      </NavbarContainer>
     </>
   );
 };
