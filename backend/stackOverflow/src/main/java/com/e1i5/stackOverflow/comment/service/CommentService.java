@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.comment.service;
 
 import com.e1i5.stackOverflow.comment.entity.Comment;
+import com.e1i5.stackOverflow.comment.mapper.CommentMapper;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.comment.repository.CommentRepository;
