@@ -94,6 +94,11 @@ const AnswerContainer = styled.div`
 const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.content);
+  const [bodyChecked, setBodyChecked] = useState(false);
+  
+  const handleCheckBody = (isChecked) => {
+    setBodyChecked(isChecked);
+  };
 
   const toggleEditMode = () => {
     setEditMode((prevMode) => !prevMode);
@@ -125,12 +130,18 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
         </div>
 
         <div className="comment text-sm font-light py-2">
-          {editMode ? (
-            <Editor height="200" value={editedContent} setValue={handleContentChange} />
-          ) : (
-            <p dangerouslySetInnerHTML={{ __html: answer.content }}></p>
-          )}
-        </div>
+  {editMode ? (
+    <Editor 
+    height="200" 
+    value={editedContent} 
+    setValue={handleContentChange}
+    checkBody={handleCheckBody}
+     />
+  ) : (
+    <p 
+    dangerouslySetInnerHTML={{ __html: answer.content }}></p>
+  )}
+</div>
 
         <div className="right-section">
           <VoteButton answerId={answer.answerId} />
