@@ -30,6 +30,11 @@ const Container = styled.div`
   span {
     border-bottom: 2px solid #ccc;
     margin: 2rem 2rem 0 0;
+    padding-bottom: 5px;
+  }
+  
+  input {
+    background-color: #fff;
   }
 `;
 
@@ -80,7 +85,7 @@ const MyPage = () => {
       localStorage.setItem('member', JSON.stringify(editedMember));
     }
   }, [editedMember]);
-  
+
   useEffect(() => {
     setPreviewImage(editedMember?.profile_image || member?.profile_image);
   }, [editedMember, member]);
