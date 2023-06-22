@@ -7,6 +7,12 @@ const UserBox = styled.ul`
   gap: 10px;
   grid-template-columns: repeat(3, 1fr);
   margin: 20px 0;
+  @media (max-width: 981px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 500px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
   > li {
     position: relative;
     transition: all 0.3s;

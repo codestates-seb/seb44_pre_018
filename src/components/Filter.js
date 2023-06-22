@@ -5,17 +5,17 @@ const Filter = ({ filterValue, setFilterValue }) => {
   };
   return (
     <ul className="flex my-8">
-      <li className="on pointBu01 text-xs px-4 py-2 mr-2">
+      <li className="on pointBu01 text-xs px-4 py-2 mr-2 sm:px-1.5 sm:py-1  sm:text-xxs sm:mr-1">
         <button onClick={clickBtn} value="latest">
           최신순
         </button>
       </li>
-      <li className="pointBu01 text-xs px-4 py-2 mr-2">
+      <li className="pointBu01 text-xs px-4 py-2 mr-2 sm:px-1.5 sm:py-1  sm:text-xxs sm:mr-1">
         <button onClick={clickBtn} value="popular">
           조회 순
         </button>
       </li>
-      <li className="pointBu01 text-xs px-4 py-2">
+      <li className="pointBu01 text-xs px-4 py-2 sm:px-1.5 sm:py-1  sm:text-xxs sm:mr-1">
         <button onClick={clickBtn} value="answer">
           최근 답변 달린 순
         </button>

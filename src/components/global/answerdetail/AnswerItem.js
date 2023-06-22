@@ -42,7 +42,9 @@ const AnswerItem = () => {
   };
 
   const handleDeleteAnswer = (answerId) => {
-    const updatedAnswers = answers.filter((answer) => answer.answerId !== answerId);
+    const updatedAnswers = answers.filter(
+      (answer) => answer.answerId !== answerId
+    );
     setAnswers(updatedAnswers);
     localStorage.setItem('answers', JSON.stringify(updatedAnswers));
   };
@@ -102,7 +104,7 @@ const AnswerItem = () => {
         />
       ))}
       <div className="mt-10">
-        <h2>Your Answer</h2>
+        <h2 className="mb-4">Your Answer</h2>
         <div>
           <Editor
             height={200}
@@ -113,7 +115,11 @@ const AnswerItem = () => {
           {showInputMessage && (
             <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
           )}
-          <button className="pointBu03" type="submit" onClick={handleSubmitAnswer}>
+          <button
+            className="pointBu03 my-5 "
+            type="submit"
+            onClick={handleSubmitAnswer}
+          >
             Submit your Answer
           </button>
         </div>

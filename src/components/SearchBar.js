@@ -12,7 +12,7 @@ const SearchBar = ({ queryValue, setQueryValue }) => {
     console.log('aaa');
   };
   return (
-    <div className="relative w-64">
+    <div className="relative w-64 sm:w-52">
       <input
         type="text"
         value={thisText}
