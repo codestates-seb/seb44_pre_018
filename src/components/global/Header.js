@@ -74,28 +74,11 @@ const HeaderContainer = styled.header`
   }
 `;
 
-const NavbarContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: -20px;
-  width: 100%;
-  height: calc(100vh - 6rem);
-  transform: ${({ isOpenNav }) => (isOpenNav ? 'translateY(0%)' : 'translateY(-100%)')};
-
-  @media (max-width: 981px) {
-    z-index: 1;
-    position: fixed;
-    width: 120%;
-    max-width: 40rem;
-    transform: ${({ isOpenNav }) => (isOpenNav ? 'translateX(0%)' : 'translateX(100%)')};
-  }
-`;
-
 const Header = () => {
-  const [isOpenNav, setIsOpenNav] = useState(false);
+  const [isNavbarOpen, setNavbarOpen] = useState(false);
 
-  const toggleNav = () => {
-    setIsOpenNav(!isOpenNav);
+  const handleNavbarToggle = () => {
+    setNavbarOpen(!isNavbarOpen);
   };
 
   return (
@@ -104,7 +87,7 @@ const Header = () => {
         <FontAwesomeIcon 
         icon={faBars} 
         className="menu-icon"
-        onClick={toggleNav}
+        onClick={handleNavbarToggle}
          />
         <div className="header-wrapper">
           <Link to="/" className="headerLogo">
@@ -125,9 +108,7 @@ const Header = () => {
           </div>
         </div>
       </HeaderContainer>
-      <NavbarContainer isOpenNav={isOpenNav}>
-        <Navbar />
-      </NavbarContainer>
+      {isNavbarOpen && (<Navbar />)}
     </>
   );
 };
