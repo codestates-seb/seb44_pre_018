@@ -24,6 +24,7 @@ public class MemberDto {
 
         @Pattern(regexp = "^(?=.*[!@#$%^&*])(?=\\S+$).{8,16}$",
                 message = "비밀번호는 8~16자이어야 하며, 특수기호를 포함해야 합니다.")
+        @NotBlank
         private String password;
     }
 
@@ -35,6 +36,7 @@ public class MemberDto {
 
         @Pattern(regexp = "^(?=.*[!@#$%^&*])(?=\\S+$).{8,16}$",
                 message = "비밀번호는 8~16자이어야 하며, 특수기호를 포함해야 합니다.")
+        @NotBlank
         private String password;
     }
 
@@ -58,6 +60,7 @@ public class MemberDto {
     @AllArgsConstructor
     @Getter
     public static class Response {
+        private long memberId;
         private String name;
         private String phone;
         private String email;

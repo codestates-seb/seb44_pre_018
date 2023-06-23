@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CommentService {
      private final CommentRepository commentRepository;
      private final QuestionRepository questionRepository;
