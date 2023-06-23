@@ -14,7 +14,6 @@ const User = () => {
           'ngrok-skip-browser-warning': 'true',
         },
       });
-      console.log(result.data);
       setUsers(result.data.member);
     } catch (err) {
       console.log('err', err);
