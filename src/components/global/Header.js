@@ -67,17 +67,15 @@ const HeaderContainer = styled.header`
       height: 4px;
       border-radius: 3px;
       transition: all 0.3s;
+      background-color: #002075;
       &:nth-of-type(1) {
-        background-color: #31a8ff;
         top: 0;
       }
       &:nth-of-type(2) {
-        background-color: #c2d3ff;
         top: 50%;
         transform: translateY(-50%);
       }
       &:nth-of-type(3) {
-        background-color: #6991fc;
         bottom: 0;
       }
     }
