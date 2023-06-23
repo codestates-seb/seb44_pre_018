@@ -6,9 +6,14 @@ import Pagination from 'components/global/Pagination';
 
 const User = () => {
   const [users, setUsers] = useState([]);
+
   const getUserData = async () => {
     try {
-      const result = await axios.get('/data/member.json');
+      const result = await axios.get('/member/1', {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        },
+      });
       console.log(result.data);
       setUsers(result.data.member);
     } catch (err) {
