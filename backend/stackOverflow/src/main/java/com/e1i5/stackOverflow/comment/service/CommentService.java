@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.comment.service;
 
 import com.e1i5.stackOverflow.comment.entity.Comment;
+import com.e1i5.stackOverflow.comment.mapper.CommentMapper;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.comment.repository.CommentRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -25,26 +27,27 @@ public class CommentService {
      private final QuestionRepository questionRepository;
      private final MemberService memberService;
      private final QuestionService questionService;
+     private final CommentMapper mapper;
 
     public CommentService(CommentRepository commentRepository,
                           QuestionService questionService,
                           MemberService memberService,
-                          QuestionRepository questionRepository){
+                          QuestionRepository questionRepository,
+                          CommentMapper mapper){
        this.questionService = questionService;
         this.memberService = memberService;
         this.commentRepository = commentRepository;
         this.questionRepository = questionRepository;
+        this.mapper = mapper;
     }
 
+    // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능.
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
-    public List<Comment> findCommentList(long questionId, long lastCommentId, int size){
-        Question question = questionRepository.findById(questionId) // 전달받은 질문 id와 일치하는 질문을 질문테이블에서 가져옴
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-
-        Pageable pageable = PageRequest.of(0, size); // No-offset방식 > 페이지를 항상 0으로 고정
+    public Page<Comment> findCommentList(int page, int size){
         // lastCommentId도 같이 전달해 다음 페이지 댓글 목록을 list로 조회한다.
-        List<Comment> commentPage = commentRepository.findAllByQuestion(questionId, lastCommentId, pageable);
-        return commentPage;
+        return commentRepository.findAll(PageRequest.of(page, size,
+                Sort.by("commentId").descending()));
+
     }
 
 
@@ -72,13 +75,10 @@ public class CommentService {
         // 회원인지 파악
         Member findmember = memberService.findVerifiedMemberById(memberId);
         comment.setMember(findmember);
-        System.out.println("멤버 존재 확인");
 
         //존재 질문인지 파악
         Question findQuestion = questionService.findVerifiedQuestion(questionId);
         comment.setQuestion(findQuestion);
-        System.out.println("질문 존재 확인");
-
         findQuestion.getCommentList().add(comment);
         questionRepository.save(findQuestion);
 
@@ -105,6 +105,12 @@ public class CommentService {
                 optionalComment.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         return findComment;
+    }
+
+    // 댓글 수정시 사용 - 39-55
+    public Member findCommentMember(long commentId){
+        Comment findComment = findVerifiedComment(commentId);
+        return findComment.getMember();
     }
 
     // 댓글 like count - 로그인 된 회원만 가능
@@ -140,20 +146,23 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()-> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         Question question = comment.getQuestion(); // 찾은 답변의 질문정보를 가져온다.
-        if(question.getMember().getMemberId() != memberId){ // 동일인인지 비교
+        if(question == null || question.getMember() == null || question.getMember().getMemberId() != memberId){ // 동일인인지 비교
             throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
         }
     }
+    //질문의 역할인지 확인
 
-    //댓글 작성자인지 판단하는 메서드
-    //전달 받은 memberId가 comment에 저장된 memberId와 같은지 비교
+//    댓글 작성자인지 판단하는 메서드
+//    전달 받은 memberId가 comment에 저장된 memberId와 같은지 비교
     public void VerifyCommentAuthor(long commentId, long memberId){
-        Comment comment = commentRepository.findById(commentId)
+        Comment patchComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-        // 댓글 작성자의 memberId와 전달받은 memberId가 같은지 비교
-        if (comment.getMember().getMemberId() != memberId) {
+
+        if(patchComment.getMember() == null || patchComment.getMember().getMemberId() != memberId){
             throw new BusinessLogicException(ExceptionCode.NOT_A_COMMENT_WRITER);
+
         }
+
     }
 
 }
