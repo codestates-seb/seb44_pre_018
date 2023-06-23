@@ -9,12 +9,13 @@ const User = () => {
 
   const getUserData = async () => {
     try {
-      const result = await axios.get('/member/1', {
+      const result = await axios.get('/member?page=1&size=5', {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         },
       });
-      setUsers(result.data.member);
+      console.log(result.data.data);
+      setUsers(result.data.data);
     } catch (err) {
       console.log('err', err);
     }
