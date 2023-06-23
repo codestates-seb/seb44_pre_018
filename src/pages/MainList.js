@@ -12,8 +12,16 @@ const MainList = () => {
 
   const getBoardList = async () => {
     try {
-      const result = await axios.get('/data/data.json');
-      setBoardList(result.data.questions);
+      const result = await axios.get(
+        '/question/question/search?page=1&size=3',
+        {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      console.log(result.data.data);
+      setBoardList(result.data.data);
     } catch (err) {
       console.log('err', err);
     }

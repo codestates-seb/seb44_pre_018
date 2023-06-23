@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Editor from 'components/global/questionItem/Editor';
 import AddTag from 'components/global/tag/AddTag';
 
 const QuestionWrite = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [tags, setTags] = useState('');
@@ -19,17 +21,18 @@ const QuestionWrite = () => {
     setCheckTag(false);
   };
   const submitForm = async () => {
-    // const {
-    //   data: { questionId },
-    // } = await axios.post('/api/question/write', {
-    //   title: title,
-    //   body: body,
-    //   tags: tags.join(''),
-    // });
-    //navigate(`/detail/${questionId}`);
     setCheckTitle(title === '');
     setCheckBody(body === '');
-    setCheckTag(tags === '');
+    //setCheckTag(tags === '');
+    try {
+      const result = await axios.post('/question/1/create', {
+        title: title,
+        content: body,
+      });
+      navigate(`/detail/1`);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div className="inner">
