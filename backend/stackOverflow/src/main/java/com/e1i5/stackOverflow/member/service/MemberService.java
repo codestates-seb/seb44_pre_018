@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,19 +25,19 @@ import java.util.UUID;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    //private final BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
 
-    public MemberService(MemberRepository memberRepository/* BCryptPasswordEncoder encoder*/) {
+    public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder encoder) {
         this.memberRepository = memberRepository;
-        //this.encoder = encoder;
+        this.encoder = encoder;
     }
 
     public Member signupMember(Member member){
         verifyExistsEmail(member.getEmail());
         //Member saveMember = memberRepository.save(member);
 
-//        //비밀번호 암호화
-//        member.setPassword(encoder.encode(member.getPassword()));
+        //비밀번호 암호화
+        member.setPassword(encoder.encode(member.getPassword()));
         //회원가입 이메일 추가부분
         return memberRepository.save(member);
     }
@@ -46,11 +47,11 @@ public class MemberService {
         String findMemberPassword = findMember.getPassword();
 
         // 임시 비밀번호 확인
-//        if (!encoder.matches(member.getPassword(), findMemberPassword)) {
-//            throw new Exception("Invalid password"); // 예외를 던짐
-//        }else {
-//            System.out.println("비밀번호 일치");
-//        }
+        if (!encoder.matches(member.getPassword(), findMemberPassword)) {
+            throw new Exception("Invalid password"); // 예외를 던짐
+        }else {
+            System.out.println("비밀번호 일치");
+        }
 
 
         return memberRepository.save(findMember);
