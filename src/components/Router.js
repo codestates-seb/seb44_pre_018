@@ -8,6 +8,7 @@ import Login from 'pages/Login';
 import Register from 'pages/Register';
 import DetailPage from 'pages/DetailPage';
 import QuestionWrite from 'pages/QuestionWrite';
+import QuestionUpdate from 'pages/QuestionUpdate';
 import MyPage from 'pages/MyPage';
 import Tag from 'pages/Tag';
 import User from 'pages/User';
@@ -44,6 +45,7 @@ const Router = () => {
                 <Route path="/write" element={<DetailPage />} />
                 <Route path="/question/:id" element={<DetailPage />} />
                 <Route path="/questionwrite" element={<QuestionWrite />} />
+                <Route path="/update/:id" element={<QuestionUpdate />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/tag" element={<Tag />} />
                 <Route path="/user" element={<User />} />

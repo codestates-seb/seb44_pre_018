@@ -64,7 +64,7 @@ const UserBox = styled.ul`
 const UserWrap = ({ users }) => {
   return (
     <UserBox>
-      {/* {users.map((user) => {
+      {users.map((user) => {
         return (
           <li>
             <div className="userImgWrap">
@@ -77,9 +77,13 @@ const UserWrap = ({ users }) => {
             <div className="userInfo">
               <p>{user.name}</p>
               <ol>
+                <li>email : {user.email}</li>
+                <li>phone : {user.phone}</li>
+              </ol>
+              {/* <ol>
                 <li>질문수 : 1개</li>
                 <li>답변수 : 10개</li>
-              </ol>
+              </ol> */}
               <TagList />
               <img
                 src={require('assets/login_logo.png')}
@@ -89,7 +93,7 @@ const UserWrap = ({ users }) => {
             </div>
           </li>
         );
-      })} */}
+      })}
     </UserBox>
   );
 };

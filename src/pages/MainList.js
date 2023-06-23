@@ -9,18 +9,22 @@ const MainList = () => {
   const [filterValue, setFilterValue] = useState('latest');
   const [queryValue, setQueryValue] = useState('');
   const [boardList, setBoardList] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 2;
+  //const totalElements =
+  const offset = (page - 1) * limit;
 
   const getBoardList = async () => {
     try {
       const result = await axios.get(
-        '/question/question/search?page=1&size=3',
+        `/question/question/search?page=${page}&size=5`,
         {
           headers: {
             'ngrok-skip-browser-warning': 'true',
           },
         }
       );
-      console.log(result.data.data);
+      console.log(result.data.pageInfo.totalElements);
       setBoardList(result.data.data);
     } catch (err) {
       console.log('err', err);
@@ -30,6 +34,13 @@ const MainList = () => {
   useEffect(() => {
     getBoardList();
   }, [filterValue, queryValue]);
+
+  const postsData = (posts) => {
+    if (posts) {
+      let result = posts.slice(offset, offset + limit);
+      return result;
+    }
+  };
 
   return (
     <div className="inner">
@@ -52,7 +63,12 @@ const MainList = () => {
           return <ListItem key={item.questionId} value={item} />;
         })}
       </ul>
-      <Pagination />
+      <Pagination
+        limit={limit}
+        page={page}
+        totalPosts={boardList.length}
+        setPage={setPage}
+      />
     </div>
   );
 };

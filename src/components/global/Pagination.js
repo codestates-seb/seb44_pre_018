@@ -4,7 +4,8 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
-const Pagination = () => {
+const Pagination = ({ totalPosts, limit, page, setPage }) => {
+  const numPages = Math.ceil(totalPosts / limit);
   return (
     <nav className="my-10 flex justify-center" aria-label="Pagination">
       <a
@@ -14,36 +15,19 @@ const Pagination = () => {
         <span className="sr-only">Previous</span>
         <FontAwesomeIcon icon={faChevronLeft} />
       </a>
-      <a
-        href="#!"
-        className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"
-      >
-        1
-      </a>
-      <a
-        href="#!"
-        className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"
-      >
-        2
-      </a>
-      <a
-        href="#!"
-        className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"
-      >
-        3
-      </a>
-      <a
-        href="#!"
-        className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"
-      >
-        4
-      </a>
-      <a
-        href="#!"
-        className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"
-      >
-        5
-      </a>
+      {/* {Array(numPages).map((_, i) => {
+        return (
+          <a
+            href="#!"
+            className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"
+            key={i + 1}
+            onClick={() => setPage(i + 1)}
+          >
+            {i + 1}
+          </a>
+        );
+      })} */}
+
       <a
         href="#!"
         className="pointBu01 text-xxs px-2 py-1.5 font-extralight mx-0.5"

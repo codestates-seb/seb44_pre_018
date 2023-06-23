@@ -47,6 +47,7 @@ const ListItem = ({ value }) => {
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState('');
+  const viewCount = 0;
   const toggleEditMode = () => {
     navigate(`/questionwrite/${value.questionId}`);
   };
@@ -67,11 +68,14 @@ const ListItem = ({ value }) => {
           <h3 className="itemTitle text-base ">
             <span>{value.title}</span>
           </h3>
-          <p className="text-sm font-light py-2">{value.content}</p>
+          <p
+            className="text-sm font-light py-2"
+            dangerouslySetInnerHTML={{ __html: value.content }}
+          ></p>
           <TagList />
         </div>
         <div className="w-1/5 text-right flex align-center justify-end">
-          <ItemView />
+          <ItemView viewCount={value.view} />
           <ItemAnswer />
         </div>
       </Link>
