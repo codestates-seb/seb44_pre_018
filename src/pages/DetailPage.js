@@ -8,7 +8,7 @@
 // 8. 회원 확인 후 추천 비추천 투표 가능하게 하기
 // 9. 무한 스크롤 기능 구현하기 (로드 할 데이터 없을 시 멈추기?)
 // 10. 답변 채택 기능 구현하기
-
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
@@ -17,25 +17,28 @@ import TagList from 'components/global/tag/TagList';
 import AnswerItem from 'components/global/answerdetail/AnswerItem';
 
 const DetailPage = () => {
+  const { id } = useParams();
   const [question, setQuestion] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/data/data.json');
-        const data = response.data;
-        if (data && data.questions && data.questions.length > 0) {
-          const question = data.questions[0];
-          setQuestion(question);
-        }
+        const response = await axios.get(`/question/${id}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+        });
+        const data = response.data.data;
+        setQuestion({ title: data.title, content: data.content });
+        console.log(data);
       } catch (error) {
         console.log('Error fetching question data:', error);
       }
     };
 
     fetchData();
-  }, []);
-  
+  }, [id]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -47,9 +50,7 @@ const DetailPage = () => {
   return (
     <div className="inner">
       <div>
-        <h3 className="maintitle">
-        {question.title}
-        </h3>
+        <h3 className="maintitle">{question.title}</h3>
         <div className="flex mt-5">
           <div className="mr-3">
             <ItemView />
@@ -58,23 +59,21 @@ const DetailPage = () => {
             <ItemAnswer />
           </div>
           <p className="ml-auto font-light">
-            Asked:{formatDate(question.createdAt)}
-            </p>
+            Asked: {formatDate(question.createdAt)}
+          </p>
         </div>
         <div className="border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2 items-center">
-        <div className="font-light flex justify-end ml-auto mt-2">
-        <button className="mr-2">수정</button>
-          <button>삭제</button>
+          <div className="font-light flex justify-end ml-auto mt-2">
+            <button className="mr-2">수정</button>
+            <button>삭제</button>
           </div>
-          <p className="text-sm font-light py-2 content">
-          {question.content}
-          </p>
-          <TagList/>
+          <p className="text-sm font-light py-2 content">{question.content}</p>
+          <TagList />
         </div>
       </div>
 
       {/* 댓글 */}
-      <AnswerItem/>
+      <AnswerItem />
     </div>
   );
 };
