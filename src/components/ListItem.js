@@ -61,7 +61,7 @@ const ListItem = ({ value }) => {
       />
       <Link
         className="flex items-center justify-between"
-        to={`/detail/${value.questionId}`}
+        to={`/question/${value.questionId}`}
       >
         <div className="w-4/5">
           <h3 className="itemTitle text-base ">
