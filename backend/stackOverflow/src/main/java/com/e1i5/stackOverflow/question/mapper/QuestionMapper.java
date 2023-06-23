@@ -5,6 +5,7 @@ import com.e1i5.stackOverflow.question.dto.QuestionCommentDto;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
 import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
+import com.e1i5.stackOverflow.questionVote.entity.QuestionVote;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -61,6 +62,12 @@ public interface QuestionMapper {
         questionResponseDto.setContent(question.getContent());
         questionResponseDto.setView(question.getView());
         questionResponseDto.setCreatedAt(question.getCreatedAt());
+        questionResponseDto.setLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
+                .filter(questionVote -> questionVote.getVoteType() == QuestionVote.VoteType.LIKE)
+                .count()));
+        questionResponseDto.setDisLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
+                .filter(questionVote -> questionVote.getVoteType() == QuestionVote.VoteType.DISLIKE)
+                .count()));
 
         return questionResponseDto;
     }

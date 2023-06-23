@@ -22,6 +22,8 @@ public class QuestionResponseDto {
     private int view;
     private LocalDateTime createdAt;
     private List<QuestionCommentDto> commentList;
+    private int likeCount;
+    private int disLikeCount;
 
 }
 

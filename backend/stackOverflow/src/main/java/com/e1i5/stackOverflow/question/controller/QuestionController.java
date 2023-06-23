@@ -2,11 +2,14 @@ package com.e1i5.stackOverflow.question.controller;
 
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
+import com.e1i5.stackOverflow.member.entity.Member;
+import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
 import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.mapper.QuestionMapper;
 import com.e1i5.stackOverflow.question.service.QuestionService;
+import com.e1i5.stackOverflow.questionVote.dto.QuestionVoteDto;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -106,6 +109,16 @@ public class QuestionController {
         return new ResponseEntity<>(new MultiResponseDto<>(
                 mapper.questionsToQuestionResponseDtos(questions),
                 pageQuestions), HttpStatus.OK);
+    }
+
+    @PostMapping("/{question-id}/{member-id}")
+    public ResponseEntity voteQuestion(@PathVariable("question-id") @Positive long questionId,
+                                       @PathVariable("member-id") @Positive long memberId,
+                                       @Valid @RequestBody QuestionVoteDto questionVoteDto){
+        System.out.println(questionVoteDto.getVoteStatus());
+        Question question = questionService.voteQuestion(memberId, questionId, questionVoteDto.getVoteStatus());
+        QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(question);
+        return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
 

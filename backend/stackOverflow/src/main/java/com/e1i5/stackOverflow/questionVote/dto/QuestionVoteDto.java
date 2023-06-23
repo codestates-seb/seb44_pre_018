@@ -1,35 +1,13 @@
 package com.e1i5.stackOverflow.questionVote.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.hibernate.annotations.LazyToOne;
 
-import com.e1i5.stackOverflow.questionVote.entity.QuestionVote;
-import lombok.*;
-
+@AllArgsConstructor
+@Getter
 public class QuestionVoteDto {
-    @NoArgsConstructor
-    @Setter
-    @Getter
-    public static class QuestionVotePostDto {
-        private QuestionVote.VoteType voteType;
-        private long questionId;
-        private long memberId;
-    }
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Setter
-    @Getter
-    public static class QuestionVotePatchDto {
-        private long questionVoteId;
-        private QuestionVote.VoteType voteType;
-        private long memberId;
-    }
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    @Getter
-    public static class QuestionVoteResponseDto {
-        private long questionVoteId;
-        private long memberId;
-        private long questionId;
-        private QuestionVote.VoteType voteType;
-    }
+    private Long questionId;
+    private Long memberId;
+    private String voteStatus;
 }
