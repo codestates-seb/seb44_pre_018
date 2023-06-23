@@ -17,10 +17,11 @@ const Router = () => {
   const [isNav, setIsNav] = useState(
     hideNavbar.includes(window.location.pathname)
   );
+  const [isNavbarOpen, setNavbarOpen] = useState(false);
   return (
     <>
       <BrowserRouter>
-        <Header />
+        <Header setNavbarOpen={setNavbarOpen} isNavbarOpen={isNavbarOpen} />
         <LocationCheck setIsNav={setIsNav} hideNavbar={hideNavbar} />
         {isNav ? (
           <div
@@ -36,7 +37,7 @@ const Router = () => {
           </div>
         ) : (
           <section className="flex">
-            <Navbar />
+            <Navbar setNavbarOpen={setNavbarOpen} isNavbarOpen={isNavbarOpen} />
             <div className="mainWrap">
               <Routes>
                 <Route path="/" element={<MainList />} />
