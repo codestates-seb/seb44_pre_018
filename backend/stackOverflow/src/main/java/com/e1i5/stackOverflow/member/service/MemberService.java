@@ -7,6 +7,7 @@ import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.question.service.QuestionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,18 +26,6 @@ import java.util.UUID;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder encoder;
-
-    public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder encoder) {
-        this.memberRepository = memberRepository;
-        this.encoder = encoder;
-//    private final PasswordEncoder encoder;
-//
-//    public MemberService(MemberRepository memberRepository, PasswordEncoder encoder) {
-//        this.memberRepository = memberRepository;
-//        this.encoder = encoder;
-//    }
-
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
@@ -46,8 +35,8 @@ public class MemberService {
         verifyExistsEmail(member.getEmail());
         //Member saveMember = memberRepository.save(member);
 
-        //비밀번호 암호화
-        member.setPassword(encoder.encode(member.getPassword()));
+//        //비밀번호 암호화
+//        member.setPassword(encoder.encode(member.getPassword()));
         //회원가입 이메일 추가부분
         return memberRepository.save(member);
     }
