@@ -52,19 +52,19 @@ const Register = () => {
     setCheckEmail(emailValue === '');
     setCheckPassword(passwordValue === '');
     try {
-      const result = await axios.post('/member/register', {
-        name: nameValue,
-        phone: phoneValue,
-        email: emailValue,
-        password: passwordValue,
-      });
-      //회원가입 성공 여부만 알려줄때
+      const result = await axios.post(
+        'https://fbe2-221-154-143-236.ngrok-free.app/member/signup',
+        {
+          email: emailValue,
+          name: nameValue,
+          phone: phoneValue,
+          password: passwordValue,
+        }
+      );
+      console.log(result);
       navigate('/login');
-      //멤버 번호 알려줄때
-      // => 로그인시 멤버 정보를 기반으로 회원정보 get하는 로직 활용
     } catch (err) {
       console.log(err);
-      alert(err.response.data);
     }
   };
 
