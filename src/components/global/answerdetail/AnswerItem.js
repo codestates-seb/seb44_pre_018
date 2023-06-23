@@ -15,24 +15,22 @@ const AnswerItem = () => {
 
   const getAnswerData = async () => {
     try {
-      const storedAnswers = localStorage.getItem('answers');
-      if (storedAnswers) {
-        const answers = JSON.parse(storedAnswers);
-        setAnswers(answers);
-      } else {
-        const result = await axios.get('/data/answers.json');
-        const answers = result.data.answers.map((answer) => ({
-          ...answer,
-          key: answer.answerId,
-        }));
-        localStorage.setItem('answers', JSON.stringify(answers));
-        setAnswers(answers);
-      }
+      const result = await axios.get('/v1/comment/1?page=0&size=4', {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        },
+      });
+      const answers = result.data.answers.map((answer) => ({
+        ...answer,
+        key: answer.answerId,
+      }));
+      localStorage.setItem('answers', JSON.stringify(answers));
+      setAnswers(answers);
     } catch (err) {
       console.log('Error getting answer data:', err);
     }
   };
-
+  
   const addAnswer = (newAnswer) => {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers, newAnswer];
