@@ -1,7 +1,7 @@
 // 1. 비회원일 때, login signup 버튼 출력
 // 2. 회원일 경우, mypage logout 버튼 출력
 // 3. 태블릿 사이즈로 줄일 경우, navbar사라지고 햄버거 버튼 출력
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import HeaderButton from 'components/global/login/HeaderButton';
 import Navbar from 'components/global/Navbar';
@@ -29,15 +29,12 @@ const HeaderContainer = styled.header`
 
   .header-wrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     width: 100vw;
   }
 
   .logo-img {
     display: block;
-    width: 10rem;
-    height: 3.5rem;
   }
 
   .profile-img {
@@ -60,7 +57,6 @@ const HeaderContainer = styled.header`
     height: 25px;
     position: relative;
     cursor: pointer;
-    overflow: hidden;
     span {
       position: absolute;
       width: 100%;
@@ -100,45 +96,58 @@ const HeaderContainer = styled.header`
       }
     }
   }
-  @media (max-width: 981px) {
-    .headerLogo {
-      display: none;
-    }
-    .header-wrapper {
-      justify-content: flex-end;
-    }
-  }
 `;
 
 const Header = ({ isNavbarOpen, setNavbarOpen }) => {
+  const location = useLocation();
+  const hideNavbar = ['/login', '/Login', '/register', '/Register'];
+  const [isNav, setIsNav] = useState(
+    hideNavbar.includes(window.location.pathname)
+  );
+
   const handleNavbarToggle = () => {
     setNavbarOpen(!isNavbarOpen);
   };
+  useEffect(() => {
+    setIsNav(hideNavbar.includes(window.location.pathname));
+  }, [location]);
 
   return (
     <>
       <HeaderContainer>
+        {!isNav ? (
+          <div
+            className={`menu-icon ${isNavbarOpen ? 'on' : null}`}
+            onClick={handleNavbarToggle}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        ) : null}
+
         <div
-          className={`menu-icon ${isNavbarOpen ? 'on' : null}`}
-          onClick={handleNavbarToggle}
+          className={`header-wrapper justify-between sm:justify-end ${
+            isNav ? ' sm:justify-between' : null
+          }`}
         >
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        {/* <FontAwesomeIcon
-          icon={faBars}
-          className="menu-icon"
-          onClick={handleNavbarToggle}
-        /> */}
-        <div className="header-wrapper">
-          <Link to="/" className="headerLogo">
-            <img
-              src={require('assets/logo-w.png')}
-              alt="logo"
-              className="logo-img"
-            />
-          </Link>
+          {isNav ? (
+            <Link to="/" className="headerLogo block">
+              <img
+                src={require('assets/logo-w.png')}
+                alt="logo"
+                className="logo-img sm:w-[7.5rem] sm:h-auto"
+              />
+            </Link>
+          ) : (
+            <Link to="/" className="headerLogo sm:hidden">
+              <img
+                src={require('assets/logo-w.png')}
+                alt="logo"
+                className="logo-img w-[9rem]"
+              />
+            </Link>
+          )}
           <div className="right-section">
             <HeaderButton />
             <img

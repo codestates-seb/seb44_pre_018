@@ -29,8 +29,11 @@ const NavbarContainer = styled.div`
 
   @media (max-width: 981px) {
     position: absolute;
-    left: -100%;
     transition: all 0.2s;
+    left: -100%;
+    .headerLeftMenu {
+      left: -100%;
+    }
     &.on {
       left: 0;
       &::after {
@@ -43,6 +46,9 @@ const NavbarContainer = styled.div`
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: -1;
+      }
+      .headerLeftMenu {
+        left: 0;
       }
     }
   }
@@ -65,11 +71,11 @@ const Navbar = ({ setNavbarOpen, isNavbarOpen }) => {
   return (
     <NavbarContainer
       onClick={handleNavbarToggle}
-      className={`w-52 top-24  h-screen bg-pointCol03 ${
+      className={`w-52 pt-24  h-screen bg-pointCol03 ${
         isNavbarOpen ? 'on' : null
       }`}
     >
-      <div className="left-0 w-52 h-screen bg-pointCol03">
+      <div className="headerLeftMenu left-0 w-52 h-full bg-pointCol03 fixed">
         <ul className="flex flex-col justify-center">
           <li key="questions" className={activeLink === '/' ? 'active' : ''}>
             <Link to="/" onClick={() => handleLinkClick('/')}>
