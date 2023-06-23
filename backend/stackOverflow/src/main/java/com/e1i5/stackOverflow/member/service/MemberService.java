@@ -7,6 +7,7 @@ import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.question.service.QuestionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,14 +22,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    //private final BCryptPasswordEncoder encoder;
 
-    public MemberService(MemberRepository memberRepository/* BCryptPasswordEncoder encoder*/) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        //this.encoder = encoder;
     }
 
     public Member signupMember(Member member){
@@ -45,12 +45,18 @@ public class MemberService {
         Member findMember = findVerifiedMemberByEmail(member.getEmail());
         String findMemberPassword = findMember.getPassword();
 
-        // 임시 비밀번호 확인
+//        // 임시 비밀번호 확인
 //        if (!encoder.matches(member.getPassword(), findMemberPassword)) {
 //            throw new Exception("Invalid password"); // 예외를 던짐
 //        }else {
 //            System.out.println("비밀번호 일치");
 //        }
+        if(member.getPassword() == findMemberPassword){
+            throw new Exception("Invalid password"); // 예외를 던짐
+        }else {
+//            System.out.println("비밀번호 일치");
+//        }
+        }
 
 
         return memberRepository.save(findMember);

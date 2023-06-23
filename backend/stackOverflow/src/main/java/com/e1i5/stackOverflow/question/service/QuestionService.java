@@ -7,18 +7,19 @@ import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
+import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
+import com.e1i5.stackOverflow.questionVote.entity.QuestionVote;
+import com.e1i5.stackOverflow.questionVote.service.QuestionVoteService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,11 +30,16 @@ public class QuestionService {
 
     private final CommentRepository commentRepository;
 
+    private final QuestionVoteService questionVoteService;
 
-    public QuestionService(QuestionRepository questionRepository, MemberService memberService, CommentRepository commentRepository) {
+    public QuestionService(QuestionRepository questionRepository,
+                           MemberService memberService,
+                           CommentRepository commentRepository,
+                           QuestionVoteService questionVoteService) {
         this.questionRepository = questionRepository;
         this.memberService = memberService;
         this.commentRepository = commentRepository;
+        this.questionVoteService = questionVoteService;
     }
 
     public Question createQuestion(Question question, long memberId ) { //질문 생성 (회원만 질문작성가능)
@@ -133,6 +139,35 @@ public class QuestionService {
 
         // 질문 삭제
         questionRepository.delete(question);
+    }
+
+    public Page<Question> getRelatedQuestions(int page, int size, String keyword){
+        // 특정 단어가 title에 포함된 모든 Question을 조회합니다.
+        List<Question> questions = questionRepository.findAll();
+
+        // 특정 단어와 연관된 Question만 필터링하여 반환합니다.
+        List<Question> relatedQuestions = questions.stream()
+                .filter(question -> question.getTitle().contains(keyword))
+                .collect(Collectors.toList());
+
+        // 페이지네이션을 적용하여 결과를 반환합니다.
+        return new PageImpl<>(relatedQuestions,
+                PageRequest.of(page, size, Sort.by("questionId").descending()), relatedQuestions.size());
+    }
+
+    public Question voteQuestion(long memberId, long questionId, String voteStatus){
+        System.out.println("-------------------------------------------------------------------");
+        Question question = findQuestion(questionId);
+        System.out.println("질문 찾음: " + question.getTitle());
+        System.out.println("-------------------------------------------------------------------");
+        Member member = memberService.findMember(memberId);
+        System.out.println("멤버 찾음: " + member.getName());
+        System.out.println("-------------------------------------------------------------------");
+
+
+        QuestionVote questionVote = new QuestionVote(QuestionVote.VoteType.valueOf(voteStatus), question, member);
+        questionVoteService.voteQuestion(questionVote);
+        return question;
     }
 }
 

@@ -2,11 +2,14 @@ package com.e1i5.stackOverflow.question.controller;
 
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
+import com.e1i5.stackOverflow.member.entity.Member;
+import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
 import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.mapper.QuestionMapper;
 import com.e1i5.stackOverflow.question.service.QuestionService;
+import com.e1i5.stackOverflow.questionVote.dto.QuestionVoteDto;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -78,7 +81,6 @@ public class QuestionController {
     public ResponseEntity getCommentList(@PathVariable("question_id") @Positive long questionId){
         Question findquestion = questionService.findQuestion(questionId);
 
-        System.out.println(findquestion.getCommentList().stream().count());
 
         QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(findquestion);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
@@ -86,7 +88,7 @@ public class QuestionController {
 
 
     @DeleteMapping("/delete/{question_id}/{member_id}") //질문 삭제
-    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId,
+    public ResponseEntity deleteQuestion(@PathVariable("question_id") @Positive long questionId,
             @PathVariable("member_id") @Positive long memberId){
 
         questionService.QuestionByAuthor(questionId, memberId);
@@ -94,6 +96,29 @@ public class QuestionController {
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity getQuestionWithTitle(@Positive @RequestParam("page") int page,
+                                               @Positive @RequestParam("size") int size,
+                                               @RequestParam("keyword") String keyword){
+
+        Page<Question> pageQuestions = questionService.getRelatedQuestions(page, size, keyword);
+        List<Question> questions = pageQuestions.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(
+                mapper.questionsToQuestionResponseDtos(questions),
+                pageQuestions), HttpStatus.OK);
+    }
+
+    @PostMapping("/{question-id}/{member-id}")
+    public ResponseEntity voteQuestion(@PathVariable("question-id") @Positive long questionId,
+                                       @PathVariable("member-id") @Positive long memberId,
+                                       @Valid @RequestBody QuestionVoteDto questionVoteDto){
+        System.out.println(questionVoteDto.getVoteStatus());
+        Question question = questionService.voteQuestion(memberId, questionId, questionVoteDto.getVoteStatus());
+        QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(question);
+        return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
 
