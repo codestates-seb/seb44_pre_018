@@ -64,7 +64,7 @@ const UserBox = styled.ul`
 const UserWrap = ({ users }) => {
   return (
     <UserBox>
-      {users.map((user) => {
+      {/* {users.map((user) => {
         return (
           <li>
             <div className="userImgWrap">
@@ -89,7 +89,7 @@ const UserWrap = ({ users }) => {
             </div>
           </li>
         );
-      })}
+      })} */}
     </UserBox>
   );
 };
