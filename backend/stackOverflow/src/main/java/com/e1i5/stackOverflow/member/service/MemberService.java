@@ -136,6 +136,7 @@ public class MemberService {
                 Sort.by("memberId").descending()));
     }
 
+    @Transactional(readOnly = true)
     public Member findMember(long memberId)
     {
         return findVerifiedMemberById(memberId);}
@@ -152,6 +153,7 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
+    @Transactional(readOnly = true)
     public Member findVerifiedMemberById(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember =

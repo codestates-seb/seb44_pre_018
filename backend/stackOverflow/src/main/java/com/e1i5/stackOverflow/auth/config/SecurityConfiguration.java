@@ -2,12 +2,20 @@ package com.e1i5.stackOverflow.auth.config;
 
 
 import com.e1i5.stackOverflow.auth.filter.JwtAuthenticationFilter;
+import com.e1i5.stackOverflow.auth.filter.JwtVerificationFilter;
+import com.e1i5.stackOverflow.auth.handler.MemberAccessDeniedHandler;
+import com.e1i5.stackOverflow.auth.handler.MemberAuthenticationEntryPoint;
+import com.e1i5.stackOverflow.auth.handler.MemberAuthenticationFailureHandler;
+import com.e1i5.stackOverflow.auth.handler.MemberAuthenticationSuccessHandler;
 import com.e1i5.stackOverflow.auth.jwt.JwtTokenizer;
+import com.e1i5.stackOverflow.auth.utils.CustomAuthorityUtils;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,10 +30,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
+    private final CustomAuthorityUtils authorityUtils;
 
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer){
-
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer,
+                                 CustomAuthorityUtils authorityUtils){
         this.jwtTokenizer = jwtTokenizer;
+        this.authorityUtils = authorityUtils;
     }
 
     @Bean
@@ -35,12 +45,23 @@ public class SecurityConfiguration {
                 .and()
                 .csrf().disable()
                 .cors(withDefaults()) // corsConfigurationSource라는 이름으로 등록된 Bean을 이용 = CorsFilter를 적용
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .accessDeniedHandler(new MemberAccessDeniedHandler())
+                .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll() // 아직 jwt 적용 전
+                        .antMatchers(HttpMethod.POST, "/member/signup").permitAll()
+                        .antMatchers(HttpMethod.PATCH, "/member/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/member").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.GET, "/member/**").hasAnyRole("USER", "ADMIN")// getMember
+                        .antMatchers(HttpMethod.DELETE, "/member/**").hasRole("USER")
+                        .anyRequest().permitAll()
                 );
         return httpSecurity.build();
     }
@@ -69,8 +90,17 @@ public class SecurityConfiguration {
             //  getSharedObject()를 통해서 Spring Security의 설정을 구성하는 SecurityConfigurer 간에 공유되는 객체를 얻을 수 있습니다.
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer); // 2-4 JwtAuthenticationFilter를 생성하면서 JwtAuthenticationFilter에서 사용되는 AuthenticationManager와 JwtTokenizer를 DI
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login"); //2-5 setFilterProcessesUrl() 메서드를 통해 디폴트 request URL인 “/login”을 “/auth/login”으로 변경
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());  // 핸들러 등록
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());  // 핸들러 등록
 
-            builder.addFilter(jwtAuthenticationFilter); // addFilter() 메서드를 통해 JwtAuthenticationFilter를 Spring Security Filter Chain에 추가
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
+
+            builder
+                    .addFilter(jwtAuthenticationFilter)
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+
+            // addFilter() 메서드를 통해 JwtAuthenticationFilter를 Spring Security Filter Chain에 추가
+
         }
     }
 
