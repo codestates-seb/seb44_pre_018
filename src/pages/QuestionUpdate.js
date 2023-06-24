@@ -69,7 +69,7 @@ const QuestionUpdate = () => {
             Tag
           </label>
           <AddTag tags={tags} setTags={setTags} checkTag={setCheckTag} />
-          {checkTag && <p className="notice">태그는 필수 입력해야 합니다.</p>}
+          {checkTag && <p className="notice">태그는 필수 입력해야 합니다.</p>}
         </div>
         <button type="submit" className="pointBu03 my-12" onClick={submitForm}>
           Post your question
