@@ -66,7 +66,7 @@ public class MemberService {
 
     public void imageUpload(long memberId, MultipartFile multipartFile){
         //image upload
-        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\files";
+        String projectPath = System.getProperty("user.dir") + File.separator + "files";
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + multipartFile.getOriginalFilename();
 
@@ -97,6 +97,19 @@ public class MemberService {
         }
 
         Member findMember = findVerifiedMemberById(memberId);
+        // 기존 파일 삭제
+        String existingFilePath = findMember.getProfileImagePath() + File.separator + findMember.getProfileImageName();
+        File existingFile = new File(existingFilePath);
+        if (existingFile.exists()) {
+            if (existingFile.delete()) {
+                System.out.println("기존 파일이 삭제되었습니다.");
+            } else {
+                System.out.println("기존 파일을 삭제할 수 없습니다.");
+                // 파일 삭제 실패 처리 로직
+                throw new IllegalArgumentException("기존 파일을 삭제할 수 없습니다.");
+            }
+        }
+
         findMember.setProfileImagePath(projectPath);
         findMember.setProfileImageName(fileName);
 
