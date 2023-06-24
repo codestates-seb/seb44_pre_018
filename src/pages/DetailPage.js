@@ -22,6 +22,7 @@ const DetailPage = () => {
     view: '',
     createdAt: '',
   });
+  const [updatedQuestion, setUpdatedQuestion] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +50,11 @@ const DetailPage = () => {
 
   return (
     <div className="inner">
-      <QuestionView question={question} />
+       {updatedQuestion ? (
+        <QuestionView question={updatedQuestion} />
+      ) : (
+        <QuestionView question={question} />
+      )}
       {/* 댓글 */}
       <AnswerItem />
     </div>
