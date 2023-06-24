@@ -19,6 +19,7 @@ const DetailPage = () => {
   const [question, setQuestion] = useState({
     title: '',
     content: '',
+    view: '',
     createdAt: '',
   });
 
@@ -34,6 +35,7 @@ const DetailPage = () => {
         setQuestion({
           title: data.title,
           content: data.content,
+          view: data.view,
           createdAt: data.createdAt,
         });
       } catch (error) {

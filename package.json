@@ -2,7 +2,7 @@
   "name": "seb44_pre_018",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://fbe2-221-154-143-236.ngrok-free.app",
+  "proxy": "https://d1a7-221-154-143-236.ngrok-free.app",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",

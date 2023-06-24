@@ -33,6 +33,7 @@ const QuesitonButtonWrap = styled.div`
 `;
 
 const QuestionView = ({ question }) => {
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -46,7 +47,7 @@ const QuestionView = ({ question }) => {
       <h3 className="maintitle">{question.title}</h3>
       <div className="flex mt-5">
         <div className="mr-3">
-          <ItemView />
+          <ItemView viewCount={question.view}/>
         </div>
         <div className="mx-3">
           <ItemAnswer />
