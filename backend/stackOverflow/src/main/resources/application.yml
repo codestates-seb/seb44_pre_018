@@ -1,11 +1,34 @@
 spring:
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
   datasource:
-    url: jdbc:mysql://db-stackoverflow.cxpgcfwnzndp.ap-northeast-2.rds.amazonaws.com/db_stackOverflow?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
-    username: admin
-    password: stark0503
+    url: jdbc:mysql://localhost:3306/db_stackOverflow?useSSL=false&allowPublicKeyRetrieval=true&useLegacyAuth=false # jdbc:mysql://localhost:3306/{????????}
+    username: user_stackOverflow #????
+    password: 1234 #????
     driver-class-name: com.mysql.cj.jdbc.Driver
-config:
-  domain: http://stackoverflowbucket.s3-website.ap-northeast-2.amazonaws.com
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update  # (1) ??? ?? ??
+    show-sql: true      # (2) SQL ?? ??
+    properties:
+      hibernate:
+        format_sql: true  # (3) SQL pretty print
+  sql:
+    init:
+      data-locations: classpath*:db/h2/data.sql
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: DEBUG
+server:
+  servlet:
+    encoding:
+      force-response: true
+mail:
+  address:
+    admin: admin@gmail.com
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 40
+  refresh-token-expiration-minutes: 420
