@@ -37,18 +37,15 @@ public class MemberService {
     private final CustomAuthorityUtils authorityUtils;
     //private final BCryptPasswordEncoder encoder;
 
-    public MemberService(MemberRepository memberRepository) {
-
 
     public MemberService(MemberRepository memberRepository,
-                         PasswordEncoder passwordEncoder,
                          ApplicationEventPublisher publisher,
+                         PasswordEncoder passwordEncoder,
                          CustomAuthorityUtils authorityUtils) {
         this.memberRepository = memberRepository;
+        this.publisher = publisher;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
-        this.publisher = publisher;
-        //this.encoder = encoder;
     }
 
     // 회원가입, 로그인 기능을 공유하는 메서드
