@@ -29,6 +29,7 @@ const QuestionWrite = () => {
         title: title,
         content: body,
       });
+      console.log(result);
       navigate(`/detail/1`);
     } catch (err) {
       console.log(err);

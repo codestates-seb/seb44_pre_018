@@ -13,11 +13,6 @@ const QuestionUpdate = () => {
   const [checkTitle, setCheckTitle] = useState(false);
   const [checkBody, setCheckBody] = useState(false);
   const [checkTag, setCheckTag] = useState(false);
-  const [questionData, setQuestionData] = useState({
-    title: '',
-    content: '',
-  });
-
 
   const titleChange = (e) => {
     setCheckTitle(false);
@@ -30,36 +25,45 @@ const QuestionUpdate = () => {
   const submitForm = async () => {
     setCheckTitle(title === '');
     setCheckBody(body === '');
-  
+
     if (title === '' || body === '') {
       return;
     }
-    const resp = await (await axios.get(`/question/${id}`)).data;
-    setQuestionData(resp.data);
-    await axios.patch(`question/update/${id}/${3}`, questionData)
-    .then((res) => {
+    try {
+      const updateData = await axios.patch(`/question/update/${id}/${1}`, {
+        title,
+        content: body,
+      });
       alert('수정되었습니다.');
-      navigate('-1');
-    });
+      navigate(`/question/${id}`);
+    } catch (err) {
+      console.log('err', err);
+    }
   };
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const resp = await axios.get(`/question/${id}`);
-      if (resp.data && resp.data.title) {
-        const { title, content } = resp.data;
-        setTitle(title);
-        setBody(content);
-  }else {
-   console.log('error');
-  } } catch (error) {
-    console.log('error');
-  }
-};
+    const fetchData = async () => {
+      try {
+        const resp = await axios.get(`/question/${id}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+        });
+        console.log('resp', resp);
+        if (resp.data) {
+          const { title, content } = resp.data.data;
+          setTitle(title);
+          setBody(content);
+        } else {
+          console.log('error');
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
 
-  fetchData();
-}, [id]);
+    fetchData();
+  }, [id]);
 
   return (
     <div className="inner">

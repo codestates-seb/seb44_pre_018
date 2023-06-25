@@ -49,7 +49,7 @@ const ListItem = ({ value }) => {
   const [editedContent, setEditedContent] = useState('');
   const viewCount = 0;
   const toggleEditMode = () => {
-    navigate(`/questionwrite/${value.questionId}`);
+    navigate(`/update/${value.questionId}`);
   };
 
   const handleDeleteAnswer = () => {};
