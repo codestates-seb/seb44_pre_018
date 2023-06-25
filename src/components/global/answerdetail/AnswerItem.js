@@ -20,7 +20,7 @@ const AnswerItem = () => {
 
   const getCommentList = async () => {
     try {
-      const response = await axios.get('/v1/comment/2', {
+      const response = await axios.get(`/v1/comment/${id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         },
@@ -35,30 +35,16 @@ const AnswerItem = () => {
     }
   };
 
-  const addComment = async (questionId, memberId, content) => {
+  const addComment = async (content) => {
     try {
-      const response = await fetch(`/v1/comment/2/5/question-answer`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: {
-            commentId: 5,
-            questionTitle: '제목생성aaa',
-            authenticatedMemberName: '444',
-            content: content,
-            choose: false,
-            likeCount: 0,
-            dislikeCount: 0,
-            commentStatus: 'COMMENT',
-          },
-        }),
+      const response = await axios.post(`/v1/comment/${id}/2/question-answer`, {
+        content: content,
       });
-      const data = await response.json();
-      console.log('데이터 추가 성공:', data);
+      const newAnswer = response.data.data;
+      setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
+      console.log('댓글 추가 성공:', response.data);
     } catch (error) {
-      console.error('데이터 추가 실패:', error);
+      console.error('댓글 추가 실패:', error);
       throw error;
     }
   };
@@ -71,15 +57,23 @@ const AnswerItem = () => {
     localStorage.setItem('answers', JSON.stringify(updatedAnswers));
   };
 
-  const handleEditAnswer = (answerId, editedContent) => {
-    const updatedAnswers = answers.map((answer) => {
-      if (answer.commentId === answerId) {
-        return { ...answer, content: editedContent };
-      }
-      return answer;
-    });
-    setAnswers(updatedAnswers);
-    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+  const handleEditComment = async (commentId, editedContent) => {
+    try {
+      const response = await axios.patch(`/v1/comment/${commentId}`, {
+        content: editedContent,
+      });
+      const updatedAnswers = answers.map((answer) => {
+        if (answer.commentId === commentId) {
+          return { ...answer, content: editedContent };
+        }
+        return answer;
+      });
+      setAnswers(updatedAnswers);
+      localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+      console.log('댓글 수정 성공:', response.data);
+    } catch (error) {
+      console.error('댓글 수정 실패:', error);
+    }
   };
 
   const handleCommentChange = (value) => {
@@ -109,7 +103,7 @@ const AnswerItem = () => {
       commentStatus: 'COMMENT',
     };
     try {
-      await addComment(newAnswer.questionId, newAnswer.memberId, newAnswer.content);
+      await addComment(newAnswer.content);
       setCommentInput('');
       setShowInputMessage(false);
     } catch (error) {
@@ -134,7 +128,7 @@ const AnswerItem = () => {
           key={answer.commentId}
           answer={answer}
           onDeleteAnswer={handleDeleteAnswer}
-          onEditAnswer={handleEditAnswer}
+          onEditAnswer={handleEditComment}
         />
       ))}
       
