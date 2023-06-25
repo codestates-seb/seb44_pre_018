@@ -58,6 +58,7 @@ public class MemberDto {
     @AllArgsConstructor
     @Getter
     public static class Response {
+        private long memberId;
         private String name;
         private String phone;
         private String email;

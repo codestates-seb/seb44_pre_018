@@ -67,8 +67,11 @@ public class QuestionController {
 
     @GetMapping ("/question/search")//질문들 조회
     public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
-                                       @Positive @RequestParam("size") int size                                     ) {
-        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size);
+                                       @Positive @RequestParam("size") int size,
+                                       @RequestParam(value = "keyword", required = false) String keyword,
+                                       @RequestParam(value = "sortBy", required = false) String sortBy) {
+
+        Page<Question> pageQuestions = questionService.findQuestions(page - 1, size, sortBy, keyword);
         List<Question> questions = pageQuestions.getContent();
 
 
@@ -98,18 +101,18 @@ public class QuestionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity getQuestionWithTitle(@Positive @RequestParam("page") int page,
-                                               @Positive @RequestParam("size") int size,
-                                               @RequestParam("keyword") String keyword){
-
-        Page<Question> pageQuestions = questionService.getRelatedQuestions(page, size, keyword);
-        List<Question> questions = pageQuestions.getContent();
-
-        return new ResponseEntity<>(new MultiResponseDto<>(
-                mapper.questionsToQuestionResponseDtos(questions),
-                pageQuestions), HttpStatus.OK);
-    }
+//    @GetMapping("/search")
+//    public ResponseEntity getQuestionWithTitle(@Positive @RequestParam("page") int page,
+//                                               @Positive @RequestParam("size") int size,
+//                                               @RequestParam("keyword") String keyword){
+//
+//        Page<Question> pageQuestions = questionService.getRelatedQuestions(page, size, keyword);
+//        List<Question> questions = pageQuestions.getContent();
+//
+//        return new ResponseEntity<>(new MultiResponseDto<>(
+//                mapper.questionsToQuestionResponseDtos(questions),
+//                pageQuestions), HttpStatus.OK);
+//    }
 
     @PostMapping("/{question-id}/{member-id}")
     public ResponseEntity voteQuestion(@PathVariable("question-id") @Positive long questionId,
