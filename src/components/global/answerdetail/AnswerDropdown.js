@@ -71,9 +71,9 @@ const AnswerDropdown = ({ onEditAnswer, onDeleteAnswer }) => {
     setShowConfirmationModal(false);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
+    await onDeleteAnswer();
     setShowConfirmationModal(false);
-    onDeleteAnswer();
   };
 
   return (

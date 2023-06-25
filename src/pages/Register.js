@@ -52,12 +52,20 @@ const Register = () => {
     setCheckEmail(emailValue === '');
     setCheckPassword(passwordValue === '');
     try {
+      console.log({
+        email: emailValue,
+        name: nameValue,
+        phone: phoneValue,
+        password: passwordValue,
+      });
       const result = await axios.post('/member/signup', {
         email: emailValue,
         name: nameValue,
         phone: phoneValue,
         password: passwordValue,
       });
+
+      console.log(result);
       //회원가입 성공 여부만 알려줄때
       navigate('/login');
       //멤버 번호 알려줄때
