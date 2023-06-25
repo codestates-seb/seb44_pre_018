@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
+import LoginModal from 'components/global/login/LoginModal';
 
 const AnswerItem = () => {
   const { id } = useParams();
@@ -11,8 +12,8 @@ const AnswerItem = () => {
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false); 
-  const [showModal, setShowModal] = useState(false); 
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
@@ -54,7 +55,7 @@ const AnswerItem = () => {
       await fetch(`/v1/comment/delete/${id}/1`, {
         method: 'DELETE',
       });
-  
+
       const updatedAnswers = answers.filter((answer) => answer.commentId !== answerId);
       setAnswers(updatedAnswers);
       console.log('댓글 삭제 성공');
@@ -68,17 +69,17 @@ const AnswerItem = () => {
       const response = await axios.patch(`/v1/comment/update/${id}/${1}/${1}`, {
         content: editedContent,
       });
-      
+
       const updatedAnswers = answers.map((answer) => {
         if (answer.commentId === commentId) {
           return { ...answer, content: editedContent };
         }
         return answer;
       });
-  
+
       setAnswers(updatedAnswers);
       localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-      
+
       console.log('댓글 수정 성공:', response.data);
     } catch (error) {
       console.error('댓글 수정 실패:', error);
@@ -96,7 +97,7 @@ const AnswerItem = () => {
       return;
     }
     if (!loggedIn) {
-      setShowModal(true); // 로그인하지 않은 경우 모달 창을 표시합니다.
+      setShowModal(true);
       return;
     }
     const newAnswer = {
@@ -125,9 +126,13 @@ const AnswerItem = () => {
     navigate('/login');
   };
 
+  const handleModalCancel = () => {
+    setShowModal(false);
+  };
+
   useEffect(() => {
     getCommentList();
-    setLoggedIn(true);
+    setLoggedIn(false);
   }, []);
 
   return (
@@ -140,42 +145,37 @@ const AnswerItem = () => {
           onEditAnswer={handleEditComment}
         />
       ))}
-      
-      {loggedIn ? (
-        <div className="mt-10">
-          <h2 className="mb-4">Your Answer</h2>
-          <div>
-            <Editor
-              height={200}
-              value={commentInput}
-              setValue={handleCommentChange}
-              checkBody={handleCheckBody}
-            />
-            <button
-              className="pointBu03 my-5"
-              type="submit"
-              onClick={handleSubmitAnswer}
-            >
-              Submit your Answer
-            </button>
-            {showInputMessage && (
-              <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
-            )}
-          </div>
+
+      <div className="mt-10">
+        <h2 className="mb-4">Your Answer</h2>
+        <div>
+          <Editor
+            height={200}
+            value={commentInput}
+            setValue={handleCommentChange}
+            checkBody={handleCheckBody}
+          />
+          {showInputMessage && (
+            <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
+          )}
+          <button
+            className="pointBu03 my-5"
+            type="submit"
+            onClick={handleSubmitAnswer}
+          >
+            
+            Submit your Answer
+          </button>
+          
         </div>
-      ) : (
-        !loggedIn && showModal && (
-          <div className="modal">
-            <div className="modal-title">로그인이 필요합니다</div>
-            <div className="modal-content">로그인 페이지로 이동하시겠습니까?</div>
-            <div className="modal-button">
-              <button className="pointBu03" onClick={handleModalClose}>
-                이동하기
-              </button>
-            </div>
-          </div>
-        )
-      )}
+        {showModal && (
+          <LoginModal
+            onClose={handleModalClose}
+            onCancel={handleModalCancel}
+            isOpen={showModal}
+          />
+        )}
+      </div>
     </>
   );
 };
