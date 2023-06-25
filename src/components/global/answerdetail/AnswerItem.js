@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Answer from 'components/global/answerdetail/Answer';
@@ -6,10 +6,13 @@ import Editor from 'components/global/questionItem/Editor';
 
 const AnswerItem = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [answers, setAnswers] = useState([]);
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false); 
+  const [showModal, setShowModal] = useState(false); 
 
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
@@ -32,12 +35,32 @@ const AnswerItem = () => {
     }
   };
 
-  const addAnswer = (newAnswer) => {
-    setAnswers((prevAnswers) => {
-      const updatedAnswers = [...prevAnswers, newAnswer];
-      localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-      return updatedAnswers;
-    });
+  const addComment = async (questionId, memberId, content) => {
+    try {
+      const response = await fetch(`/v1/comment/2/5/question-answer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            commentId: 5,
+            questionTitle: '제목생성aaa',
+            authenticatedMemberName: '444',
+            content: content,
+            choose: false,
+            likeCount: 0,
+            dislikeCount: 0,
+            commentStatus: 'COMMENT',
+          },
+        }),
+      });
+      const data = await response.json();
+      console.log('데이터 추가 성공:', data);
+    } catch (error) {
+      console.error('데이터 추가 실패:', error);
+      throw error;
+    }
   };
 
   const handleDeleteAnswer = (answerId) => {
@@ -64,9 +87,13 @@ const AnswerItem = () => {
     setShowInputMessage(value.trim() === '');
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = async () => {
     if (commentInput.trim() === '') {
       setShowInputMessage(true);
+      return;
+    }
+    if (!loggedIn) {
+      setShowModal(true); // 로그인하지 않은 경우 모달 창을 표시합니다.
       return;
     }
     const newAnswer = {
@@ -81,12 +108,23 @@ const AnswerItem = () => {
       dislikeCount: 0,
       commentStatus: 'COMMENT',
     };
-    addAnswer(newAnswer);
-    setCommentInput('');
+    try {
+      await addComment(newAnswer.questionId, newAnswer.memberId, newAnswer.content);
+      setCommentInput('');
+      setShowInputMessage(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate('/login');
   };
 
   useEffect(() => {
     getCommentList();
+    setLoggedIn(true);
   }, []);
 
   return (
@@ -99,27 +137,42 @@ const AnswerItem = () => {
           onEditAnswer={handleEditAnswer}
         />
       ))}
-      <div className="mt-10">
-        <h2 className="mb-4">Your Answer</h2>
-        <div>
-          <Editor
-            height={200}
-            value={commentInput}
-            setValue={handleCommentChange}
-            checkBody={handleCheckBody}
-          />
-          {showInputMessage && (
-            <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
-          )}
-          <button
-            className="pointBu03 my-5"
-            type="submit"
-            onClick={handleSubmitAnswer}
-          >
-            Submit your Answer
-          </button>
+      
+      {loggedIn ? (
+        <div className="mt-10">
+          <h2 className="mb-4">Your Answer</h2>
+          <div>
+            <Editor
+              height={200}
+              value={commentInput}
+              setValue={handleCommentChange}
+              checkBody={handleCheckBody}
+            />
+            <button
+              className="pointBu03 my-5"
+              type="submit"
+              onClick={handleSubmitAnswer}
+            >
+              Submit your Answer
+            </button>
+            {showInputMessage && (
+              <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        !loggedIn && showModal && (
+          <div className="modal">
+            <div className="modal-title">로그인이 필요합니다</div>
+            <div className="modal-content">로그인 페이지로 이동하시겠습니까?</div>
+            <div className="modal-button">
+              <button className="pointBu03" onClick={handleModalClose}>
+                이동하기
+              </button>
+            </div>
+          </div>
+        )
+      )}
     </>
   );
 };

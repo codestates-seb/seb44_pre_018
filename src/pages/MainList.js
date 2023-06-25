@@ -1,31 +1,52 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ListItem from 'components/ListItem';
 import Pagination from 'components/global/Pagination';
 import SearchArea from 'components/SearchArea';
-
+import { getSearch } from 'assets/js/common';
+import { styled } from 'styled-components';
+export const POST_SIZE = 10;
+export const PAGES_PER_ARRAY = 10;
 const MainList = () => {
+  const searchData = getSearch();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [queryStrObj, setQueryStrObj] = useState({
+    size: POST_SIZE,
+    query: searchData.query ? searchData.query : '',
+    sort: searchData.sort ? searchData.sort : '',
+    page: searchData.page ? searchData.page : 1,
+  });
   const [filterValue, setFilterValue] = useState('latest');
   const [queryValue, setQueryValue] = useState('');
   const [boardList, setBoardList] = useState([]);
-  const [page, setPage] = useState(1);
-  const limit = 2;
-  //const totalElements =
-  const offset = (page - 1) * limit;
-
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalEl, setTotalEl] = useState(0);
+  const generateQueryStr = (obj) => {
+    let str = '';
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      const key = Object.keys(obj)[i];
+      if (obj[key] === '') continue;
+      if (i !== 0) str += '&';
+      str += `${key}=${obj[key]}`;
+    }
+    return str;
+  };
   const getBoardList = async () => {
+    const qs = generateQueryStr(queryStrObj);
     try {
-      const result = await axios.get(
-        `/question/question/search?page=${page}&size=5`,
-        {
-          headers: {
-            'ngrok-skip-browser-warning': 'true',
-          },
-        }
-      );
-      console.log(result.data.pageInfo.totalElements);
-      setBoardList(result.data.data);
+      const {
+        data: { data: boardList, pageInfo },
+      } = await axios.get(`/question/question/search?${qs}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        },
+      });
+      setBoardList(boardList);
+      setTotalPages(pageInfo.totalPages);
+      setTotalEl(pageInfo.totalElements);
     } catch (err) {
       console.log('err', err);
     }
@@ -33,14 +54,17 @@ const MainList = () => {
 
   useEffect(() => {
     getBoardList();
-  }, [filterValue, queryValue]);
-
-  const postsData = (posts) => {
-    if (posts) {
-      let result = posts.slice(offset, offset + limit);
-      return result;
-    }
-  };
+  }, [queryStrObj]);
+  useEffect(() => {
+    const searchData = getSearch();
+    setQueryStrObj({ size: POST_SIZE, ...searchData });
+  }, [location]);
+  // const postsData = (posts) => {
+  //   if (posts) {
+  //     let result = posts.slice(offset, offset + ;o,o);
+  //     return result;
+  //   }
+  // };
 
   return (
     <div className="inner">
@@ -58,19 +82,28 @@ const MainList = () => {
         setQueryValue={setQueryValue}
       />
 
-      <ul className="border-t-[1px] border-black/[.3] border-solid">
-        {boardList.map((item, idx) => {
-          return <ListItem key={item.questionId} value={item} />;
-        })}
-      </ul>
-      <Pagination
-        limit={limit}
-        page={page}
-        totalPosts={boardList.length}
-        setPage={setPage}
-      />
+      {boardList.length > 0 ? (
+        <>
+          <ul className="border-t-[1px] border-black/[.3] border-solid">
+            {boardList.map((item, idx) => {
+              return <ListItem key={item.questionId} value={item} />;
+            })}
+          </ul>
+          <Pagination page={queryStrObj.page} totalPages={totalPages} />
+        </>
+      ) : (
+        <NoData text="게시글이" />
+      )}
     </div>
   );
 };
 
 export default MainList;
+const EmptyArea = styled.div`
+  padding: 80px 0;
+  font-size: 20px;
+  text-align: center;
+`;
+const NoData = ({ text = '데이터가' }) => {
+  return <EmptyArea>표시할 {text} 없습니다.</EmptyArea>;
+};
