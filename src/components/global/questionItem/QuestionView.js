@@ -34,6 +34,8 @@ const QuesitonButtonWrap = styled.div`
 `;
 
 const QuestionView = ({ question }) => {
+  const { id } = useParams();
+  const [commentCount, setCommentCount] = useState(0);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -43,6 +45,28 @@ const QuestionView = ({ question }) => {
     return `${year}.${month}.${day}`;
   };
 
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const response = await axios.get(`/v1/comment/${id}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+          params: {
+            page: 0,
+            size: 4,
+          },
+        });
+        const { totalElements } = response.data.pageInfo;
+        setCommentCount(response.data.data);
+        setCommentCount(totalElements);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCommentCount();
+  }, []);
   return (
     <div>
       <h3 className="maintitle">{question.title}</h3>
@@ -51,7 +75,7 @@ const QuestionView = ({ question }) => {
           <ItemView viewCount={question.view}/>
         </div>
         <div className="mx-3">
-          <ItemAnswer />
+          <ItemAnswer commentCount={commentCount}/>
         </div>
         <p className="ml-auto font-light">
           Asked: {formatDate(question.createdAt)}

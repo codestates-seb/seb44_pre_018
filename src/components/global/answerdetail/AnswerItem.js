@@ -37,7 +37,7 @@ const AnswerItem = () => {
 
   const addComment = async (content) => {
     try {
-      const response = await axios.post(`/v1/comment/${id}/2/question-answer`, {
+      const response = await axios.post(`/v1/comment/${id}/${2}/question-answer`, {
         content: content,
       });
       const newAnswer = response.data.data;
