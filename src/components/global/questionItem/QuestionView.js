@@ -7,6 +7,7 @@ import TagList from 'components/global/tag/TagList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { styled } from 'styled-components';
+import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
 
 const QuesitonButtonWrap = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ const QuesitonButtonWrap = styled.div`
 `;
 
 const QuestionView = ({ question }) => {
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -46,7 +48,7 @@ const QuestionView = ({ question }) => {
       <h3 className="maintitle">{question.title}</h3>
       <div className="flex mt-5">
         <div className="mr-3">
-          <ItemView />
+          <ItemView viewCount={question.view}/>
         </div>
         <div className="mx-3">
           <ItemAnswer />
@@ -66,10 +68,9 @@ const QuestionView = ({ question }) => {
           </button>
         </QuesitonButtonWrap>
         <div className="w-full">
-          <div className="font-light flex justify-end ml-auto mt-2">
-            <button className="mr-2">수정</button>
-            <button>삭제</button>
-          </div>
+        <div className="font-light flex justify-end ml-auto mt-2">
+        <QuestionEditButton />
+        </div>
           <p className="text-sm font-light py-2 content">{question.content}</p>
           <TagList />
         </div>

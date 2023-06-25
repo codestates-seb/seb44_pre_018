@@ -1,9 +1,11 @@
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
 
 const AnswerItem = () => {
+  const { id } = useParams();
   const [answers, setAnswers] = useState([]);
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
@@ -13,24 +15,23 @@ const AnswerItem = () => {
     setBodyChecked(isChecked);
   };
 
-  const getAnswerData = async () => {
-    try {
-      const result = await axios.get('/v1/comment/1?page=0&size=4', {
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-        },
-      });
-      const answers = result.data.answers.map((answer) => ({
-        ...answer,
-        key: answer.answerId,
-      }));
-      localStorage.setItem('answers', JSON.stringify(answers));
-      setAnswers(answers);
-    } catch (err) {
-      console.log('Error getting answer data:', err);
-    }
-  };
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`v1/comment/${id}?page=0&size=4`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+        });
+        const data = response.data.data;
+        setAnswers(data);
+      } catch (error) {
+        console.log('Error fetching question data:', error);
+      }
+    };
+    fetchData();
+  }, [id]);
+
   const addAnswer = (newAnswer) => {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers, newAnswer];
@@ -41,7 +42,7 @@ const AnswerItem = () => {
 
   const handleDeleteAnswer = (answerId) => {
     const updatedAnswers = answers.filter(
-      (answer) => answer.answerId !== answerId
+      (answer) => answer.commentId !== answerId
     );
     setAnswers(updatedAnswers);
     localStorage.setItem('answers', JSON.stringify(updatedAnswers));
@@ -49,7 +50,7 @@ const AnswerItem = () => {
 
   const handleEditAnswer = (answerId, editedContent) => {
     const updatedAnswers = answers.map((answer) => {
-      if (answer.answerId === answerId) {
+      if (answer.commentId === answerId) {
         return { ...answer, content: editedContent };
       }
       return answer;
@@ -69,33 +70,26 @@ const AnswerItem = () => {
       return;
     }
     const newAnswer = {
-      questionId: '1',
-      answerId: Date.now().toString(),
+      commentId: Date.now().toString(),
+      memberId: '123',
+      questionId: id,
+      questionTitle: '',
+      authenticatedMemberName: 'Username',
       content: commentInput,
+      choose: false,
+      likeCount: 0,
+      dislikeCount: 0,
+      commentStatus: 'COMMENT',
     };
     addAnswer(newAnswer);
     setCommentInput('');
   };
 
-  useEffect(() => {
-    const storedAnswers = localStorage.getItem('answers');
-    if (storedAnswers) {
-      setAnswers(JSON.parse(storedAnswers));
-      getAnswerData();
-    } else {
-      getAnswerData();
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('answers', JSON.stringify(answers));
-  }, [answers]);
-
   return (
     <>
-      {answers.map((answer, index) => (
+      {answers.map((answer) => (
         <Answer
-          key={`${answer.answerId}-${index}`}
+          key={answer.commentId}
           answer={answer}
           onDeleteAnswer={handleDeleteAnswer}
           onEditAnswer={handleEditAnswer}
@@ -114,7 +108,7 @@ const AnswerItem = () => {
             <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
           )}
           <button
-            className="pointBu03 my-5 "
+            className="pointBu03 my-5"
             type="submit"
             onClick={handleSubmitAnswer}
           >
