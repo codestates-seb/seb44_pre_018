@@ -4,7 +4,7 @@ import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
-import AnswerDropdown from 'components/global/answerdetail/AnswerDropdown';
+import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
 import { styled } from 'styled-components';
 
 const Item = styled.li`
@@ -113,10 +113,7 @@ const ListItem = ({ value }) => {
 
   return (
     <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3 relative">
-      <AnswerDropdown
-        onEditAnswer={toggleEditMode}
-        onDeleteAnswer={handleDeleteAnswer}
-      />
+      <QuestionEditButton id={value.questionId}/>
       <Link
         className="flex items-center justify-between"
         to={`/question/${value.questionId}`}

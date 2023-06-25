@@ -49,27 +49,36 @@ const AnswerItem = () => {
     }
   };
 
-  const handleDeleteAnswer = (answerId) => {
-    const updatedAnswers = answers.filter(
-      (answer) => answer.commentId !== answerId
-    );
-    setAnswers(updatedAnswers);
-    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+  const handleDeleteAnswer = async (answerId) => {
+    try {
+      await fetch(`/v1/comment/delete/${id}/1`, {
+        method: 'DELETE',
+      });
+  
+      const updatedAnswers = answers.filter((answer) => answer.commentId !== answerId);
+      setAnswers(updatedAnswers);
+      console.log('댓글 삭제 성공');
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+    }
   };
 
-  const handleEditComment = async (commentId, editedContent) => {
+  const handleEditComment = async (questionId, commentId, memberId, editedContent) => {
     try {
-      const response = await axios.patch(`/v1/comment/${commentId}`, {
+      const response = await axios.patch(`/v1/comment/update/${id}/${1}/${1}`, {
         content: editedContent,
       });
+      
       const updatedAnswers = answers.map((answer) => {
         if (answer.commentId === commentId) {
           return { ...answer, content: editedContent };
         }
         return answer;
       });
+  
       setAnswers(updatedAnswers);
       localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+      
       console.log('댓글 수정 성공:', response.data);
     } catch (error) {
       console.error('댓글 수정 실패:', error);

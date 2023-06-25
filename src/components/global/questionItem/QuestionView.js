@@ -33,9 +33,38 @@ const QuesitonButtonWrap = styled.div`
   }
 `;
 
+const QuestionEditButtonWrap = styled.div`
+  margin-left: -20rem;
+`;
+
 const QuestionView = ({ question }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
+  const [dislikeCount, setDislikeCount] = useState(0);
+
+
+  const handleLike = async () => {
+    try {
+      await axios.post(`/question/${id}/1`, {
+        voteStatus: 'LIKE',
+      });
+      setLikeCount((prevCount) => prevCount + 1);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDislike = async () => {
+    try {
+      await axios.post(`/question/${id}/1`, {
+        voteStatus: 'DISLIKE',
+      });
+      setLikeCount((prevCount) => prevCount - 1);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -67,7 +96,7 @@ const QuestionView = ({ question }) => {
 
     fetchCommentCount();
   }, []);
-  
+
   return (
     <div>
       <h3 className="maintitle">{question.title}</h3>
@@ -83,18 +112,21 @@ const QuestionView = ({ question }) => {
         </p>
       </div>
       <div className="flex justify-between border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2 items-center">
-        <QuesitonButtonWrap>
-          <button>
+        
+      <QuesitonButtonWrap>
+          <button onClick={handleLike}>
             <FontAwesomeIcon icon={faCaretUp} />
           </button>
-          <p>2</p>
-          <button>
+          <p>{likeCount}</p>
+          <button onClick={handleDislike}>
             <FontAwesomeIcon icon={faCaretDown} />
           </button>
         </QuesitonButtonWrap>
         <div className="w-full">
-        <div className="font-light flex justify-end ml-auto mt-2">
-        <QuestionEditButton />
+        <div className="mt-2">
+          <QuestionEditButtonWrap>
+            <QuestionEditButton />
+          </QuestionEditButtonWrap>
         </div>
           <p className="text-sm font-light py-2 content">{question.content}</p>
           <TagList />
