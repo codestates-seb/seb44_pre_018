@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { getSearch } from 'assets/js/common';
 
-const SearchBar = ({ queryValue, setQueryValue }) => {
-  const [thisText, setThisText] = useState(queryValue);
+const SearchBar = ({ clickBtn }) => {
+  const searchData = getSearch();
+  const [thisText, setThisText] = useState(
+    searchData.keyword ? searchData.keyword : ''
+  );
   const onChangeThis = (e) => {
     setThisText(e.currentTarget.value);
   };
   const submitQuery = () => {
-    setQueryValue(thisText);
+    clickBtn(thisText);
   };
   return (
     <div className="relative w-64 sm:w-52">

@@ -19,8 +19,6 @@ const MainList = () => {
     sortBy: searchData.sortBy ? searchData.sortBy : '',
     page: searchData.page ? searchData.page : 1,
   });
-  const [filterValue, setFilterValue] = useState('latest');
-  const [queryValue, setQueryValue] = useState('');
   const [boardList, setBoardList] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [totalEl, setTotalEl] = useState(0);
@@ -36,6 +34,7 @@ const MainList = () => {
   };
   const getBoardList = async () => {
     const qs = generateQueryStr(queryStrObj);
+    console.log(qs);
     try {
       const {
         data: { data: boardList, pageInfo },
@@ -81,12 +80,7 @@ const MainList = () => {
         </Link>
       </div>
 
-      <SearchArea
-        filterValue={filterValue}
-        setFilterValue={setFilterValue}
-        queryValue={queryValue}
-        setQueryValue={setQueryValue}
-      />
+      <SearchArea />
 
       {boardList.length > 0 ? (
         <>
