@@ -151,22 +151,10 @@ public class QuestionService {
     }
 
     // 질문글 삭제시 답변도 같이 삭제하는 메서드
-    public void deleteQuestionWithComments(long questionId) {
+    public void deleteQuestion(long questionId) {
 
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-
-        List<Comment> comments = question.getCommentList();
-
-        if (comments != null && !comments.isEmpty()) {
-            for (Comment comment : comments) {
-                Long commentId = comment.getCommentId();
-                Comment existingComment = commentRepository.findById(commentId).orElse(null);
-                if (existingComment != null) {
-                    commentRepository.delete(existingComment);
-                }
-            }
-        }
 
         // 질문 삭제
         questionRepository.delete(question);
@@ -187,13 +175,9 @@ public class QuestionService {
     }
 
     public Question voteQuestion(long memberId, long questionId, String voteStatus){
-        System.out.println("-------------------------------------------------------------------");
         Question question = findQuestion(questionId);
-        System.out.println("질문 찾음: " + question.getTitle());
-        System.out.println("-------------------------------------------------------------------");
         Member member = memberService.findMember(memberId);
-        System.out.println("멤버 찾음: " + member.getName());
-        System.out.println("-------------------------------------------------------------------");
+
 
 
         QuestionVote questionVote = new QuestionVote(QuestionVote.VoteType.valueOf(voteStatus), question, member);

@@ -68,12 +68,12 @@ public class Member extends Auditable {
     }
 
 
-    @OneToMany(mappedBy = "commentId")
-    List<Comment> commentList= new ArrayList<Comment>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Comment> commentList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "questionId")
-    List<Question> questionList= new ArrayList<Question>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Question> questionList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     List<QuestionVote> questionVoteList = new ArrayList<>();
 }

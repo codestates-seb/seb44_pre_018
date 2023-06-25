@@ -42,8 +42,6 @@ public class QuestionVoteService {
 
         } else {
             //이 질문에 대ㅐ해 투표를 처음한 회원
-            questionVote.getQuestion().getQuestionVoteList().add(questionVote);
-            questionRepository.save(questionVote.getQuestion());
             questionVoteRepository.save(questionVote);
         }
     }

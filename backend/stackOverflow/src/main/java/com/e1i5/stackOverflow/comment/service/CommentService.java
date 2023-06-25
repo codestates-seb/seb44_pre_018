@@ -80,8 +80,6 @@ public class CommentService {
         //존재 질문인지 파악
         Question findQuestion = questionService.findVerifiedQuestion(questionId);
         comment.setQuestion(findQuestion);
-        findQuestion.getCommentList().add(comment);
-        questionRepository.save(findQuestion);
 
         return commentRepository.save(comment);
     }

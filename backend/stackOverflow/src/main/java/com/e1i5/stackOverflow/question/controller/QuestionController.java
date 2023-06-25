@@ -45,7 +45,7 @@ public class QuestionController {
     public ResponseEntity postQuestion(@PathVariable("member_id") long memberId,
             @Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
         Question question =questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto),memberId);
-        QuestionResponseDto response = mapper.questionToQuestionResponseDto(question);
+        QuestionResponseDto.Question response = mapper.questionToQuestionResponseDto(question);
    // 회원인지 판단 --> 시큐리티 토큰(jwt)
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
 
@@ -85,7 +85,7 @@ public class QuestionController {
         Question findquestion = questionService.findQuestion(questionId);
 
 
-        QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(findquestion);
+        QuestionResponseDto.Question responseDto = mapper.questionToQuestionResponseDto(findquestion);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
@@ -95,7 +95,7 @@ public class QuestionController {
             @PathVariable("member_id") @Positive long memberId){
 
         questionService.QuestionByAuthor(questionId, memberId);
-        questionService.deleteQuestionWithComments(questionId);
+        questionService.deleteQuestion(questionId);
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -120,7 +120,7 @@ public class QuestionController {
                                        @Valid @RequestBody QuestionVoteDto questionVoteDto){
         System.out.println(questionVoteDto.getVoteStatus());
         Question question = questionService.voteQuestion(memberId, questionId, questionVoteDto.getVoteStatus());
-        QuestionResponseDto responseDto = mapper.questionToQuestionResponseDto(question);
+        QuestionResponseDto.Question responseDto = mapper.questionToQuestionResponseDto(question);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
