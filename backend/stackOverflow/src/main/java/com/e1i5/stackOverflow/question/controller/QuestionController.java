@@ -65,7 +65,7 @@ public class QuestionController {
                 (new SingleResponseDto<>(mapper.questionToQuestionResponseDto(patchQuestion)), HttpStatus.OK);
     }
 
-    @GetMapping ("/question/search")//질문들 조회
+    @GetMapping ("/search")//질문들 조회
     public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
                                        @Positive @RequestParam("size") int size,
                                        @RequestParam(value = "keyword", required = false) String keyword,

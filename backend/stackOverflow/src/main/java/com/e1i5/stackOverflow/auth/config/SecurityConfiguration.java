@@ -61,6 +61,13 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/member").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/member/**").hasAnyRole("USER", "ADMIN")// getMember
                         .antMatchers(HttpMethod.DELETE, "/member/**").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/question/{member_id}/create").hasRole("USER") //질문생성
+                        .antMatchers(HttpMethod.POST, "/question/{question-id}/{member-id}").hasRole("USER") //질문투표
+                        .antMatchers(HttpMethod.PATCH, "/question/update/{question_id}/{member_id}").hasRole("USER") //질문 수정
+                        .antMatchers(HttpMethod.DELETE, "/question/delete/{question_id}/{member_id}").hasRole("USER") //질문 삭제
+                        .antMatchers(HttpMethod.POST, "/v1/comment/{member_id}/create").hasRole("USER") //댓글 생성
+                        .antMatchers(HttpMethod.PATCH,"/v1/comment/update/{question-id}/{comment-id}/{member-id}").hasRole("USER") //댓글 수정
+                        .antMatchers(HttpMethod.DELETE,"/v1/comment/delete/{comment-id}/{member-id}").hasRole("USER") //댓글 삭제
                         .anyRequest().permitAll()
                 );
         return httpSecurity.build();
