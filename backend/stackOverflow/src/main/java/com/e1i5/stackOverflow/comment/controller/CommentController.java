@@ -114,11 +114,7 @@ public class CommentController {
     @DeleteMapping("/delete/{comment-id}/{member-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId,
                                         @PathVariable("member-id") @Positive long memberId){
-        // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
-        // 댓글 작성자인지 확인
-        commentService.VerifyCommentAuthor(commentId, memberId);
-        // 질문 작성자인지 확인
-        commentService.VerifyQuestionAuthor(commentId, memberId);
+
         commentService.deleteComment(commentId,memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
