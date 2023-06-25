@@ -67,6 +67,7 @@ const QuestionView = ({ question }) => {
 
     fetchCommentCount();
   }, []);
+  
   return (
     <div>
       <h3 className="maintitle">{question.title}</h3>

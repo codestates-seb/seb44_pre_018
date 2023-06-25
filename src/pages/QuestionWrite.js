@@ -29,8 +29,8 @@ const QuestionWrite = () => {
         title: title,
         content: body,
       });
-      console.log(result);
-      navigate(`/detail/1`);
+      const question_id = result.data.data.questionId;
+      navigate(`/question/${question_id}`);
     } catch (err) {
       console.log(err);
     }

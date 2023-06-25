@@ -15,8 +15,8 @@ const MainList = () => {
 
   const [queryStrObj, setQueryStrObj] = useState({
     size: POST_SIZE,
-    query: searchData.query ? searchData.query : '',
-    sort: searchData.sort ? searchData.sort : '',
+    keyword: searchData.keyword ? searchData.keyword : '',
+    sortBy: searchData.sortBy ? searchData.sortBy : '',
     page: searchData.page ? searchData.page : 1,
   });
   const [filterValue, setFilterValue] = useState('latest');
@@ -57,7 +57,13 @@ const MainList = () => {
   }, [queryStrObj]);
   useEffect(() => {
     const searchData = getSearch();
-    setQueryStrObj({ size: POST_SIZE, ...searchData });
+    const obj = {
+      size: POST_SIZE,
+      keyword: searchData.keyword ? searchData.keyword : '',
+      sortBy: searchData.sortBy ? searchData.sortBy : '',
+      page: searchData.page ? searchData.page : 1,
+    };
+    setQueryStrObj(obj);
   }, [location]);
   // const postsData = (posts) => {
   //   if (posts) {

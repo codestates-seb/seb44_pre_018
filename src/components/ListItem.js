@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
@@ -43,16 +44,72 @@ const Item = styled.li`
   }
 `;
 
+const ListText = styled.p`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.25rem;
+  padding: 0;
+  * {
+    font-size: inherit !important;
+    line-height: inherit !important;
+    font-weight: inherit !important;
+  }
+  > *:not(:first-child) {
+    display: none;
+  }
+`;
+
 const ListItem = ({ value }) => {
+  // 댓글 수 가져오기
+  const [commentCount, setCommentCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const response = await axios.get(`/v1/comment/${value.questionId}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+          params: {
+            page: 0,
+            size: 4,
+          },
+        });
+        const { totalElements } = response.data.pageInfo;
+        setCommentCount(totalElements);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCommentCount();
+  }, []);
+
   const navigate = useNavigate();
-  const [editMode, setEditMode] = useState(false);
-  const [editedContent, setEditedContent] = useState('');
-  const viewCount = 0;
+  // const {
+  //   user: {
+  //     userInfo: { member_id },
+  //   },
+  // } = useSelector((state) => state);
   const toggleEditMode = () => {
     navigate(`/update/${value.questionId}`);
   };
 
-  const handleDeleteAnswer = () => {};
+  const handleDeleteAnswer = async () => {
+    // try {
+    //   const result = await axios.delete(`/delete~/${member_id}/${content_id}`);
+    //   console.log(result);
+    //   afterDelete();
+    // } catch (err) {
+    //   console.log('err', err);
+    // }
+    // navigate(`/question/delete/4/1`);
+    // 딜리트요청
+    // 리스트 새로고침.
+  };
 
   return (
     <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3 relative">
@@ -68,15 +125,15 @@ const ListItem = ({ value }) => {
           <h3 className="itemTitle text-base ">
             <span>{value.title}</span>
           </h3>
-          <p
+          <ListText
             className="text-sm font-light py-2"
             dangerouslySetInnerHTML={{ __html: value.content }}
-          ></p>
+          ></ListText>
           <TagList />
         </div>
         <div className="w-1/5 text-right flex align-center justify-end">
           <ItemView viewCount={value.view} />
-          <ItemAnswer />
+          <ItemAnswer commentCount={commentCount}/>
         </div>
       </Link>
     </Item>

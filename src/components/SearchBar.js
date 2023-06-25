@@ -9,7 +9,6 @@ const SearchBar = ({ queryValue, setQueryValue }) => {
   };
   const submitQuery = () => {
     setQueryValue(thisText);
-    console.log('aaa');
   };
   return (
     <div className="relative w-64 sm:w-52">

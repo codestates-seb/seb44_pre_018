@@ -10,8 +10,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('dsdssd@ddd.com');
+  const [password, setPassword] = useState('Gntifr5897!@@');
   const [checkEmail, setCheckEmail] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
 
@@ -24,28 +24,37 @@ const Login = () => {
     setPassword(e.currentTarget.value);
   };
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-
-    let body = {
-      email: email,
-      password: password,
-    };
-    // const result = await axios.post('/api/login', body);
-    // const member_no = result.data.member_no;
-    // const result2 = await axios.get(`/api/member/${member_no}`);
-    // dispatch(loginUser({...result2.data, isLogin : true}))
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
     setCheckEmail(email === '');
     setCheckPassword(password === '');
+    // try {
+    //   const result = await axios.post('/auth/login', {
+    //     username: email,
+    //     password: password,
+    //   });
+    //   navigate('/');
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
-    dispatch(
-      loginUser({
-        name: 'test',
-        email: email,
-        isLoading: false,
-        isLogin: true,
-      })
-    );
+    const result = await axios.post('/auth/login', {
+      username: email,
+      password: password,
+    });
+    const member_no = result.data.member_id;
+    console.log(member_no);
+    // const result2 = await axios.get(`/member/${member_no}`);
+    // dispatch(loginUser({ ...result2.data, isLogin: true }));
+
+    // dispatch(
+    //   loginUser({
+    //     name: 'test',
+    //     email: email,
+    //     isLoading: false,
+    //     isLogin: true,
+    //   })
+    // );
     //navigate('/');
   };
 
@@ -60,6 +69,7 @@ const Login = () => {
         <input
           type="text"
           id="email"
+          value={email}
           onChange={emailChange}
           className={`inputBox ${checkEmail && 'disabledInput'}`}
         />
@@ -71,6 +81,7 @@ const Login = () => {
         <input
           type="password"
           id="password"
+          value={password}
           onChange={passwordChange}
           className={`inputBox ${checkPassword && 'disabledInput'}`}
         />
