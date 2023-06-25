@@ -15,22 +15,22 @@ const AnswerItem = () => {
     setBodyChecked(isChecked);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`v1/comment/${id}?page=0&size=4`, {
-          headers: {
-            'ngrok-skip-browser-warning': 'true',
-          },
-        });
-        const data = response.data.data;
-        setAnswers(data);
-      } catch (error) {
-        console.log('Error fetching question data:', error);
-      }
-    };
-    fetchData();
-  }, [id]);
+  const getCommentList = async () => {
+    try {
+      const response = await axios.get('/v1/comment/2', {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        },
+        params: {
+          page: 0,
+          size: 4,
+        },
+      });
+      setAnswers(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const addAnswer = (newAnswer) => {
     setAnswers((prevAnswers) => {
@@ -84,6 +84,10 @@ const AnswerItem = () => {
     addAnswer(newAnswer);
     setCommentInput('');
   };
+
+  useEffect(() => {
+    getCommentList();
+  }, []);
 
   return (
     <>
