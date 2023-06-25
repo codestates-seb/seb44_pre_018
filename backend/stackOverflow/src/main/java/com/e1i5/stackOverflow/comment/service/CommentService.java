@@ -44,9 +44,8 @@ public class CommentService {
 
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능.
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
-    public Page<Comment> findCommentList(int page, int size){
-        // lastCommentId도 같이 전달해 다음 페이지 댓글 목록을 list로 조회한다.
-        return commentRepository.findAll(PageRequest.of(page, size,
+    public Page<Comment> findCommentList(long questionId, int page, int size){
+        return commentRepository.findAllByQuestionId(questionId, PageRequest.of(page, size,
                 Sort.by("commentId").descending()));
 
     }

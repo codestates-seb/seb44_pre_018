@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.question.controller;
 
+import com.e1i5.stackOverflow.auth.interceptor.JwtInterceptor;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.question.dto.QuestionDto;
@@ -38,9 +39,10 @@ public class QuestionController {
     }
 
 
-    @PostMapping("/{member_id}/create") //질문 생성
-    public ResponseEntity postQuestion(@PathVariable("member_id") long memberId,
-            @Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
+    @PostMapping("/create") //질문 생성
+    public ResponseEntity postQuestion(@Valid @RequestBody QuestionDto.QuestionPostDto questionPostDto) {
+        long memberId = JwtInterceptor.requestMemberId();
+
         Question question =questionService.createQuestion(mapper.questionPostDtoToQuestion(questionPostDto),memberId);
         QuestionResponseDto response = mapper.questionToQuestionResponseDto(question);
    // 회원인지 판단 --> 시큐리티 토큰(jwt)
@@ -49,10 +51,11 @@ public class QuestionController {
 
     }
 
-    @PatchMapping("/update/{question_id}/{member_id}") //질문 수정
+    @PatchMapping("/update/{question_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive @NonNull long questionId,
-                                        @PathVariable("member_id") @Positive long memberId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
+        long memberId = JwtInterceptor.requestMemberId();
+
         questionService.QuestionByAuthor(questionId, memberId); // 댓글 작성자메서드 호출
         questionPatchDto.setQuestionId(questionId);
         questionPatchDto.setMemberId(memberId);
@@ -85,9 +88,9 @@ public class QuestionController {
     }
 
 
-    @DeleteMapping("/delete/{question_id}/{member_id}") //질문 삭제
-    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId,
-            @PathVariable("member_id") @Positive long memberId){
+    @DeleteMapping("/delete/{question_id}") //질문 삭제
+    public ResponseEntity deleteMember(@PathVariable("question_id") @Positive long questionId){
+        long memberId = JwtInterceptor.requestMemberId();
 
         questionService.QuestionByAuthor(questionId, memberId);
         questionService.deleteQuestionWithComments(questionId);

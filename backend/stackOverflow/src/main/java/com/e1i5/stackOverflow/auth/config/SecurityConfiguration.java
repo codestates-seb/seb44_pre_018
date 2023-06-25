@@ -55,12 +55,19 @@ public class SecurityConfiguration {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests(authorize -> authorize // > 잘 작동하지 않는 듯
                         .antMatchers(HttpMethod.POST, "/member/signup").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/member/**").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/member").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.GET, "/member/**").hasAnyRole("USER", "ADMIN")// getMember
-                        .antMatchers(HttpMethod.DELETE, "/member/**").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH, "/member/update").hasRole("USER") // 회원수정
+                        .antMatchers(HttpMethod.GET, "/member").hasRole("ADMIN") // getMebers
+                        .antMatchers(HttpMethod.GET, "/member/getmember").hasAnyRole("USER", "ADMIN")// getMember
+                        .antMatchers(HttpMethod.DELETE, "/member/delete").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.POST, "/question/create").hasRole("USER") //질문생성
+                        .antMatchers(HttpMethod.POST, "/question/**").hasRole("USER") //질문투표
+                        .antMatchers(HttpMethod.PATCH, "/question/update/**").hasRole("USER") //질문 수정
+                        .antMatchers(HttpMethod.DELETE, "/question/delete/**").hasRole("USER") //질문 삭제
+                        .antMatchers(HttpMethod.POST, "/v1/comment/create").hasAnyRole("USER","ADMIN") //댓글 생성
+                        .antMatchers(HttpMethod.PATCH,"/v1/comment/update/**").hasRole("USER") //댓글 수정
+                        .antMatchers(HttpMethod.DELETE,"/v1/comment/delete/**").hasRole("USER") //댓글 삭제
                         .anyRequest().permitAll()
                 );
         return httpSecurity.build();
