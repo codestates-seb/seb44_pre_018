@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://db-stackoverflow.cxpgcfwnzndp.ap-northeast-2.rds.amazonaws.com/db_stackOverflow?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: admin
+    password: stark0503
+    driver-class-name: com.mysql.cj.jdbc.Driver
+config:
+  domain: http://stackoverflowbucket.s3-website.ap-northeast-2.amazonaws.com
