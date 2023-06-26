@@ -62,7 +62,7 @@ const MainList = () => {
     const obj = {
       size: POST_SIZE,
       keyword: searchData.keyword ? searchData.keyword : '',
-      sortBy: searchData.sortBy ? searchData.sortBy : '',
+      sortBy: searchData.sortBy ? searchData.sortBy : 'latest',
       page: searchData.page ? searchData.page : 1,
     };
     setQueryStrObj(obj);
