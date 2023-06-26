@@ -1,13 +1,9 @@
 package com.e1i5.stackOverflow.question.service;
 
-import com.e1i5.stackOverflow.comment.entity.Comment;
-import com.e1i5.stackOverflow.comment.repository.CommentRepository;
-import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
-import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import com.e1i5.stackOverflow.questionVote.entity.QuestionVote;
@@ -28,17 +24,14 @@ public class QuestionService {
 
     private final MemberService memberService;
 
-    private final CommentRepository commentRepository;
 
     private final QuestionVoteService questionVoteService;
 
     public QuestionService(QuestionRepository questionRepository,
                            MemberService memberService,
-                           CommentRepository commentRepository,
                            QuestionVoteService questionVoteService) {
         this.questionRepository = questionRepository;
         this.memberService = memberService;
-        this.commentRepository = commentRepository;
         this.questionVoteService = questionVoteService;
     }
 
@@ -82,12 +75,30 @@ public class QuestionService {
     }
 
     public Page<Question> findQuestions(int page, int size, String sortBy, String keyword) { // 여러 질문 검색
+
+        Sort sort;
+
+        switch (sortBy) {
+            case "view":
+                sort = Sort.by(Sort.Direction.DESC, "view");
+                break;
+
+//            case "created_at":
+//                System.out.println("--생성일 순--");
+//                sort = Sort.by(Sort.Direction.DESC, "created_at");
+//                break;
+
+            default:
+                sort = Sort.by(Sort.Direction.DESC, "questionId");
+                break;
+        }
+
         // 특정 단어가 title에 포함된 모든 Question을 조회합니다.
-        List<Question> questions = questionRepository.findAll();
+        List<Question> questions = questionRepository.findAll(sort);
+
 
         // 특정 단어와 연관된 Question만 필터링하여 반환합니다.
         List<Question> relatedQuestions;
-
         if (keyword != null && !keyword.isEmpty()) {
             relatedQuestions = questions.stream()
                     .filter(question -> question.getTitle().contains(keyword))
@@ -96,25 +107,10 @@ public class QuestionService {
             relatedQuestions = questions;
         }
 
-        Sort sort;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Question> resultPage = new PageImpl<>(relatedQuestions, pageable, relatedQuestions.size());
 
-        switch (sortBy) {
-            case "view":
-                sort = Sort.by("view").descending();
-                break;
-//        case "recentAnswer":
-//            sort = Sort.by("lastAnswerDate").descending();
-//            break;
-            default:
-                sort = Sort.by("questionId").descending();
-                break;
-        }
-
-        int startIndex = page * size;
-        int endIndex = Math.min(startIndex + size, relatedQuestions.size());
-        List<Question> pagedQuestions = relatedQuestions.subList(startIndex, endIndex);
-
-        return new PageImpl<>(pagedQuestions, PageRequest.of(page, size, sort), relatedQuestions.size());
+        return resultPage;
     }
 
 //    public void deleteQuestion(long questionId) {
@@ -177,8 +173,6 @@ public class QuestionService {
     public Question voteQuestion(long memberId, long questionId, String voteStatus){
         Question question = findQuestion(questionId);
         Member member = memberService.findMember(memberId);
-
-
 
         QuestionVote questionVote = new QuestionVote(QuestionVote.VoteType.valueOf(voteStatus), question, member);
         questionVoteService.voteQuestion(questionVote);

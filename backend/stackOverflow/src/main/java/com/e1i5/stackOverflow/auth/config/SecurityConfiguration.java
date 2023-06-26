@@ -3,21 +3,26 @@ package com.e1i5.stackOverflow.auth.config;
 
 import com.e1i5.stackOverflow.auth.filter.JwtAuthenticationFilter;
 import com.e1i5.stackOverflow.auth.filter.JwtVerificationFilter;
-import com.e1i5.stackOverflow.auth.handler.MemberAccessDeniedHandler;
-import com.e1i5.stackOverflow.auth.handler.MemberAuthenticationEntryPoint;
-import com.e1i5.stackOverflow.auth.handler.MemberAuthenticationFailureHandler;
-import com.e1i5.stackOverflow.auth.handler.MemberAuthenticationSuccessHandler;
+import com.e1i5.stackOverflow.auth.handler.*;
 import com.e1i5.stackOverflow.auth.jwt.JwtTokenizer;
 import com.e1i5.stackOverflow.auth.utils.CustomAuthorityUtils;
+import com.e1i5.stackOverflow.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,25 +32,35 @@ import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@EnableWebSecurity
+@Configuration
 public class SecurityConfiguration {
+//    @Value("${spring.security.oauth2.client.registration.google.clientId}")  // (1)
+//    private String clientId;
+//
+//    @Value("${spring.security.oauth2.client.registration.google.clientSecret}") // (2)
+//    private String clientSecret;
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
 
     public SecurityConfiguration(JwtTokenizer jwtTokenizer,
-                                 CustomAuthorityUtils authorityUtils){
+                                 CustomAuthorityUtils authorityUtils) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, MemberService memberService) throws Exception {
         httpSecurity
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
                 .cors(withDefaults()) // corsConfigurationSource라는 이름으로 등록된 Bean을 이용 = CorsFilter를 적용
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()//이 아래는 oauth2
+//                .oauth2Login()
+//                .loginPage("/oauth2/login/google") // 구글 로그인 페이지 경로 설정
+//                .defaultSuccessUrl("/oauth2/login/google/success") // 로그인 성공 후 리디렉션할 경로 설정
+//                .failureUrl("/oauth2/login/google/error") // 로그인 실패 시 리디렉션할 경로 설정
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()

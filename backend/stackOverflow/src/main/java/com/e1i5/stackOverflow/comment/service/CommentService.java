@@ -42,6 +42,7 @@ public class CommentService {
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능.
     // 댓글 목록 조회 - 비회원, 회원 모두 조회 가능. 특정 질문의 댓글들을 리스트 형태로 확인한다.
     public Page<Comment> findCommentList(int page, int size, Question question){
+        // lastCommentId도 같이 전달해 다음 페이지 댓글 목록을 list로 조회한다.
         List<Comment> commentList = commentRepository.findAll();
 
         List<Comment> filteredComments = commentList.stream()
@@ -154,6 +155,7 @@ public class CommentService {
             throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
         }
     }
+    //질문의 역할인지 확인
 
 //    댓글 작성자인지 판단하는 메서드
 //    전달 받은 memberId가 comment에 저장된 memberId와 같은지 비교

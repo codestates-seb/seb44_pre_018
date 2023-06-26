@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//서버 작동 테스트 페이지
 @Slf4j
 @RestController
 @RequestMapping("/test")
 public class TestController {
     @GetMapping
     public ResponseEntity<String> getTest() {
-        return new ResponseEntity<>("test is ok!!", HttpStatus.OK);
+        return new ResponseEntity<>("server is working!!", HttpStatus.OK);
     }
 }

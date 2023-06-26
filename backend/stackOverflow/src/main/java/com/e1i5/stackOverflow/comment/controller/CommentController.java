@@ -55,7 +55,9 @@ public class CommentController {
     public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId,
                                                         @RequestParam("page") int page,
                                                         @RequestParam("size") int size){
-        Question question = questionService.findQuestion(questionId);
+        Question question = questionRepository.findById(questionId) // 전달받은 질문 id와 일치하는 질문을 질문테이블에서 가져옴
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
         Page<Comment> comments = commentService.findCommentList(page, size, question);
         List<Comment> commentList = comments.getContent();
 
@@ -105,10 +107,6 @@ public class CommentController {
     public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
         long memberId = JwtInterceptor.requestMemberId();
         // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
-        // 댓글 작성자인지 확인
-        commentService.VerifyCommentAuthor(commentId, memberId);
-        // 질문 작성자인지 확인
-        commentService.VerifyQuestionAuthor(commentId, memberId);
         commentService.deleteComment(commentId,memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

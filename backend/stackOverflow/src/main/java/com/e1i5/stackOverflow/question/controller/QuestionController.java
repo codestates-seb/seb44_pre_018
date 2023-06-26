@@ -87,8 +87,6 @@ public class QuestionController {
     public ResponseEntity getCommentList(@PathVariable("question_id") @Positive long questionId){
         Question findquestion = questionService.findQuestion(questionId);
 
-        System.out.println(findquestion.getCommentList().stream().count());
-
         QuestionResponseDto.Question responseDto = mapper.questionToQuestionResponseDto(findquestion);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
