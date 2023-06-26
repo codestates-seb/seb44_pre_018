@@ -5,13 +5,14 @@ import { loginUser } from 'store';
 import axios from 'axios';
 import LoginGoogle from 'components/global/login/LoginGoogle';
 import LoginGithub from 'components/global/login/LoginGithub';
+import { getCookie, setCookie, removeCookie } from './cookie';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('dsdssd@ddd.com');
-  const [password, setPassword] = useState('Gntifr5897!@@');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [checkEmail, setCheckEmail] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
 
@@ -28,22 +29,34 @@ const Login = () => {
     e.preventDefault();
     setCheckEmail(email === '');
     setCheckPassword(password === '');
-    // try {
-    //   const result = await axios.post('/auth/login', {
-    //     username: email,
-    //     password: password,
-    //   });
-    //   navigate('/');
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const result = await axios.post('/auth/login', {
+        username: email,
+        password: password,
+      });
+      const accessToken = result.headers.authorization;
+      setCookie('Authorization', `${accessToken}`);
+      console.log(result);
+      dispatch(
+        loginUser({
+          name: 'test',
+          email: email,
+          isLoading: false,
+          isLogin: true,
+          token: accessToken,
+        })
+      );
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
 
-    const result = await axios.post('/auth/login', {
-      username: email,
-      password: password,
-    });
-    const member_no = result.data.member_id;
-    console.log(member_no);
+    // const result = await axios.post('/auth/login', {
+    //   username: email,
+    //   password: password,
+    // });
+    // const member_no = result.data.member_id;
+    // console.log(member_no);
     // const result2 = await axios.get(`/member/${member_no}`);
     // dispatch(loginUser({ ...result2.data, isLogin: true }));
 
