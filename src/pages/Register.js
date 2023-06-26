@@ -53,12 +53,6 @@ const Register = () => {
     setCheckEmail(emailValue === '');
     setCheckPassword(passwordValue === '');
     try {
-      console.log({
-        email: emailValue,
-        name: nameValue,
-        phone: phoneValue,
-        password: passwordValue,
-      });
       const result = await axios.post('/member/signup', {
         email: emailValue,
         name: nameValue,

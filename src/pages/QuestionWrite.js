@@ -4,7 +4,9 @@ import axios from 'axios';
 import Editor from 'components/global/questionItem/Editor';
 import AddTag from 'components/global/tag/AddTag';
 import { getCookie } from './cookie';
+import { useSelector } from 'react-redux';
 const QuestionWrite = () => {
+  const { user } = useSelector((state) => state);
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -12,7 +14,6 @@ const QuestionWrite = () => {
   const [checkTitle, setCheckTitle] = useState(false);
   const [checkBody, setCheckBody] = useState(false);
   const [checkTag, setCheckTag] = useState(false);
-  const token = getCookie('Authorization');
 
   const titleChange = (e) => {
     setCheckTitle(false);
@@ -26,7 +27,6 @@ const QuestionWrite = () => {
     setCheckBody(body === '');
     //setCheckTag(tags === '');
     try {
-      console.log(token);
       const result = await axios.post(
         '/question/create',
         {
@@ -35,7 +35,7 @@ const QuestionWrite = () => {
         },
         {
           headers: {
-            Authorization: token,
+            Authorization: user.token,
           },
         }
       );

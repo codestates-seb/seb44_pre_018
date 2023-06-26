@@ -6,6 +6,7 @@ import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
 import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
 import { styled } from 'styled-components';
+import { useSelector } from 'react-redux';
 
 const Item = styled.li`
   .itemTitle {
@@ -65,7 +66,8 @@ const ListText = styled.p`
 const ListItem = ({ value }) => {
   // 댓글 수 가져오기
   const [commentCount, setCommentCount] = useState(0);
-
+  const { user } = useSelector((state) => state);
+  const isMine = user.name === value.memberName;
   useEffect(() => {
     async () => {
       try {
@@ -109,7 +111,7 @@ const ListItem = ({ value }) => {
 
   return (
     <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3 relative">
-      <QuestionEditButton id={value.questionId} />
+      {isMine && <QuestionEditButton id={value.questionId} />}
       <Link
         className="flex items-center justify-between"
         to={`/question/${value.questionId}`}
