@@ -61,7 +61,7 @@ public class CommentController {
         Question question = questionRepository.findById(questionId) // 전달받은 질문 id와 일치하는 질문을 질문테이블에서 가져옴
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
-        Page<Comment> comments = commentService.findCommentList(page, size);
+        Page<Comment> comments = commentService.findCommentList(page, size, question);
         List<Comment> commentList = comments.getContent();
 
         return new ResponseEntity<>(new MultiResponseDto<>(
