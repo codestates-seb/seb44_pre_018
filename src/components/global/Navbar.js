@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -55,13 +56,13 @@ const NavbarContainer = styled.div`
 `;
 
 const Navbar = ({ setNavbarOpen, isNavbarOpen }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const {
+    user: { isLogin },
+  } = useSelector((state) => state);
+
   const [activeLink, setActiveLink] = useState('');
   const handleNavbarToggle = () => {
     setNavbarOpen(false);
-  };
-  const handleLogin = () => {
-    setIsLoggedIn(true);
   };
 
   const handleLinkClick = (link) => {
@@ -92,7 +93,7 @@ const Navbar = ({ setNavbarOpen, isNavbarOpen }) => {
               Tag
             </Link>
           </li>
-          {isLoggedIn && (
+          {isLogin && (
             <li
               key="mypage"
               className={activeLink === 'mypage' ? 'active' : ''}

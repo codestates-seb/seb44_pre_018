@@ -1,19 +1,21 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { getCookie } from 'pages/cookie';
+import { combineReducers } from '@reduxjs/toolkit';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
 const token = getCookie('accessToken');
 const initialState = {
   name: '',
   email: '',
-  isLoading: false,
-  isLogin: null,
+  isLogin: false,
+  phone: '',
   token: '',
 };
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
-  headers: {
-    Authorization: `${token}`,
-  },
   reducers: {
     loginUser: (state, action) => {
       return action.payload;
@@ -23,9 +25,23 @@ export const userSlice = createSlice({
     },
   },
 });
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['user'],
+};
+
 export const { loginUser, clearUser } = userSlice.actions;
-export const store = configureStore({
-  reducer: {
-    user: userSlice.reducer,
-  },
+
+const rootReducer = combineReducers({
+  user: userSlice.reducer,
 });
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+});
+
+export const persistor = persistStore(store);

@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { getCookie } from 'pages/cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearUser } from 'store';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -9,17 +12,17 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = () => {
-  // 로그인 상태를 저장하는 상태 변수(로그인 되지 않은 상태)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
 
+  const { user } = useSelector((state) => state);
   // 로그아웃 시 상태 변경
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    dispatch(clearUser());
   };
 
   return (
     <ButtonContainer>
-      {isLoggedIn ? (
+      {user.isLogin ? (
         <>
           <Link className="pointBu01" to="/mypage">
             MyPage

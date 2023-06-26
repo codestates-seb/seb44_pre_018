@@ -14,9 +14,6 @@ const Filter = () => {
     } = e;
     const searchObj = getSearch();
     const newObj = { ...searchObj, sortBy: value };
-    if (value === 'latest') {
-      delete newObj.sortBy;
-    }
 
     const searchParams = new URLSearchParams(newObj).toString();
     navigate({
