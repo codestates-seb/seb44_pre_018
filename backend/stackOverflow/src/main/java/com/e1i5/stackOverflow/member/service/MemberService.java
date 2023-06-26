@@ -8,6 +8,7 @@ import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.question.service.QuestionService;
+import lombok.extern.slf4j.Slf4j;
 import com.e1i5.stackOverflow.helper.event.MemberRegistrationApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @Transactional
 
 public class MemberService {
@@ -36,16 +38,14 @@ public class MemberService {
     //private final BCryptPasswordEncoder encoder;
 
 
-
     public MemberService(MemberRepository memberRepository,
-                         PasswordEncoder passwordEncoder,
                          ApplicationEventPublisher publisher,
+                         PasswordEncoder passwordEncoder,
                          CustomAuthorityUtils authorityUtils) {
         this.memberRepository = memberRepository;
+        this.publisher = publisher;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
-        this.publisher = publisher;
-        //this.encoder = encoder;
     }
 
     // 회원가입, 로그인 기능을 공유하는 메서드
@@ -74,6 +74,12 @@ public class MemberService {
 //        }else {
 //            System.out.println("비밀번호 일치");
 //        }
+        if(member.getPassword() == findMemberPassword){
+            throw new Exception("Invalid password"); // 예외를 던짐
+        }else {
+//            System.out.println("비밀번호 일치");
+//        }
+        }
 
 
         return memberRepository.save(findMember);
@@ -83,7 +89,7 @@ public class MemberService {
 
     public void imageUpload(long memberId, MultipartFile multipartFile){
         //image upload
-        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\files";
+        String projectPath = System.getProperty("user.dir") + File.separator + "files";
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + multipartFile.getOriginalFilename();
 
@@ -114,6 +120,19 @@ public class MemberService {
         }
 
         Member findMember = findVerifiedMemberById(memberId);
+        // 기존 파일 삭제
+        String existingFilePath = findMember.getProfileImagePath() + File.separator + findMember.getProfileImageName();
+        File existingFile = new File(existingFilePath);
+        if (existingFile.exists()) {
+            if (existingFile.delete()) {
+                System.out.println("기존 파일이 삭제되었습니다.");
+            } else {
+                System.out.println("기존 파일을 삭제할 수 없습니다.");
+                // 파일 삭제 실패 처리 로직
+                throw new IllegalArgumentException("기존 파일을 삭제할 수 없습니다.");
+            }
+        }
+
         findMember.setProfileImagePath(projectPath);
         findMember.setProfileImageName(fileName);
 

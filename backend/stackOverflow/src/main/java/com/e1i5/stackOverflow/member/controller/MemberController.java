@@ -57,9 +57,7 @@ public class MemberController{
         Member member = memberService.signupMember(mapper.memberSignupPostDtoToMember(requestBody));
 //        URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, member.getMemberId());
 //        return ResponseEntity.created(location).build();
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.memberToMemberResponseDto(member)),
-                HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping // securityConfiguration을 통해 경로 변경 >  /auth/login

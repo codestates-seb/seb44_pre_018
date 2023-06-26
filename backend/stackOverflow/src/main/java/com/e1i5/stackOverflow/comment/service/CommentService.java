@@ -80,21 +80,23 @@ public class CommentService {
         //존재 질문인지 파악
         Question findQuestion = questionService.findVerifiedQuestion(questionId);
         comment.setQuestion(findQuestion);
-        findQuestion.getCommentList().add(comment);
-        questionRepository.save(findQuestion);
 
         return commentRepository.save(comment);
     }
 
     //댓글 삭제 - 해당 댓글 작성자, 질문글 작성자 모두 삭제 가능.
     public void deleteComment(long commentId, long memberId) {
-        // if(댓글 작성자 || 질문작성자) 삭제 else 예외발생
-        VerifyQuestionAuthor(commentId, memberId);
-        VerifyCommentAuthor(commentId, memberId);
-        // 예외가 발생하지 않으면 저장된 댓글을 찾는다.
-        Comment result = findVerifiedComment(commentId);
-        commentRepository.delete(result);
+        Comment comment = findVerifiedComment(commentId);
+        long commentAuthorId = comment.getMember().getMemberId();
+        long questionAuthorId = comment.getQuestion().getQuestionId();
 
+        // if(댓글 작성자 || 질문작성자) 삭제 else 예외발생
+        if(memberId == commentAuthorId || memberId == questionAuthorId){
+            Comment result = findVerifiedComment(commentId);
+            commentRepository.delete(result);
+        }else {
+            throw new RuntimeException("권한이 없습니다.");
+        }
     }
 
     // commentId에 해당하는 댓글을 찾는 메서드. 댓글이 존재하는지 확인한다.
