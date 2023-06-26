@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.comment.controller;
 
+import com.e1i5.stackOverflow.auth.interceptor.JwtInterceptor;
 import com.e1i5.stackOverflow.comment.dto.CommentDto;
 import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.comment.mapper.CommentMapper;
@@ -32,11 +33,11 @@ import java.net.URI;
 import java.util.*;
 
 @RestController
-@RequestMapping("/v1/comment")
+@RequestMapping("/comment")
 @Validated
 @Slf4j
 public class CommentController {
-    private final static String COMMENT_DEFAULT_URL = "v1/comment";
+    private final static String COMMENT_DEFAULT_URL = "/comment";
     private CommentService commentService;
     private QuestionService questionService;
     private CommentMapper mapper;
@@ -77,11 +78,12 @@ public class CommentController {
 
 
     // 댓글 수정 - 해당 댓글 작성자만 수정 가능
-    @PatchMapping("/update/{question-id}/{comment-id}/{member-id}")
+    @PatchMapping("/update/{question-id}/{comment-id}")
     public ResponseEntity updateComment(@PathVariable("question-id") @Positive @NotNull long questionId,
                                         @PathVariable("comment-id") @Positive @NotNull long commentId,
-                                        @PathVariable("member-id") @Positive @NotNull long memberId,
                                         @Valid @RequestBody CommentDto.Patch requestBody){
+        long memberId = JwtInterceptor.requestMemberId();
+
         requestBody.setQuestionId(questionId);
         requestBody.setCommentId(commentId);
         requestBody.setAuthenticatedMemberId(memberId);
@@ -93,12 +95,12 @@ public class CommentController {
     }
 
     // 댓글 생성 - 회원만 생성 가능 / 특정 질문에 대해 답변을 하는 것이라 하위 설정을 한다.
-    @PostMapping("/{question-id}/{member-id}/question-answer")
+    @PostMapping("/question-answer/{question-id}")
     public ResponseEntity postComment(@PathVariable("question-id") long questionId,
-                                      @PathVariable("member-id") long authenticatedMemberId,
                                       @Valid @RequestBody CommentDto.Post requestBody){
         // 회원인지 판단 - > jwt 토큰을 받던지 해야할듯
 //        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId();  // 인가된 사용자를 전달받는다.
+        long authenticatedMemberId = JwtInterceptor.requestMemberId();
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);
         Question question = questionService.findQuestion(questionId);
@@ -111,10 +113,14 @@ public class CommentController {
     }
 
     // 댓글 삭제 - 질문글 작성자와 답변 작성자 둘 다 삭제가 가능하다.
-    @DeleteMapping("/delete/{comment-id}/{member-id}")
-    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId,
-                                        @PathVariable("member-id") @Positive long memberId){
-
+    @DeleteMapping("/delete/{comment-id}")
+    public ResponseEntity deleteComment(@PathVariable("comment-id") @Positive long commentId){
+        long memberId = JwtInterceptor.requestMemberId();
+        // 댓글 작성자거나, 질문 작성자인 경우 삭제 가능
+        // 댓글 작성자인지 확인
+        commentService.VerifyCommentAuthor(commentId, memberId);
+        // 질문 작성자인지 확인
+        commentService.VerifyQuestionAuthor(commentId, memberId);
         commentService.deleteComment(commentId,memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -122,6 +128,7 @@ public class CommentController {
     // 댓글 추천수 증가> 로그인한 회원만 가능
     @PatchMapping("/like/{comment-id}")
     public ResponseEntity<Void> likeComment(@PathVariable("comment-id") long commentId){
+        long memberId = JwtInterceptor.requestMemberId();
         // 로그인한 회원인지
 //        memberService.findVerifiedMemberById(memberId); // member 객체 출력이라 제외
 
@@ -132,6 +139,7 @@ public class CommentController {
     // 댓글 비추천 수 증가 > 로그인한 회원만 가능.
     @PatchMapping("/dislike/{comment-id}")
     public ResponseEntity<Void> dislikeComment(@PathVariable("comment-id") @Positive long commentId) {
+        long memberId = JwtInterceptor.requestMemberId();
         // 로그인한 회원인지
 //        memberService.findVerifiedMemberById(memberId); // member 객체 출력이라 제외
 
@@ -140,9 +148,9 @@ public class CommentController {
     }
 
     //댓글 채택 > 질문자에게만 보인다.
-    @PatchMapping("/choose/{comment-id}/{member-id}")
-    public ResponseEntity chooseComment(@PathVariable("comment-id") @Positive long commentId,
-                                        @PathVariable("member-id") @Positive long memberId){
+    @PatchMapping("/choose/{comment-id}")
+    public ResponseEntity chooseComment(@PathVariable("comment-id") @Positive long commentId){
+        long memberId = JwtInterceptor.requestMemberId();
         // 질문자인지 검사
         commentService.VerifyQuestionAuthor(commentId, memberId);
         commentService.chooseComment(commentId);

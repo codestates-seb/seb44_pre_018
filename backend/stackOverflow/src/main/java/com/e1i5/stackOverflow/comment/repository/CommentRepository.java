@@ -1,6 +1,7 @@
 package com.e1i5.stackOverflow.comment.repository;
 
 import com.e1i5.stackOverflow.comment.entity.Comment;
+import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.question.entity.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     // 주어진 질문 id에 해당하는 모든 댓글 조회
 //    Page<Comment> findAllByQuestionIdAndCommentIdLessThan(long questionId, long lastCommentId, PageRequest pageRequest);
 //    //List<Comment> findAllByQuestions(long questionId);
+//    Page<Comment> findAllByQuestionId(long questionId, Pageable pageable);
 
 
 

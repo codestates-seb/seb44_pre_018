@@ -67,8 +67,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // 토큰을 생성하는 구체적인 로직
     private String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
-//        claims.put("memberId", member.getMemberId());  // 식별자도 포함할 수 있다.
-        claims.put("username", member.getEmail()); //
+        claims.put("memberId", member.getMemberId());  // 식별자도 포함.
+        claims.put("username", member.getEmail());
         claims.put("roles", member.getRoles());
 
         String subject = member.getEmail();

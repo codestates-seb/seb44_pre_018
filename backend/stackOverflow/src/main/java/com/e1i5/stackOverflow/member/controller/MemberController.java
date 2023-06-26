@@ -1,7 +1,10 @@
 package com.e1i5.stackOverflow.member.controller;
 
+import com.e1i5.stackOverflow.auth.interceptor.JwtInterceptor;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
+import com.e1i5.stackOverflow.exception.BusinessLogicException;
+import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.mapper.MemberMapper;
@@ -66,18 +69,20 @@ public class MemberController{
        return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping("/upload/{memberId}")
-    public ResponseEntity memberIamgeUpload(@PathVariable("memberId") @Positive long memberId,
-                                            @RequestParam("file") MultipartFile multipartFile){
+    @PatchMapping("/upload")
+    public ResponseEntity memberIamgeUpload(@RequestParam("file") MultipartFile multipartFile){
+        long memberId = JwtInterceptor.requestMemberId();
+
         memberService.imageUpload(memberId, multipartFile);
         Member findMember = memberService.findMember(memberId);
         MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @PatchMapping("/{memberId}")
-    public ResponseEntity patchMember(@PathVariable("memberId") @Positive long memberId,
-                                      @Valid @RequestBody MemberDto.Patch requestBody){
+    @PatchMapping("/update")
+    public ResponseEntity patchMember(@Valid @RequestBody MemberDto.Patch requestBody){
+        long memberId = JwtInterceptor.requestMemberId();
+
         requestBody.setMemberId(memberId);
         Member findMember = memberService.updateMember(mapper.memberPatchDtoToMember(requestBody));
         MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
@@ -87,23 +92,36 @@ public class MemberController{
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size){
-        Page<Member> pageMembers = memberService.findMembers(page-1, size);
-        List<Member> members = pageMembers.getContent();
+        long memberId = JwtInterceptor.requestMemberId();
+        // 전달받은 id 가 admin과 같다면
+        Member visit = memberService.findVerifiedMemberById(memberId);
 
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.membersToMemberResponseDtos(members),
-                pageMembers), HttpStatus.OK);
+        if(visit.getEmail().equals("admin@gmail.com")){
+            Page<Member> pageMembers = memberService.findMembers(page-1, size);
+            List<Member> members = pageMembers.getContent();
+
+            return new ResponseEntity<>(
+                    new MultiResponseDto<>(mapper.membersToMemberResponseDtos(members),
+                    pageMembers), HttpStatus.OK);}
+        else{
+            throw new BusinessLogicException(ExceptionCode.IS_NOT_AN_ADMIN);
+        }
+
+
     }
 
-    @GetMapping("/{member_id}")
-    public ResponseEntity getMember(@PathVariable("member_id") @Positive long memberId){
+    @GetMapping("/getmember")
+    public ResponseEntity getMember(){
+        long memberId = JwtInterceptor.requestMemberId();
+
         Member findMember = memberService.findMember(memberId);
         MemberDto.Response response = mapper.memberToMemberResponseDto(findMember);
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{member_id}")
-    public ResponseEntity deleteMember(@PathVariable("member_id") @Positive long memberId){
+    @DeleteMapping("/delete") // 회원 삭제 > 지금 탈퇴기능으로 구현인지. 권한이 user로만 설정됨.
+    public ResponseEntity deleteMember(){
+        long memberId = JwtInterceptor.requestMemberId();
         memberService.deleteMember(memberId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
