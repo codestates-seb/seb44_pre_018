@@ -43,7 +43,6 @@ const QuestionView = ({ question }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
 
-
   const handleLike = async () => {
     try {
       await axios.post(`/question/${id}/1`, {
@@ -102,18 +101,17 @@ const QuestionView = ({ question }) => {
       <h3 className="maintitle">{question.title}</h3>
       <div className="flex mt-5">
         <div className="mr-3">
-          <ItemView viewCount={question.view}/>
+          <ItemView viewCount={question.view} />
         </div>
         <div className="mx-3">
-          <ItemAnswer commentCount={commentCount}/>
+          <ItemAnswer commentCount={commentCount} />
         </div>
         <p className="ml-auto font-light">
           Asked: {formatDate(question.createdAt)}
         </p>
       </div>
       <div className="flex justify-between border-t-[1px] border-b-[1px] border-black/[.3] border-solid pb-2 items-center">
-        
-      <QuesitonButtonWrap>
+        <QuesitonButtonWrap>
           <button onClick={handleLike}>
             <FontAwesomeIcon icon={faCaretUp} />
           </button>
@@ -122,13 +120,16 @@ const QuestionView = ({ question }) => {
             <FontAwesomeIcon icon={faCaretDown} />
           </button>
         </QuesitonButtonWrap>
-        <div className="w-full">
-        <div className="mt-2">
-          <QuestionEditButtonWrap>
-            <QuestionEditButton />
-          </QuestionEditButtonWrap>
-        </div>
-          <p className="text-sm font-light py-2 content">{question.content}</p>
+        <div className="w-full relative pt-3">
+          <div className="mt-2">
+            <QuestionEditButtonWrap>
+              <QuestionEditButton className="top-[7px]" />
+            </QuestionEditButtonWrap>
+          </div>
+          <p
+            className="text-sm font-light py-2 content"
+            dangerouslySetInnerHTML={{ __html: question.content }}
+          ></p>
           <TagList />
         </div>
       </div>
