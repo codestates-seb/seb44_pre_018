@@ -3,6 +3,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const Container = styled.div`
   display: flex;
@@ -32,7 +34,7 @@ const Container = styled.div`
     margin: 2rem 2rem 0 0;
     padding-bottom: 5px;
   }
-  
+
   input {
     background-color: #fff;
     padding-bottom: 5px;
@@ -51,35 +53,12 @@ const ProfileDetails = styled.div`
 `;
 
 const MyPage = () => {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state);
   const [member, setMember] = useState(null);
   const [editedMember, setEditedMember] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  
-  
-  useEffect(() => {
-    const fetchMemberData = async () => {
-      try {
-        const response = await axios.get('/data/member.json');
-        const data = response.data;
-        const storedMember = JSON.parse(localStorage.getItem('member'));
-
-        if (storedMember) {
-          setMember(storedMember);
-          setEditedMember(storedMember);
-          setPreviewImage(storedMember.profile_image);
-        } else {
-          setMember(data.member[0]);
-          setEditedMember(data.member[0]);
-          setPreviewImage(data.member[0].profile_image);
-        }
-      } catch (error) {
-        console.error('Error fetching member data:', error);
-      }
-    };
-
-    fetchMemberData();
-  }, []);
 
   useEffect(() => {
     if (editedMember) {
@@ -90,10 +69,6 @@ const MyPage = () => {
   useEffect(() => {
     setPreviewImage(editedMember?.profile_image || member?.profile_image);
   }, [editedMember, member]);
-
-  if (!member) {
-    return <div>Loading...</div>;
-  }
 
   const changePicture = () => {
     const inputElement = document.createElement('input');
@@ -128,40 +103,36 @@ const MyPage = () => {
     );
     setEditedMember(null);
     setIsEditing(false);
-    
   };
 
   const editProfile = () => {
     setEditedMember({ ...member });
-    setIsEditing(true); 
+    setIsEditing(true);
   };
-
-  
+  const checkLogin = () => {
+    if (!user.isLogin) {
+      alert('로그인이 필요합니다.', (location.href = '/'));
+      return <></>;
+    }
+  };
+  useEffect(() => {
+    checkLogin();
+  }, [user]);
   return (
     <div className="inner">
       <h3 className="maintitle">MyPage</h3>
-      <h1 className="mt-3">Hello, {member.name}!</h1>
+      <h1 className="mt-3">Hello, {user.name}!</h1>
       <Container>
         <div className="left-section">
-          <img
-            src={previewImage || member.profile_image}
-            alt="Profile"
-          />
-          <Button 
-            className="pointBu01 w-50 text-sm" 
-            onClick={changePicture}
-          >
-            <FontAwesomeIcon 
-              icon={faArrowUpFromBracket} 
-              className="mr-1" 
-            />
+          {user.profile_image && (
+            <img src={previewImage || user.profile_image} alt="Profile" />
+          )}
+          <Button className="pointBu01 w-50 text-sm" onClick={changePicture}>
+            <FontAwesomeIcon icon={faArrowUpFromBracket} className="mr-1" />
             Change Picture
           </Button>
           {isEditing ? null : (
-            <Button 
-              className="pointBu03" 
-              onClick={editProfile}
-            >
+            <Button className="pointBu03" onClick={editProfile}>
               Edit Profile
             </Button>
           )}
@@ -172,7 +143,7 @@ const MyPage = () => {
               Name:
               <input
                 type="text"
-                value={isEditing ? editedMember.name : member.name}
+                value={isEditing ? editedMember.name : user.name}
                 onChange={(event) => handleInputChange(event, 'name')}
                 disabled={!isEditing}
               />
@@ -181,7 +152,7 @@ const MyPage = () => {
               Email:
               <input
                 type="text"
-                value={isEditing ? editedMember.email : member.email}
+                value={isEditing ? editedMember.email : user.email}
                 onChange={(event) => handleInputChange(event, 'email')}
                 disabled={!isEditing}
               />
@@ -190,9 +161,9 @@ const MyPage = () => {
               Phone:
               <input
                 type="text"
-                value={isEditing ? editedMember.phone : member.phone}
+                value={isEditing ? editedMember.phone : user.phone}
                 onChange={(event) => handleInputChange(event, 'phone')}
-                disabled={!isEditing} 
+                disabled={!isEditing}
               />
             </span>
           </ProfileDetails>

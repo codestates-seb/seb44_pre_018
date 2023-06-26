@@ -24,17 +24,17 @@ const VoteContainer = styled.div`
   }
 `;
 
-const updateCommentLikes = async () => {
+const updateCommentLikes = async (commentId) => {
   try {
-    await axios.patch(`/v1/comment/like/${2}`);
+    await axios.patch(`/comment/like/${commentId}`);
   } catch (error) {
     console.error(error);
   }
 };
 
-const updateCommentDislikes = async () => {
+const updateCommentDislikes = async (commentId) => {
   try {
-    await axios.patch(`/v1/comment/dislike/${2}`);
+    await axios.patch(`/comment/dislike/${commentId}`);
   } catch (error) {
     console.error(error);
   }

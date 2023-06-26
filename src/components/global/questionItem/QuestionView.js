@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
@@ -8,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { styled } from 'styled-components';
 import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
-import { getCookie } from '../../../pages/cookie';
 
 const QuesitonButtonWrap = styled.div`
   display: flex;
@@ -39,14 +39,9 @@ const QuestionView = ({ question }) => {
   const [commentCount, setCommentCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
-  const token = getCookie('Authorization');
-
+  const { user } = useSelector((state) => state);
 
   const handleLike = async () => {
-    if (!token) {
-      console.error('로그인이 필요합니다.');
-      return;
-    }
     try {
       await axios.post(`/question/vote/${id}`,
         {
@@ -54,7 +49,7 @@ const QuestionView = ({ question }) => {
         },
         {
           headers: {
-            Authorization: token,
+            Authorization: user.token,
             'ngrok-skip-browser-warning': 'true',
           },
         }
@@ -66,10 +61,6 @@ const QuestionView = ({ question }) => {
   };
 
   const handleDislike = async () => {
-    if (!token) {
-      console.error('로그인이 필요합니다.');
-      return;
-    }
     try {
       await axios.post(
         `/question/vote/${id}`,
@@ -78,7 +69,7 @@ const QuestionView = ({ question }) => {
         },
         {
           headers: {
-            Authorization: token,
+            Authorization: user.token,
             'ngrok-skip-browser-warning': 'true',
           },
         }

@@ -1,15 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { persistReducer } from 'redux-persist';
-import { CookiesProvider } from 'react-cookie';
+import { useSelector } from 'react-redux';
 import { clearUser } from 'store';
 import axios from 'axios';
 
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
 import LoginModal from 'components/global/login/LoginModal';
-import { getCookie } from '../../../pages/cookie';
 
 const AnswerItem = ({ itemid }) => {
   const { id } = useParams();
@@ -19,19 +16,12 @@ const AnswerItem = ({ itemid }) => {
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const dispatch = useDispatch();
 
-  const loggedIn = useSelector((state) => state.user.isLogin);
-  const token = useSelector((state) => state.user.token);
+  const { user } = useSelector((state) => state);
 
   
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
-  };
-
-  const checkUser = () => {
-    dispatch(clearUser());
-    navigate('/users/login');
   };
 
   const getCommentList = async () => {
@@ -52,13 +42,16 @@ const AnswerItem = ({ itemid }) => {
     }
   };
 
-  const addComment = async (content) => {
+  const addComment = async (newAnswer) => {
     try {
-      const response = await axios.post(`/comment/question-answer/${id}`, {
-        content: content,
+      const response = await axios.post(`/comment/question-answer/${id}`, newAnswer, {
+        headers: {
+          Authorization: user.token,
+        },
       });
-      const newAnswer = response.data.data;
-      setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
+      const addedAnswer = response.data.data;
+      console.log(addedAnswer);
+      setAnswers((prevAnswers) => [...prevAnswers, addedAnswer]);
       console.log('댓글 추가 성공:', response.data);
     } catch (error) {
       console.error('댓글 추가 실패:', error);
@@ -66,12 +59,12 @@ const AnswerItem = ({ itemid }) => {
     }
   };
 
-  const handleDeleteAnswer = (id) => {
-    if (!checkUser()) {
+  const handleDeleteAnswer = () => {
+    if (user.isLogin) {
       axios
-        .delete(`comment/delete/${id}`, {
+        .delete(`comment/delete/${itemid}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: user.token,
           },
         })
         .then((response) => {
@@ -84,14 +77,15 @@ const AnswerItem = ({ itemid }) => {
     }
   };
 
-  const handleEditComment = async (
-    questionId,
-    commentId,
-    memberId,
-    editedContent
-  ) => {
+  const handleEditComment = async (questionId, commentId, content) => {
     try {
-      const response = await axios.patch(`/v1/comment/update/${id}/${1}/${1}`, {
+      const response = await axios.patch(`/comment/update/${questionId}/${commentId}`,   
+      {
+      headers: {
+        Authorization: user.token,
+      },
+    },
+    {
         content: editedContent,
       });
 
@@ -121,10 +115,11 @@ const AnswerItem = ({ itemid }) => {
       setShowInputMessage(true);
       return;
     }
-    if (!loggedIn) {
+    if (!user.isLogin) {
       setShowModal(true);
       return;
     }
+  
     const newAnswer = {
       commentId: Date.now().toString(),
       memberId: '123',
@@ -137,14 +132,16 @@ const AnswerItem = ({ itemid }) => {
       dislikeCount: 0,
       commentStatus: 'COMMENT',
     };
+  
     try {
-      await dispatch(addComment(newAnswer.content));
+      await addComment(newAnswer);
       setCommentInput('');
       setShowInputMessage(false);
     } catch (error) {
       console.error(error);
     }
   };
+
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -171,7 +168,7 @@ const AnswerItem = ({ itemid }) => {
         />
       ))}
 
-      <div className="mt-10">
+        <div className="mt-10">
         <h2 className="mb-4">Your Answer</h2>
         <div>
           <Editor
@@ -183,13 +180,15 @@ const AnswerItem = ({ itemid }) => {
           {showInputMessage && (
             <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
           )}
-          <button
-            className="pointBu03 my-5"
-            type="submit"
-            onClick={handleSubmitAnswer}
-          >
-            Submit your Answer
-          </button>
+           <button
+              className="pointBu03 my-5"
+              type="submit"
+              onClick={handleSubmitAnswer}
+            >
+
+              Submit your Answer
+            </button>
+          
         </div>
         {showModal && (
           <LoginModal

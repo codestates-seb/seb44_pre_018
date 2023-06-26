@@ -22,22 +22,22 @@ const Filter = () => {
     });
   };
   return (
-    <ul className="flex my-8">
+    <div className="flex my-8">
       {btns.map((btn) => {
         return (
-          <li
+          <button
+            onClick={clickBtn}
+            value={btn.value}
             key={btn.value}
             className={`pointBu01 text-xs px-4 py-2 mr-2 sm:px-1.5 sm:py-1  sm:text-xxs sm:mr-1 ${
               searchData.sortBy === btn.value ? 'pointBu02' : ''
             }`}
           >
-            <button onClick={clickBtn} value={btn.value}>
-              {btn.txt}
-            </button>
-          </li>
+            {btn.txt}
+          </button>
         );
       })}
-    </ul>
+    </div>
   );
 };
 
