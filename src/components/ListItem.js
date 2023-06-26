@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
 import TagList from 'components/global/tag/TagList';
-import AnswerDropdown from 'components/global/answerdetail/AnswerDropdown';
+import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
 import { styled } from 'styled-components';
 
 const Item = styled.li`
@@ -62,6 +63,31 @@ const ListText = styled.p`
 `;
 
 const ListItem = ({ value }) => {
+  // 댓글 수 가져오기
+  const [commentCount, setCommentCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const response = await axios.get(`/v1/comment/${value.questionId}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+          params: {
+            page: 0,
+            size: 4,
+          },
+        });
+        const { totalElements } = response.data.pageInfo;
+        setCommentCount(totalElements);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCommentCount();
+  }, []);
+
   const navigate = useNavigate();
   // const {
   //   user: {
@@ -87,10 +113,7 @@ const ListItem = ({ value }) => {
 
   return (
     <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3 relative">
-      <AnswerDropdown
-        onEditAnswer={toggleEditMode}
-        onDeleteAnswer={handleDeleteAnswer}
-      />
+      <QuestionEditButton id={value.questionId}/>
       <Link
         className="flex items-center justify-between"
         to={`/question/${value.questionId}`}
@@ -107,7 +130,7 @@ const ListItem = ({ value }) => {
         </div>
         <div className="w-1/5 text-right flex align-center justify-end">
           <ItemView viewCount={value.view} />
-          <ItemAnswer />
+          <ItemAnswer commentCount={commentCount}/>
         </div>
       </Link>
     </Item>

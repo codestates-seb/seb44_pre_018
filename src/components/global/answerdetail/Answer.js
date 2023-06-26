@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import styled from 'styled-components';
 import Editor from 'components/global/questionItem/Editor';
-import VoteButton from 'components/global/questionItem/VoteButton';
+import VoteButton from 'components/global/answerdetail/VoteButton';
 import AnswerDropdown from 'components/global/answerdetail/AnswerDropdown';
 
 const AnswerContainer = styled.div`

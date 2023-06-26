@@ -1,62 +1,89 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
+import LoginModal from 'components/global/login/LoginModal';
 
 const AnswerItem = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [answers, setAnswers] = useState([]);
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`v1/comment/${id}?page=0&size=4`, {
-          headers: {
-            'ngrok-skip-browser-warning': 'true',
-          },
-        });
-        const data = response.data.data;
-        setAnswers(data);
-      } catch (error) {
-        console.log('Error fetching question data:', error);
-      }
-    };
-    fetchData();
-  }, [id]);
+  const getCommentList = async () => {
+    try {
+      const response = await axios.get(`/v1/comment/${id}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+        },
+        params: {
+          page: 0,
+          size: 4,
+        },
+      });
+      setAnswers(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const addAnswer = (newAnswer) => {
-    setAnswers((prevAnswers) => {
-      const updatedAnswers = [...prevAnswers, newAnswer];
+  const addComment = async (content) => {
+    try {
+      const response = await axios.post(`/v1/comment/${id}/${2}/question-answer`, {
+        content: content,
+      });
+      const newAnswer = response.data.data;
+      setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
+      console.log('댓글 추가 성공:', response.data);
+    } catch (error) {
+      console.error('댓글 추가 실패:', error);
+      throw error;
+    }
+  };
+
+  const handleDeleteAnswer = async (answerId) => {
+    try {
+      await fetch(`/v1/comment/delete/${id}/1`, {
+        method: 'DELETE',
+      });
+
+      const updatedAnswers = answers.filter((answer) => answer.commentId !== answerId);
+      setAnswers(updatedAnswers);
+      console.log('댓글 삭제 성공');
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+    }
+  };
+
+  const handleEditComment = async (questionId, commentId, memberId, editedContent) => {
+    try {
+      const response = await axios.patch(`/v1/comment/update/${id}/${1}/${1}`, {
+        content: editedContent,
+      });
+
+      const updatedAnswers = answers.map((answer) => {
+        if (answer.commentId === commentId) {
+          return { ...answer, content: editedContent };
+        }
+        return answer;
+      });
+
+      setAnswers(updatedAnswers);
       localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-      return updatedAnswers;
-    });
-  };
 
-  const handleDeleteAnswer = (answerId) => {
-    const updatedAnswers = answers.filter(
-      (answer) => answer.commentId !== answerId
-    );
-    setAnswers(updatedAnswers);
-    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-  };
-
-  const handleEditAnswer = (answerId, editedContent) => {
-    const updatedAnswers = answers.map((answer) => {
-      if (answer.commentId === answerId) {
-        return { ...answer, content: editedContent };
-      }
-      return answer;
-    });
-    setAnswers(updatedAnswers);
-    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+      console.log('댓글 수정 성공:', response.data);
+    } catch (error) {
+      console.error('댓글 수정 실패:', error);
+    }
   };
 
   const handleCommentChange = (value) => {
@@ -64,9 +91,13 @@ const AnswerItem = () => {
     setShowInputMessage(value.trim() === '');
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = async () => {
     if (commentInput.trim() === '') {
       setShowInputMessage(true);
+      return;
+    }
+    if (!loggedIn) {
+      setShowModal(true);
       return;
     }
     const newAnswer = {
@@ -81,9 +112,28 @@ const AnswerItem = () => {
       dislikeCount: 0,
       commentStatus: 'COMMENT',
     };
-    addAnswer(newAnswer);
-    setCommentInput('');
+    try {
+      await addComment(newAnswer.content);
+      setCommentInput('');
+      setShowInputMessage(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate('/login');
+  };
+
+  const handleModalCancel = () => {
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    getCommentList();
+    setLoggedIn(false);
+  }, []);
 
   return (
     <>
@@ -92,9 +142,10 @@ const AnswerItem = () => {
           key={answer.commentId}
           answer={answer}
           onDeleteAnswer={handleDeleteAnswer}
-          onEditAnswer={handleEditAnswer}
+          onEditAnswer={handleEditComment}
         />
       ))}
+
       <div className="mt-10">
         <h2 className="mb-4">Your Answer</h2>
         <div>
@@ -112,9 +163,18 @@ const AnswerItem = () => {
             type="submit"
             onClick={handleSubmitAnswer}
           >
+            
             Submit your Answer
           </button>
+          
         </div>
+        {showModal && (
+          <LoginModal
+            onClose={handleModalClose}
+            onCancel={handleModalCancel}
+            isOpen={showModal}
+          />
+        )}
       </div>
     </>
   );
