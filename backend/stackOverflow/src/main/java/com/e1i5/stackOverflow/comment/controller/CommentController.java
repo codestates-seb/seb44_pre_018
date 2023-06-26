@@ -58,7 +58,8 @@ public class CommentController {
     public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId,
                                                         @RequestParam("page") int page,
                                                         @RequestParam("size") int size){
-        Page<Comment> comments = commentService.findCommentList(page, size);
+        Question question = questionService.findQuestion(questionId);
+        Page<Comment> comments = commentService.findCommentList(page, size, question);
         List<Comment> commentList = comments.getContent();
 
         return new ResponseEntity<>(new MultiResponseDto<>(
@@ -121,10 +122,14 @@ public class CommentController {
     public ResponseEntity<Void> likeComment(@PathVariable("comment-id") long commentId){
         long memberId = JwtInterceptor.requestMemberId();
         // 로그인한 회원인지
-//        memberService.findVerifiedMemberById(memberId); // member 객체 출력이라 제외
-
-        commentService.likeCount(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Member member = memberService.findMember(memberId);
+        if(member.getMemberStatus() == Member.MemberStatus.MEMBER_ACTIVE){
+            commentService.likeCount(commentId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // 댓글 비추천 수 증가 > 로그인한 회원만 가능.
@@ -132,10 +137,15 @@ public class CommentController {
     public ResponseEntity<Void> dislikeComment(@PathVariable("comment-id") @Positive long commentId) {
         long memberId = JwtInterceptor.requestMemberId();
         // 로그인한 회원인지
-//        memberService.findVerifiedMemberById(memberId); // member 객체 출력이라 제외
+        Member member = memberService.findMember(memberId);
+        if(member.getMemberStatus() == Member.MemberStatus.MEMBER_ACTIVE){
+            commentService.dislikeCount(commentId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
-        commentService.dislikeCount(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //댓글 채택 > 질문자에게만 보인다.
