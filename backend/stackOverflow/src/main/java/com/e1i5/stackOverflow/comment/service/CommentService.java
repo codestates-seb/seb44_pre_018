@@ -111,7 +111,7 @@ public class CommentService {
         return findComment;
     }
 
-    // 댓글 수정시 사용 - 39-55
+    // 댓글 수정시 사용
     public Member findCommentMember(long commentId){
         Comment findComment = findVerifiedComment(commentId);
         return findComment.getMember();
@@ -154,7 +154,6 @@ public class CommentService {
             throw new BusinessLogicException(ExceptionCode.QUESTION_MEMBER_NOT_MATCH);
         }
     }
-    //질문의 역할인지 확인
 
 //    댓글 작성자인지 판단하는 메서드
 //    전달 받은 memberId가 comment에 저장된 memberId와 같은지 비교

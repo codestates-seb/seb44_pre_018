@@ -33,10 +33,6 @@ public class Comment extends Auditable {
     private Question question;
 
 
-    //    public void addQuestion(Question question){  // 질문 변경사항 설정
-//        this.question = question;
-//    }
-
     // 댓글 수정부분 null exception 해결을 위해 초기화
     public Comment(Member member, Question question) {
         this.member = member;

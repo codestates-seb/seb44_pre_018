@@ -50,10 +50,7 @@ public class CommentController {
         this.questionRepository = questionRepository;
     }
 
-    // 댓글 조회 - 비회원도 조회 가능, 질문의 id를 전달받는다.
-    // 무한 스크롤 적용. 마지막 댓글 id 전달받는다.
-    // 페이지 사이즈는 클라이언트에서 전달
-    // 실제 객체를 가져와야한다.
+    // 댓글 조회 - 비회원도 조회 가능
     @GetMapping("/{question-id}")
     public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId,
                                                         @RequestParam("page") int page,
@@ -90,8 +87,7 @@ public class CommentController {
     @PostMapping("/question-answer/{question-id}")
     public ResponseEntity postComment(@PathVariable("question-id") long questionId,
                                       @Valid @RequestBody CommentDto.Post requestBody){
-        // 회원인지 판단 - > jwt 토큰을 받던지 해야할듯
-//        long authenticatedMemberId = JwtParseInterceptor.getAuthenticatedMemberId();  // 인가된 사용자를 전달받는다.
+
         long authenticatedMemberId = JwtInterceptor.requestMemberId();
 
         Comment comment = mapper.commentPostDtoToComment(requestBody);

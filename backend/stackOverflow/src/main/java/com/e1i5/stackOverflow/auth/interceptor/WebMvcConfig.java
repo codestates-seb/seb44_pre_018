@@ -17,8 +17,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**"); // 모든 경로에 interceptor 적용
 //                .excludePathPatterns("/")  // 경로 설정 (이 경로는 제외)
-//                .excludePathPatterns()
-//                .excludePathPatterns()
-//                .excludePathPatterns();
     }
 }
