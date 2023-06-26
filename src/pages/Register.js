@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import LoginGoogle from 'components/global/login/LoginGoogle';
 import LoginGithub from 'components/global/login/LoginGithub';
 
 const Register = () => {
+  const navigate = useNavigate();
   const nameRef = useRef(null);
   const phonRef = useRef(null);
   const emailRef = useRef(null);
@@ -65,14 +66,12 @@ const Register = () => {
         password: passwordValue,
       });
 
-      console.log(result);
       //회원가입 성공 여부만 알려줄때
       navigate('/login');
       //멤버 번호 알려줄때
       // => 로그인시 멤버 정보를 기반으로 회원정보 get하는 로직 활용
     } catch (err) {
       console.log(err);
-      alert(err.response.data);
     }
   };
 

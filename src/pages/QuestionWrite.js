@@ -25,7 +25,7 @@ const QuestionWrite = () => {
     setCheckBody(body === '');
     //setCheckTag(tags === '');
     try {
-      const result = await axios.post('/question/1/create', {
+      const result = await axios.post('/question/create', {
         title: title,
         content: body,
       });
