@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,11 +34,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfiguration {
-    @Value("${spring.security.oauth2.client.registration.google.clientId}")  // (1)
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.clientSecret}") // (2)
-    private String clientSecret;
+//    @Value("${spring.security.oauth2.client.registration.google.clientId}")  // (1)
+//    private String clientId;
+//
+//    @Value("${spring.security.oauth2.client.registration.google.clientSecret}") // (2)
+//    private String clientSecret;
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
 
@@ -49,8 +50,6 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, MemberService memberService) throws Exception {
-        OAuth2MemberSuccessHandler oAuth2MemberSuccessHandler = new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService);
-
         httpSecurity
                 .headers().frameOptions().sameOrigin()
                 .and()
@@ -86,10 +85,6 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE,"/comment/delete/**").hasRole("USER") //댓글 삭제
                         .antMatchers(HttpMethod.PATCH,"/comment/choose/**").hasRole("USER") //댓글 채택
                         .anyRequest().permitAll()
-                )
-//                .oauth2Login(withDefaults());
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(oAuth2MemberSuccessHandler)
                 );
         return httpSecurity.build();
     }
@@ -130,24 +125,6 @@ public class SecurityConfiguration {
             // addFilter() 메서드를 통해 JwtAuthenticationFilter를 Spring Security Filter Chain에 추가
 
         }
-    }
-
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        var clientRegistration = clientRegistration();    // (3-1)
-
-        return new InMemoryClientRegistrationRepository(clientRegistration);   // (3-2)
-    }
-
-    // (4)
-    private ClientRegistration clientRegistration() {
-        // (4-1)
-        return CommonOAuth2Provider
-                .GOOGLE
-                .getBuilder("google")
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .build();
     }
 
 }

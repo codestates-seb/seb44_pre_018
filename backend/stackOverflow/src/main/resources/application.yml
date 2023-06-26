@@ -12,15 +12,6 @@ spring:
   sql:
     init:
       data-locations: classpath*:db/h2/data.sql
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId: 895180325672-98q6heibg4petksk353q1i627e98aiav.apps.googleusercontent.com           # (1)
-            clientSecret: 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  # (2)
-            scope:
-              - email
 logging:
   level:
     org:
