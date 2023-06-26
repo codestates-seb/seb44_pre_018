@@ -1,9 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { persistReducer } from 'redux-persist';
+import { CookiesProvider } from 'react-cookie';
+import { clearUser } from 'store';
 import axios from 'axios';
+
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
 import LoginModal from 'components/global/login/LoginModal';
+import { getCookie } from '../../../pages/cookie';
 
 const AnswerItem = ({ itemid }) => {
   const { id } = useParams();
@@ -12,24 +18,34 @@ const AnswerItem = ({ itemid }) => {
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
 
+  const loggedIn = useSelector((state) => state.user.isLogin);
+  const token = useSelector((state) => state.user.token);
+
+  
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
   };
 
+  const checkUser = () => {
+    dispatch(clearUser());
+    navigate('/users/login');
+  };
+
   const getCommentList = async () => {
     try {
-      const response = await axios.get(`/v1/comment/${id}`, {
+      const response = await axios.get(`/comment/${id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         },
         params: {
-          page: 0,
-          size: 4,
+          page: 1,
+          size: 5,
         },
       });
+      console.log(response.data);
       setAnswers(response.data.data);
     } catch (error) {
       console.error(error);
@@ -38,12 +54,9 @@ const AnswerItem = ({ itemid }) => {
 
   const addComment = async (content) => {
     try {
-      const response = await axios.post(
-        `/v1/comment/${id}/${2}/question-answer`,
-        {
-          content: content,
-        }
-      );
+      const response = await axios.post(`/comment/question-answer/${id}`, {
+        content: content,
+      });
       const newAnswer = response.data.data;
       setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
       console.log('댓글 추가 성공:', response.data);
@@ -53,19 +66,21 @@ const AnswerItem = ({ itemid }) => {
     }
   };
 
-  const handleDeleteAnswer = async (answerId) => {
-    try {
-      await fetch(`/v1/comment/delete/${id}/1`, {
-        method: 'DELETE',
-      });
-
-      const updatedAnswers = answers.filter(
-        (answer) => answer.commentId !== answerId
-      );
-      setAnswers(updatedAnswers);
-      console.log('댓글 삭제 성공');
-    } catch (error) {
-      console.error('댓글 삭제 실패:', error);
+  const handleDeleteAnswer = (id) => {
+    if (!checkUser()) {
+      axios
+        .delete(`comment/delete/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setAnswers(answers.filter((i) => i.id !== id));
+        })
+        .catch(() => {
+          alert('답변 삭제 권한이 없습니다.');
+        });
     }
   };
 
@@ -123,7 +138,7 @@ const AnswerItem = ({ itemid }) => {
       commentStatus: 'COMMENT',
     };
     try {
-      await addComment(newAnswer.content);
+      await dispatch(addComment(newAnswer.content));
       setCommentInput('');
       setShowInputMessage(false);
     } catch (error) {
@@ -142,7 +157,6 @@ const AnswerItem = ({ itemid }) => {
 
   useEffect(() => {
     getCommentList();
-    setLoggedIn(false);
     console.log(id);
   }, []);
 

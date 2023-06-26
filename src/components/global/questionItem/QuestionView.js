@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { styled } from 'styled-components';
 import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
+import { getCookie } from '../../../pages/cookie';
 
 const QuesitonButtonWrap = styled.div`
   display: flex;
@@ -33,21 +34,31 @@ const QuesitonButtonWrap = styled.div`
   }
 `;
 
-const QuestionEditButtonWrap = styled.div`
-  margin-left: -20rem;
-`;
-
 const QuestionView = ({ question }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
+  const token = getCookie('Authorization');
+
 
   const handleLike = async () => {
+    if (!token) {
+      console.error('로그인이 필요합니다.');
+      return;
+    }
     try {
-      await axios.post(`/question/${id}/1`, {
+      await axios.post(`/question/vote/${id}`,
+        {
         voteStatus: 'LIKE',
-      });
+        },
+        {
+          headers: {
+            Authorization: token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
       setLikeCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error(error);
@@ -55,16 +66,28 @@ const QuestionView = ({ question }) => {
   };
 
   const handleDislike = async () => {
+    if (!token) {
+      console.error('로그인이 필요합니다.');
+      return;
+    }
     try {
-      await axios.post(`/question/${id}/1`, {
-        voteStatus: 'DISLIKE',
-      });
-      setLikeCount((prevCount) => prevCount - 1);
+      await axios.post(
+        `/question/vote/${id}`,
+        {
+          voteStatus: 'DISLIKE',
+        },
+        {
+          headers: {
+            Authorization: token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      setDislikeCount((prevCount) => prevCount - 1);
     } catch (error) {
       console.error(error);
     }
   };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -76,7 +99,7 @@ const QuestionView = ({ question }) => {
   useEffect(() => {
     const fetchCommentCount = async () => {
       try {
-        const response = await axios.get(`/v1/comment/${id}`, {
+        const response = await axios.get(`/comment/${id}`, {
           headers: {
             'ngrok-skip-browser-warning': 'true',
           },
@@ -85,8 +108,8 @@ const QuestionView = ({ question }) => {
             size: 4,
           },
         });
+        console.log(id);        
         const { totalElements } = response.data.pageInfo;
-        setCommentCount(response.data.data);
         setCommentCount(totalElements);
       } catch (error) {
         console.error(error);
@@ -104,7 +127,7 @@ const QuestionView = ({ question }) => {
           <ItemView viewCount={question.view} />
         </div>
         <div className="mx-3">
-          <ItemAnswer commentCount={commentCount} />
+          <ItemAnswer viewAnswer={commentCount} />
         </div>
         <p className="ml-auto font-light">
           Asked: {formatDate(question.createdAt)}
@@ -122,9 +145,7 @@ const QuestionView = ({ question }) => {
         </QuesitonButtonWrap>
         <div className="w-full relative pt-3">
           <div className="mt-2">
-            <QuestionEditButtonWrap>
-              <QuestionEditButton className="top-[7px]" />
-            </QuestionEditButtonWrap>
+              <QuestionEditButton id={id} className="top-[7px]" />
           </div>
           <p
             className="text-sm font-light py-2 content"

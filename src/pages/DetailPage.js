@@ -14,6 +14,7 @@ import axios from 'axios';
 import QuestionView from 'components/global/questionItem/QuestionView';
 import AnswerItem from 'components/global/answerdetail/AnswerItem';
 
+
 const DetailPage = () => {
   const { id } = useParams();
   const [question, setQuestion] = useState({
