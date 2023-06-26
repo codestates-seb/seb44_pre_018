@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 const Dropdown = styled.div`
   position: absolute;
@@ -53,6 +54,7 @@ const ToggleButton = styled.button`
 
 const QuestionEditButton = ({ id }) => {
   // const { id } = useParams();
+  const { user } = useSelector((state) => state);
   const navigate = useNavigate();
   const [isOpenStatus, setIsOpenStatus] = useState(false);
   const [post, setPost] = useState(id);
@@ -67,15 +69,18 @@ const QuestionEditButton = ({ id }) => {
 
   const handleDeleteQuestion = () => {
     if (window.confirm('삭제하시겠습니까?')) {
-      fetch(`/question/delete/${id}/${1}`, {
+      axios(`/question/delete/${id}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: user.token,
+        },
       }).then((res) => {
         if (res.ok) {
-          setPost({ id: 0 });
           navigate('/');
         }
       });
     }
+    window.location.replace('/');
   };
 
   if (id === 0) {

@@ -3,9 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Editor from 'components/global/questionItem/Editor';
 import AddTag from 'components/global/tag/AddTag';
+import { useSelector } from 'react-redux';
 
 const QuestionUpdate = () => {
   const { id } = useParams();
+  const { user } = useSelector((state) => state);
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -30,10 +32,18 @@ const QuestionUpdate = () => {
       return;
     }
     try {
-      const updateData = await axios.patch(`/question/update/${id}/${1}`, {
-        title,
-        content: body,
-      });
+      const updateData = await axios.patch(
+        `/question/update/${id}`,
+        {
+          title,
+          content: body,
+        },
+        {
+          headers: {
+            Authorization: user.token,
+          },
+        }
+      );
       alert('수정되었습니다.');
       navigate(`/question/${id}`);
     } catch (err) {
@@ -49,7 +59,6 @@ const QuestionUpdate = () => {
             'ngrok-skip-browser-warning': 'true',
           },
         });
-        console.log('resp', resp);
         if (resp.data) {
           const { title, content } = resp.data.data;
           setTitle(title);
