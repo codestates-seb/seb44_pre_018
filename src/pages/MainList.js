@@ -7,6 +7,7 @@ import SearchArea from 'components/SearchArea';
 import { getSearch } from 'assets/js/common';
 import { styled } from 'styled-components';
 import { getCookie } from './cookie';
+import { useSelector } from 'react-redux';
 export const POST_SIZE = 10;
 export const PAGES_PER_ARRAY = 10;
 const MainList = () => {
@@ -14,7 +15,7 @@ const MainList = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const token = getCookie('Authorization');
-
+  const { user } = useSelector((state) => state);
   const [queryStrObj, setQueryStrObj] = useState({
     size: POST_SIZE,
     keyword: searchData.keyword ? searchData.keyword : '',
@@ -28,7 +29,7 @@ const MainList = () => {
     let str = '';
     for (let i = 0; i < Object.keys(obj).length; i++) {
       const key = Object.keys(obj)[i];
-      if (obj[key] === '') continue;
+      // if (obj[key] === '') continue;
       if (i !== 0) str += '&';
       str += `${key}=${obj[key]}`;
     }
@@ -46,6 +47,7 @@ const MainList = () => {
           Authorization: token,
         },
       });
+      console.log('boardList', boardList);
       setBoardList(boardList);
       setTotalPages(pageInfo.totalPages);
       setTotalEl(pageInfo.totalElements);
@@ -59,10 +61,14 @@ const MainList = () => {
   }, [queryStrObj]);
   useEffect(() => {
     const searchData = getSearch();
+    let sortBy = searchData.sortBy ? searchData.sortBy : '';
+    if (sortBy === 'latest') {
+      sortBy = '';
+    }
     const obj = {
       size: POST_SIZE,
       keyword: searchData.keyword ? searchData.keyword : '',
-      sortBy: searchData.sortBy ? searchData.sortBy : 'latest',
+      sortBy: sortBy,
       page: searchData.page ? searchData.page : 1,
     };
     setQueryStrObj(obj);
@@ -73,7 +79,9 @@ const MainList = () => {
   //     return result;
   //   }
   // };
-
+  useEffect(() => {
+    console.log('user', user);
+  }, [user]);
   return (
     <div className="inner">
       <div className="flex items-center justify-between">

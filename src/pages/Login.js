@@ -34,14 +34,25 @@ const Login = () => {
         username: email,
         password: password,
       });
+      console.log('result', result);
       const accessToken = result.headers.authorization;
       setCookie('Authorization', `${accessToken}`);
-      console.log(result);
+
+      const {
+        data: {
+          data: { email: resEmail, name: resName, phone: resPhone },
+        },
+      } = await axios.get('/member/getmember', {
+        headers: {
+          Authorization: accessToken,
+          'ngrok-skip-browser-warning': 'true',
+        },
+      });
       dispatch(
         loginUser({
-          name: 'test',
-          email: email,
-          isLoading: false,
+          name: resName,
+          email: resEmail,
+          phone: resPhone,
           isLogin: true,
           token: accessToken,
         })
@@ -49,6 +60,7 @@ const Login = () => {
       navigate('/');
     } catch (err) {
       console.log(err);
+      alert('로그인에 실패하였습니다.');
     }
 
     // const result = await axios.post('/auth/login', {
@@ -64,7 +76,6 @@ const Login = () => {
     //   loginUser({
     //     name: 'test',
     //     email: email,
-    //     isLoading: false,
     //     isLogin: true,
     //   })
     // );
