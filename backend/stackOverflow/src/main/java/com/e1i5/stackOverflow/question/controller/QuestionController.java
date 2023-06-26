@@ -54,10 +54,11 @@ public class QuestionController {
 
     }
 
-    @PatchMapping("/update/{question_id}/{member_id}") //질문 수정
+    @PatchMapping("/update/{question_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive @NonNull long questionId,
-                                        @PathVariable("member_id") @Positive long memberId,
                                         @Valid @RequestBody QuestionDto.QuestionPatchDto questionPatchDto) {
+        long memberId = JwtInterceptor.requestMemberId();
+
         questionService.QuestionByAuthor(questionId, memberId); // 댓글 작성자메서드 호출
         questionPatchDto.setQuestionId(questionId);
         questionPatchDto.setMemberId(memberId);
@@ -104,5 +105,15 @@ public class QuestionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PostMapping("vote/{question-id}")
+    public ResponseEntity voteQuestion(@PathVariable("question-id") @Positive long questionId,
+                                       @Valid @RequestBody QuestionVoteDto questionVoteDto){
+        long memberId = JwtInterceptor.requestMemberId();
+
+        System.out.println(questionVoteDto.getVoteStatus());
+        Question question = questionService.voteQuestion(memberId, questionId, questionVoteDto.getVoteStatus());
+        QuestionResponseDto.Question responseDto = mapper.questionToQuestionResponseDto(question);
+        return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
+    }
 
 }

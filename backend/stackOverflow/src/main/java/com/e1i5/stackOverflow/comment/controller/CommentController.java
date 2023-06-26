@@ -10,16 +10,11 @@ import com.e1i5.stackOverflow.dto.SingleResponseDto;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.entity.Member;
-import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.member.service.MemberService;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import com.e1i5.stackOverflow.question.service.QuestionService;
-import com.e1i5.stackOverflow.utils.UriCreator;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.patterns.TypePatternQuestions;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.net.URI;
 import java.util.*;
 
 @RestController

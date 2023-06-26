@@ -65,9 +65,10 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/question/**").hasRole("USER") //질문투표
                         .antMatchers(HttpMethod.PATCH, "/question/update/**").hasRole("USER") //질문 수정
                         .antMatchers(HttpMethod.DELETE, "/question/delete/**").hasRole("USER") //질문 삭제
-                        .antMatchers(HttpMethod.POST, "/v1/comment/create").hasAnyRole("USER","ADMIN") //댓글 생성
-                        .antMatchers(HttpMethod.PATCH,"/v1/comment/update/**").hasRole("USER") //댓글 수정
-                        .antMatchers(HttpMethod.DELETE,"/v1/comment/delete/**").hasRole("USER") //댓글 삭제
+                        .antMatchers(HttpMethod.POST, "/comment/create").hasAnyRole("USER","ADMIN") //댓글 생성
+                        .antMatchers(HttpMethod.PATCH,"/comment/update/**").hasRole("USER") //댓글 수정
+                        .antMatchers(HttpMethod.DELETE,"/comment/delete/**").hasRole("USER") //댓글 삭제
+                        .antMatchers(HttpMethod.PATCH,"/comment/choose/**").hasRole("USER") //댓글 채택
                         .anyRequest().permitAll()
                 );
         return httpSecurity.build();
