@@ -27,25 +27,11 @@ public class Comment extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-//    public void setMember(long memberId){ // post
-//        this.member = new Member();
-//        this.member.setMemberId(memberId);
-//    }
-
-
 
     @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 
-//    public void setQuestion(long questionId){
-//        this.question = new Question();
-//        this.question.setQuestionId(questionId);
-//    }
-
-    //    public void addQuestion(Question question){  // 질문 변경사항 설정
-//        this.question = question;
-//    }
 
     // 댓글 수정부분 null exception 해결을 위해 초기화
     public Comment(Member member, Question question) {

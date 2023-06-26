@@ -112,7 +112,7 @@ public class CommentService {
         return findComment;
     }
 
-    // 댓글 수정시 사용 - 39-55
+    // 댓글 수정시 사용
     public Member findCommentMember(long commentId){
         Comment findComment = findVerifiedComment(commentId);
         return findComment.getMember();

@@ -35,20 +35,12 @@ public class MemberController{
     private final MemberMapper mapper;
     private final MemberService memberService;
 
-    //private final JwtTokenProvider jwtTokenProvider;
 
     public MemberController(MemberMapper mapper, MemberService memberService) {
         this.mapper = mapper;
         this.memberService = memberService;
-       // this.jwtTokenProvider = jwtTokenProvider;
     }
 
-//    @PatchMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity patchMemberImage(@RequestPart MultipartFile memberImage){
-//        Member member = new Member(memberImage.getOriginalFilename());
-//
-//        return new ResponseEntity<>(member, HttpStatus.OK);
-//    }
 /**
  * signupMember, loginMember는 레퍼런스 상 엔드포인트가 같고 동일한 서비스 계층으로 전달되지만
  * 회원가입의 response body를 json의 형태로 반환하는 방법을 찾지 못해 해당 프로젝트에서는 둘을 구분하였습니다.
@@ -120,7 +112,7 @@ public class MemberController{
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete") // 회원 삭제 > 지금 탈퇴기능으로 구현인지. 권한이 user로만 설정됨.
+    @DeleteMapping("/delete") // 회원 삭제
     public ResponseEntity deleteMember(){
         long memberId = JwtInterceptor.requestMemberId();
         memberService.deleteMember(memberId);
