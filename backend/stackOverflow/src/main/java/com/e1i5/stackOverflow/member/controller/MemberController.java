@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.member.controller;
 
+import com.e1i5.stackOverflow.auth.dto.LoginDto;
 import com.e1i5.stackOverflow.auth.interceptor.JwtInterceptor;
 import com.e1i5.stackOverflow.dto.MultiResponseDto;
 import com.e1i5.stackOverflow.dto.SingleResponseDto;
@@ -61,8 +62,8 @@ public class MemberController{
     }
 
     @PostMapping // securityConfiguration을 통해 경로 변경 >  /auth/login
-    public ResponseEntity loginMember(@Valid @RequestBody MemberDto.LoginPost requestBody) {
-        Member member = mapper.memberLoginPostDtoToMember(requestBody);
+    public ResponseEntity loginMember(@Valid @RequestBody LoginDto requestBody) {
+        Member member = mapper.LoginDtoToMember(requestBody);
         // 동일한 로직이다.
         Member createdMember = memberService.signupMember(member);
         URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, createdMember.getMemberId());

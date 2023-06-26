@@ -35,7 +35,6 @@ public class MemberService {
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
-    //private final BCryptPasswordEncoder encoder;
 
 
     public MemberService(MemberRepository memberRepository,
@@ -146,6 +145,8 @@ public class MemberService {
                 .ifPresent(name -> findMember.setName(name));
         Optional.ofNullable(member.getPhone())
                 .ifPresent(phone -> findMember.setPhone(phone));
+        Optional.ofNullable(member.getPassword())
+                .ifPresent(password -> findMember.setPassword(password));
 
         return memberRepository.save(findMember);
     }

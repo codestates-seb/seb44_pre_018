@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.member.mapper;
 
+import com.e1i5.stackOverflow.auth.dto.LoginDto;
 import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import org.mapstruct.Mapper;
@@ -11,7 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {
     Member memberSignupPostDtoToMember(MemberDto.SignupPost requestBody);
-    Member memberLoginPostDtoToMember(MemberDto.LoginPost requestBody);
+    Member LoginDtoToMember(LoginDto requestBody);
 
     Member memberPatchDtoToMember(MemberDto.Patch requestBody);
     MemberDto.Response memberToMemberResponseDto(Member member);
