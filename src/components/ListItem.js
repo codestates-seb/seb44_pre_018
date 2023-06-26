@@ -67,9 +67,9 @@ const ListItem = ({ value }) => {
   const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
-    const fetchCommentCount = async () => {
+    async () => {
       try {
-        const response = await axios.get(`/v1/comment/${value.questionId}`, {
+        const response = await axios.get(`/question/${value.questionId}`, {
           headers: {
             'ngrok-skip-browser-warning': 'true',
           },
@@ -78,14 +78,10 @@ const ListItem = ({ value }) => {
             size: 4,
           },
         });
-        const { totalElements } = response.data.pageInfo;
-        setCommentCount(totalElements);
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchCommentCount();
   }, []);
 
   const navigate = useNavigate();
@@ -113,24 +109,24 @@ const ListItem = ({ value }) => {
 
   return (
     <Item className="transition border-b-[1px] border-black/[.3] border-solid cursor-pointer py-3 relative">
-      <QuestionEditButton id={value.questionId}/>
+      <QuestionEditButton id={value.questionId} />
       <Link
         className="flex items-center justify-between"
         to={`/question/${value.questionId}`}
       >
         <div className="w-4/5">
-          <h3 className="itemTitle text-base ">
+          <h3 className="itemTitle text-base">
             <span>{value.title}</span>
           </h3>
           <ListText
-            className="text-sm font-light py-2"
+            className="text-sm font-light py-2 my-[10px]"
             dangerouslySetInnerHTML={{ __html: value.content }}
           ></ListText>
           <TagList />
         </div>
         <div className="w-1/5 text-right flex align-center justify-end">
           <ItemView viewCount={value.view} />
-          <ItemAnswer commentCount={commentCount}/>
+          <ItemAnswer viewAnswer={value.commentListCount} />
         </div>
       </Link>
     </Item>
