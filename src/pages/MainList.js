@@ -6,12 +6,14 @@ import Pagination from 'components/global/Pagination';
 import SearchArea from 'components/SearchArea';
 import { getSearch } from 'assets/js/common';
 import { styled } from 'styled-components';
+import { getCookie } from './cookie';
 export const POST_SIZE = 10;
 export const PAGES_PER_ARRAY = 10;
 const MainList = () => {
   const searchData = getSearch();
   const location = useLocation();
   const navigate = useNavigate();
+  const token = getCookie('Authorization');
 
   const [queryStrObj, setQueryStrObj] = useState({
     size: POST_SIZE,
@@ -38,9 +40,10 @@ const MainList = () => {
     try {
       const {
         data: { data: boardList, pageInfo },
-      } = await axios.get(`/question/question/search?${qs}`, {
+      } = await axios.get(`/question/search?${qs}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
+          Authorization: token,
         },
       });
       setBoardList(boardList);
