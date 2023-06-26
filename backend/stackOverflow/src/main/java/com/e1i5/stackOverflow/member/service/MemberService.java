@@ -1,5 +1,6 @@
 package com.e1i5.stackOverflow.member.service;
 
+import com.e1i5.stackOverflow.auth.utils.CustomAuthorityUtils;
 import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
@@ -8,44 +9,66 @@ import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.repository.MemberRepository;
 import com.e1i5.stackOverflow.question.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
+import com.e1i5.stackOverflow.helper.event.MemberRegistrationApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @Slf4j
 @Transactional
+
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher publisher;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomAuthorityUtils authorityUtils;
+    //private final BCryptPasswordEncoder encoder;
 
-    public MemberService(MemberRepository memberRepository) {
+
+    public MemberService(MemberRepository memberRepository,
+                         ApplicationEventPublisher publisher,
+                         PasswordEncoder passwordEncoder,
+                         CustomAuthorityUtils authorityUtils) {
         this.memberRepository = memberRepository;
+        this.publisher = publisher;
+        this.passwordEncoder = passwordEncoder;
+        this.authorityUtils = authorityUtils;
     }
 
+    // 회원가입, 로그인 기능을 공유하는 메서드
     public Member signupMember(Member member){
         verifyExistsEmail(member.getEmail());
-        //Member saveMember = memberRepository.save(member);
+        String encryptedPassword = passwordEncoder.encode(member.getPassword()); // member에 저장된 원래 비밀번호 암호화
+        member.setPassword(encryptedPassword);// 암호화된 비밀번호를 member의 비밀번호 필드에 저장
+        // db에 저장되는 비밀번호는 실제 비밀번호의 암호화된 형태로 저장
 
-//        //비밀번호 암호화
-//        member.setPassword(encoder.encode(member.getPassword()));
-        //회원가입 이메일 추가부분
-        return memberRepository.save(member);
+        // 추가: DB에 User Role 저장, 사용자 권한 정보 생성
+        List<String> roles = authorityUtils.createRoles(member.getEmail());// 사용자 이메일 기반으로 사용자 역할을 생성, 저장
+        member.setRoles(roles);// member 객체의 역할 필드에 역할 리스트 설정
+
+        Member savedMember = memberRepository.save(member);
+        publisher.publishEvent(new MemberRegistrationApplicationEvent(savedMember));
+        return savedMember;
     }
 
     public Member loginMember(Member member) throws Exception{
         Member findMember = findVerifiedMemberByEmail(member.getEmail());
         String findMemberPassword = findMember.getPassword();
 
-//        // 임시 비밀번호 확인
+        // 임시 비밀번호 확인
 //        if (!encoder.matches(member.getPassword(), findMemberPassword)) {
 //            throw new Exception("Invalid password"); // 예외를 던짐
 //        }else {
@@ -66,7 +89,7 @@ public class MemberService {
 
     public void imageUpload(long memberId, MultipartFile multipartFile){
         //image upload
-        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\files";
+        String projectPath = System.getProperty("user.dir") + File.separator + "files";
         UUID uuid = UUID.randomUUID();
         String fileName = uuid + "_" + multipartFile.getOriginalFilename();
 
@@ -97,6 +120,19 @@ public class MemberService {
         }
 
         Member findMember = findVerifiedMemberById(memberId);
+        // 기존 파일 삭제
+        String existingFilePath = findMember.getProfileImagePath() + File.separator + findMember.getProfileImageName();
+        File existingFile = new File(existingFilePath);
+        if (existingFile.exists()) {
+            if (existingFile.delete()) {
+                System.out.println("기존 파일이 삭제되었습니다.");
+            } else {
+                System.out.println("기존 파일을 삭제할 수 없습니다.");
+                // 파일 삭제 실패 처리 로직
+                throw new IllegalArgumentException("기존 파일을 삭제할 수 없습니다.");
+            }
+        }
+
         findMember.setProfileImagePath(projectPath);
         findMember.setProfileImageName(fileName);
 
@@ -119,6 +155,7 @@ public class MemberService {
                 Sort.by("memberId").descending()));
     }
 
+    @Transactional(readOnly = true)
     public Member findMember(long memberId)
     {
         return findVerifiedMemberById(memberId);}
@@ -135,6 +172,7 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
+    @Transactional(readOnly = true)
     public Member findVerifiedMemberById(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember =

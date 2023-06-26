@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/db_stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&useLegacyAuth=false # jdbc:mysql://localhost:3306/{데이터베이스이름}
-    username: Dong #유저이름
-    password: 1234 #비밀번호
+    url: jdbc:mysql://localhost:3306/db_stackOverflow?useSSL=false&allowPublicKeyRetrieval=true&useLegacyAuth=false # jdbc:mysql://localhost:3306/{????????}
+    username: user_stackOverflow #????
+    password: 1234 #????
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update  # (1) 스키마 자동 생성
-    show-sql: true      # (2) SQL 쿼리 출력
+      ddl-auto: update  # (1) ??? ?? ??
+    show-sql: true      # (2) SQL ?? ??
     properties:
       hibernate:
         format_sql: true  # (3) SQL pretty print

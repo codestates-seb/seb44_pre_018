@@ -37,44 +37,74 @@ public interface QuestionMapper {
 //                .collect(Collectors.toList());
 //    }
 
-    @Mapping(source = "member.name", target = "name")
+    @Mapping(source = "member.name", target = "authenticatedMemberName")
     @Mapping(source = "member.profileImageName", target = "ImageName")
     @Mapping(source = "member.profileImagePath", target = "ImagePath")
+    @Mapping(source = "likeCount", target = "commentLikeCount")
+    @Mapping(source = "dislikeCount", target = "commentDislikeCount")
     QuestionCommentDto commentToQuestionCommentDto(Comment comment);
 
-    default QuestionResponseDto questionToQuestionResponseDto(Question question) {
+    default QuestionResponseDto.Question questionToQuestionResponseDto(Question question) {
         if (question == null) {
             return null;
         }
 
-        QuestionResponseDto questionResponseDto = new QuestionResponseDto();
+        QuestionResponseDto.Question dto = new QuestionResponseDto.Question();
 
-        questionResponseDto.setMemberName(question.getMember().getName());
+        dto.setMemberName(question.getMember().getName());
 
-        questionResponseDto.setCommentList(question.getCommentList().stream()
+        dto.setCommentList(question.getCommentList().stream()
                 .map(comment -> commentToQuestionCommentDto(comment))
                 .collect(Collectors.toList()));
 
         if (question.getQuestionId() != null) {
-            questionResponseDto.setQuestionId(question.getQuestionId());
+            dto.setQuestionId(question.getQuestionId());
         }
-        questionResponseDto.setTitle(question.getTitle());
-        questionResponseDto.setContent(question.getContent());
-        questionResponseDto.setView(question.getView());
-        questionResponseDto.setCreatedAt(question.getCreatedAt());
-        questionResponseDto.setLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
+        dto.setTitle(question.getTitle());
+        dto.setContent(question.getContent());
+        dto.setView(question.getView());
+        dto.setCreatedAt(question.getCreatedAt());
+        dto.setLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
                 .filter(questionVote -> questionVote.getVoteType() == QuestionVote.VoteType.LIKE)
                 .count()));
-        questionResponseDto.setDisLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
+        dto.setDisLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
                 .filter(questionVote -> questionVote.getVoteType() == QuestionVote.VoteType.DISLIKE)
                 .count()));
 
-        return questionResponseDto;
+        return dto;
     }
 
-    default List<QuestionResponseDto> questionsToQuestionResponseDtos(List<Question> questions) {
+    default QuestionResponseDto.QuestionList questionToQuestionListResponseDto(Question question){
+        if (question == null) {
+            return null;
+        }
+
+        QuestionResponseDto.QuestionList dto = new QuestionResponseDto.QuestionList();
+
+        dto.setMemberName(question.getMember().getName());
+
+        dto.setCommentListCount(Math.toIntExact(question.getCommentList().stream().count()));
+
+        if (question.getQuestionId() != null) {
+            dto.setQuestionId(question.getQuestionId());
+        }
+        dto.setTitle(question.getTitle());
+        dto.setContent(question.getContent());
+        dto.setView(question.getView());
+        dto.setCreatedAt(question.getCreatedAt());
+        dto.setLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
+                .filter(questionVote -> questionVote.getVoteType() == QuestionVote.VoteType.LIKE)
+                .count()));
+        dto.setDisLikeCount(Math.toIntExact(question.getQuestionVoteList().stream()
+                .filter(questionVote -> questionVote.getVoteType() == QuestionVote.VoteType.DISLIKE)
+                .count()));
+
+        return dto;
+    }
+
+    default List<QuestionResponseDto.QuestionList> questionsToQuestionResponseDtos(List<Question> questions) {
         return questions.stream()
-                .map(question -> questionToQuestionResponseDto(question))
+                .map(question -> questionToQuestionListResponseDto(question))
                 .collect(Collectors.toList());
     }
 }

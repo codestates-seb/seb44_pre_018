@@ -81,9 +81,40 @@ public class QuestionService {
         return findQuestion;
     }
 
-    public Page<Question> findQuestions(int page, int size) { //여러 질문 검색
-        return questionRepository.findAll(PageRequest.of(page, size,
-                Sort.by("questionId").descending()));
+    public Page<Question> findQuestions(int page, int size, String sortBy, String keyword) { // 여러 질문 검색
+        // 특정 단어가 title에 포함된 모든 Question을 조회합니다.
+        List<Question> questions = questionRepository.findAll();
+
+        // 특정 단어와 연관된 Question만 필터링하여 반환합니다.
+        List<Question> relatedQuestions;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            relatedQuestions = questions.stream()
+                    .filter(question -> question.getTitle().contains(keyword))
+                    .collect(Collectors.toList());
+        } else {
+            relatedQuestions = questions;
+        }
+
+        Sort sort;
+
+        switch (sortBy) {
+            case "view":
+                sort = Sort.by("view").descending();
+                break;
+//        case "recentAnswer":
+//            sort = Sort.by("lastAnswerDate").descending();
+//            break;
+            default:
+                sort = Sort.by("questionId").descending();
+                break;
+        }
+
+        int startIndex = page * size;
+        int endIndex = Math.min(startIndex + size, relatedQuestions.size());
+        List<Question> pagedQuestions = relatedQuestions.subList(startIndex, endIndex);
+
+        return new PageImpl<>(pagedQuestions, PageRequest.of(page, size, sort), relatedQuestions.size());
     }
 
 //    public void deleteQuestion(long questionId) {
@@ -120,22 +151,10 @@ public class QuestionService {
     }
 
     // 질문글 삭제시 답변도 같이 삭제하는 메서드
-    public void deleteQuestionWithComments(long questionId) {
+    public void deleteQuestion(long questionId) {
 
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-
-        List<Comment> comments = question.getCommentList();
-
-        if (comments != null && !comments.isEmpty()) {
-            for (Comment comment : comments) {
-                Long commentId = comment.getCommentId();
-                Comment existingComment = commentRepository.findById(commentId).orElse(null);
-                if (existingComment != null) {
-                    commentRepository.delete(existingComment);
-                }
-            }
-        }
 
         // 질문 삭제
         questionRepository.delete(question);
@@ -156,13 +175,9 @@ public class QuestionService {
     }
 
     public Question voteQuestion(long memberId, long questionId, String voteStatus){
-        System.out.println("-------------------------------------------------------------------");
         Question question = findQuestion(questionId);
-        System.out.println("질문 찾음: " + question.getTitle());
-        System.out.println("-------------------------------------------------------------------");
         Member member = memberService.findMember(memberId);
-        System.out.println("멤버 찾음: " + member.getName());
-        System.out.println("-------------------------------------------------------------------");
+
 
 
         QuestionVote questionVote = new QuestionVote(QuestionVote.VoteType.valueOf(voteStatus), question, member);

@@ -31,8 +31,8 @@ public class Member extends Auditable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(length=100, nullable = false, unique = true)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Enumerated(value = EnumType.STRING)
@@ -42,6 +42,10 @@ public class Member extends Auditable {
     private String profileImageName;
 
     private String profileImagePath;
+
+    // 사용자 등록시 사용자 권한 등록 테이블 생성
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
     public Member(String name, String phone, String email, String password) {
         this.email = email;
@@ -64,12 +68,12 @@ public class Member extends Auditable {
     }
 
 
-    @OneToMany(mappedBy = "commentId")
-    List<Comment> commentList= new ArrayList<Comment>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Comment> commentList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "questionId")
-    List<Question> questionList= new ArrayList<Question>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Question> questionList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     List<QuestionVote> questionVoteList = new ArrayList<>();
 }

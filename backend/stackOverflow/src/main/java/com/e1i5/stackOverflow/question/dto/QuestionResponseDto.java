@@ -6,24 +6,45 @@ import com.e1i5.stackOverflow.member.dto.MemberDto;
 import com.e1i5.stackOverflow.member.entity.Member;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 
-@Getter
-@Setter
+
 public class QuestionResponseDto {
 
-    private long questionId;
-    private String memberName;
-    private String title;
-    private String content;
-    private int view;
-    private LocalDateTime createdAt;
-    private List<QuestionCommentDto> commentList;
-    private int likeCount;
-    private int disLikeCount;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class Question {
+        private long questionId;
+        private String memberName;
+        private String title;
+        private String content;
+        private int likeCount;
+        private int disLikeCount;
+        private int view;
+        private LocalDateTime createdAt;
+        private List<QuestionCommentDto> commentList;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class QuestionList {
+        private long questionId;
+        private String memberName;
+        private String title;
+        private String content;
+        private int view;
+        private LocalDateTime createdAt;
+        private int commentListCount;
+        private int likeCount;
+        private int disLikeCount;
+    }
 
 }
 

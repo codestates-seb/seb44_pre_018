@@ -46,9 +46,11 @@ public class Question extends Auditable {
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToMany(mappedBy = "commentId")
-
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<QuestionVote> questionVoteList = new ArrayList<>();
 
     public enum QuestionStatus {
         QUESTION_NOT_EXIST("존재하지 않는 질문"),
@@ -61,11 +63,6 @@ public class Question extends Auditable {
             this.status = status;
         }
     }
-
-
-    @OneToMany(mappedBy = "question")
-    List<QuestionVote> questionVoteList = new ArrayList<>();
-
 
     }
 

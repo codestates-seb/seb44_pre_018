@@ -9,12 +9,15 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 public class QuestionCommentDto {
-    private String name;
+    private long commentId;
+    private String authenticatedMemberName;
     private String content;
     private String ImageName;
     private String ImagePath;
-    private int likeCount;
-    private int dislikeCount;
+    private boolean choose;
+    private int commentLikeCount;
+    private int commentDislikeCount;
+
 
     private LocalDateTime createdAt;
 }
