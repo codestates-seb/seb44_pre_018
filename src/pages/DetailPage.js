@@ -47,16 +47,15 @@ const DetailPage = () => {
     fetchData();
   }, [id]);
 
-
   return (
     <div className="inner">
-       {updatedQuestion ? (
+      {updatedQuestion ? (
         <QuestionView question={updatedQuestion} />
       ) : (
         <QuestionView question={question} />
       )}
       {/* 댓글 */}
-      <AnswerItem />
+      <AnswerItem itemid={id} />
     </div>
   );
 };

@@ -51,40 +51,40 @@ const ToggleButton = styled.button`
   }
 `;
 
-const QuestionEditButton = (question) => {
-  const { id } = useParams();
+const QuestionEditButton = ({ id }) => {
+  // const { id } = useParams();
   const navigate = useNavigate();
   const [isOpenStatus, setIsOpenStatus] = useState(false);
-  const [post, setPost] = useState(question);
-  
+  const [post, setPost] = useState(id);
+
   const toggleDropdown = () => {
     setIsOpenStatus((prevStatus) => !prevStatus);
   };
 
   const moveToUpdate = () => {
-      navigate(`/update/${id}`);
-    };
+    navigate(`/update/${id}`);
+  };
 
-    const handleDeleteQuestion = () => {
-      if(window.confirm('삭제하시겠습니까?')) {
-        fetch(`/question/delete/${id}/${1}`, {
-          method: 'DELETE'
-        }). then (res => {
-          if(res.ok) {
-            setPost({id:0});
-            navigate('/');
-          }
-        })
-      }
+  const handleDeleteQuestion = () => {
+    if (window.confirm('삭제하시겠습니까?')) {
+      fetch(`/question/delete/${id}/${1}`, {
+        method: 'DELETE',
+      }).then((res) => {
+        if (res.ok) {
+          setPost({ id: 0 });
+          navigate('/');
+        }
+      });
     }
+  };
 
-    if( id === 0) {
-      return null;
-    }
+  if (id === 0) {
+    return null;
+  }
 
   return (
     <>
-     <Dropdown>
+      <Dropdown>
         <ToggleButton className="dropdown-toggle" onClick={toggleDropdown}>
           <FontAwesomeIcon icon={faEllipsis} />
         </ToggleButton>
@@ -101,6 +101,6 @@ const QuestionEditButton = (question) => {
       </Dropdown>
     </>
   );
-}
+};
 
 export default QuestionEditButton;

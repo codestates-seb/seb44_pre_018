@@ -5,7 +5,7 @@ import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
 import LoginModal from 'components/global/login/LoginModal';
 
-const AnswerItem = () => {
+const AnswerItem = ({ itemid }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [answers, setAnswers] = useState([]);
@@ -38,9 +38,12 @@ const AnswerItem = () => {
 
   const addComment = async (content) => {
     try {
-      const response = await axios.post(`/v1/comment/${id}/${2}/question-answer`, {
-        content: content,
-      });
+      const response = await axios.post(
+        `/v1/comment/${id}/${2}/question-answer`,
+        {
+          content: content,
+        }
+      );
       const newAnswer = response.data.data;
       setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
       console.log('댓글 추가 성공:', response.data);
@@ -56,7 +59,9 @@ const AnswerItem = () => {
         method: 'DELETE',
       });
 
-      const updatedAnswers = answers.filter((answer) => answer.commentId !== answerId);
+      const updatedAnswers = answers.filter(
+        (answer) => answer.commentId !== answerId
+      );
       setAnswers(updatedAnswers);
       console.log('댓글 삭제 성공');
     } catch (error) {
@@ -64,7 +69,12 @@ const AnswerItem = () => {
     }
   };
 
-  const handleEditComment = async (questionId, commentId, memberId, editedContent) => {
+  const handleEditComment = async (
+    questionId,
+    commentId,
+    memberId,
+    editedContent
+  ) => {
     try {
       const response = await axios.patch(`/v1/comment/update/${id}/${1}/${1}`, {
         content: editedContent,
@@ -133,6 +143,7 @@ const AnswerItem = () => {
   useEffect(() => {
     getCommentList();
     setLoggedIn(false);
+    console.log(id);
   }, []);
 
   return (
@@ -163,10 +174,8 @@ const AnswerItem = () => {
             type="submit"
             onClick={handleSubmitAnswer}
           >
-            
             Submit your Answer
           </button>
-          
         </div>
         {showModal && (
           <LoginModal
