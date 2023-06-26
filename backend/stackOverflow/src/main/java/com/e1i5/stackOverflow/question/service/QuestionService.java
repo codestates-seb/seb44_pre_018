@@ -1,13 +1,9 @@
 package com.e1i5.stackOverflow.question.service;
 
-import com.e1i5.stackOverflow.comment.entity.Comment;
-import com.e1i5.stackOverflow.comment.repository.CommentRepository;
-import com.e1i5.stackOverflow.comment.service.CommentService;
 import com.e1i5.stackOverflow.exception.BusinessLogicException;
 import com.e1i5.stackOverflow.exception.ExceptionCode;
 import com.e1i5.stackOverflow.member.entity.Member;
 import com.e1i5.stackOverflow.member.service.MemberService;
-import com.e1i5.stackOverflow.question.dto.QuestionResponseDto;
 import com.e1i5.stackOverflow.question.entity.Question;
 import com.e1i5.stackOverflow.question.repository.QuestionRepository;
 import com.e1i5.stackOverflow.questionVote.entity.QuestionVote;
@@ -28,17 +24,14 @@ public class QuestionService {
 
     private final MemberService memberService;
 
-    private final CommentRepository commentRepository;
 
     private final QuestionVoteService questionVoteService;
 
     public QuestionService(QuestionRepository questionRepository,
                            MemberService memberService,
-                           CommentRepository commentRepository,
                            QuestionVoteService questionVoteService) {
         this.questionRepository = questionRepository;
         this.memberService = memberService;
-        this.commentRepository = commentRepository;
         this.questionVoteService = questionVoteService;
     }
 
@@ -180,8 +173,6 @@ public class QuestionService {
     public Question voteQuestion(long memberId, long questionId, String voteStatus){
         Question question = findQuestion(questionId);
         Member member = memberService.findMember(memberId);
-
-
 
         QuestionVote questionVote = new QuestionVote(QuestionVote.VoteType.valueOf(voteStatus), question, member);
         questionVoteService.voteQuestion(questionVote);
