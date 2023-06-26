@@ -64,9 +64,6 @@ public class CommentController {
     public ResponseEntity getCommentList(@PathVariable("question-id") @Positive long questionId,
                                                         @RequestParam("page") int page,
                                                         @RequestParam("size") int size){
-        Question question = questionRepository.findById(questionId) // 전달받은 질문 id와 일치하는 질문을 질문테이블에서 가져옴
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-
         Page<Comment> comments = commentService.findCommentList(page, size);
         List<Comment> commentList = comments.getContent();
 
