@@ -39,6 +39,8 @@ public class Question extends Auditable {
         this.content = content;
         this.view = view;
     }
+    @OneToMany(mappedBy = "question",cascade = CascadeType.PERSIST)
+    private List<Tag> tagNews = new ArrayList<>();
 
 
 
