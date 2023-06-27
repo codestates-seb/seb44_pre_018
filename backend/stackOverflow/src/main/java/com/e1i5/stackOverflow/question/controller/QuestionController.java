@@ -53,6 +53,10 @@ public class QuestionController {
 
 
     }
+//    @PostMapping("/tag") //태그생성
+//    public Tag PostTag(@RequestBody Tag tag){
+//        return  tagService.createTag(tag);
+//    }
 
     @PatchMapping("/update/{question_id}") //질문 수정
     public ResponseEntity patchQuestion(@PathVariable("question_id") @Positive @NonNull long questionId,
@@ -62,7 +66,7 @@ public class QuestionController {
         questionService.QuestionByAuthor(questionId, memberId); // 댓글 작성자메서드 호출
         questionPatchDto.setQuestionId(questionId);
         questionPatchDto.setMemberId(memberId);
-        Question patchQuestion = questionService.updateQuestion(mapper.questionPatchDtoToQuestion(questionPatchDto));
+        Question patchQuestion = questionService.updateQuestion(mapper.questionPatchDtoToQuestion(questionService,questionPatchDto));
 
         return new ResponseEntity<>
                 (new SingleResponseDto<>(mapper.questionToQuestionResponseDto(patchQuestion)), HttpStatus.OK);

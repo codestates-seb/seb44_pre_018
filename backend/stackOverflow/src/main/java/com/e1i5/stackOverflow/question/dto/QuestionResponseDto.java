@@ -28,6 +28,8 @@ public class QuestionResponseDto {
         private int view;
         private LocalDateTime createdAt;
         private List<QuestionCommentDto> commentList;
+        private List<TagResponseDto> questionTags;
+
 
     }
 

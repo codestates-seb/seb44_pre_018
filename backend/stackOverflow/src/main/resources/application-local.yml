@@ -1,8 +1,8 @@
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://localhost:3306/db_stackOverflow?useSSL=false&allowPublicKeyRetrieval=true&useLegacyAuth=false # jdbc:mysql://localhost:3306/{????????}
-    username: user_stackOverflow #????
+    url: jdbc:mysql://localhost:3306/db_stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&useLegacyAuth=false # jdbc:mysql://localhost:3306/{????????}
+    username: user_stackoverflow #????
     password: 1234 #????
     driver-class-name: com.mysql.cj.jdbc.Driver
 

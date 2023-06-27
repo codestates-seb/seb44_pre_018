@@ -19,6 +19,7 @@ public enum ExceptionCode {
 
     IS_NOT_AN_ADMIN(403, "not an admin"),
     MEMBER_EXISTS(409, "Member exists"),
+    TAG_EXISTS(409, "Member exists"),
     MEMBER_NOT_LOGIN(403, "Member not login"),
     COFFEE_NOT_FOUND(404, "Coffee not found"),
     COFFEE_CODE_EXISTS(409, "Coffee Code exists"),
