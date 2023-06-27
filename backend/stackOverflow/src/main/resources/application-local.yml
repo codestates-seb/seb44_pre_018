@@ -1,0 +1,8 @@
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_stackOverflow?useSSL=false&allowPublicKeyRetrieval=true&useLegacyAuth=false # jdbc:mysql://localhost:3306/{????????}
+    username: user_stackOverflow #????
+    password: 1234 #????
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
