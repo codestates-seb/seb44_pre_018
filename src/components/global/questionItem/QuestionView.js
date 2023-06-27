@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
@@ -33,21 +34,26 @@ const QuesitonButtonWrap = styled.div`
   }
 `;
 
-const QuestionEditButtonWrap = styled.div`
-  margin-left: -20rem;
-`;
-
 const QuestionView = ({ question }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
+  const { user } = useSelector((state) => state);
 
   const handleLike = async () => {
     try {
-      await axios.post(`/question/${id}/1`, {
+      await axios.post(`/question/vote/${id}`,
+        {
         voteStatus: 'LIKE',
-      });
+        },
+        {
+          headers: {
+            Authorization: user.token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
       setLikeCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error(error);
@@ -56,15 +62,23 @@ const QuestionView = ({ question }) => {
 
   const handleDislike = async () => {
     try {
-      await axios.post(`/question/${id}/1`, {
-        voteStatus: 'DISLIKE',
-      });
-      setLikeCount((prevCount) => prevCount - 1);
+      await axios.post(
+        `/question/vote/${id}`,
+        {
+          voteStatus: 'DISLIKE',
+        },
+        {
+          headers: {
+            Authorization: user.token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      setDislikeCount((prevCount) => prevCount - 1);
     } catch (error) {
       console.error(error);
     }
   };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -76,7 +90,7 @@ const QuestionView = ({ question }) => {
   useEffect(() => {
     const fetchCommentCount = async () => {
       try {
-        const response = await axios.get(`/v1/comment/${id}`, {
+        const response = await axios.get(`/comment/${id}`, {
           headers: {
             'ngrok-skip-browser-warning': 'true',
           },
@@ -85,8 +99,8 @@ const QuestionView = ({ question }) => {
             size: 4,
           },
         });
+        console.log(id);        
         const { totalElements } = response.data.pageInfo;
-        setCommentCount(response.data.data);
         setCommentCount(totalElements);
       } catch (error) {
         console.error(error);
@@ -104,7 +118,7 @@ const QuestionView = ({ question }) => {
           <ItemView viewCount={question.view} />
         </div>
         <div className="mx-3">
-          <ItemAnswer commentCount={commentCount} />
+          <ItemAnswer viewAnswer={commentCount} />
         </div>
         <p className="ml-auto font-light">
           Asked: {formatDate(question.createdAt)}
@@ -122,9 +136,7 @@ const QuestionView = ({ question }) => {
         </QuesitonButtonWrap>
         <div className="w-full relative pt-3">
           <div className="mt-2">
-            <QuestionEditButtonWrap>
-              <QuestionEditButton className="top-[7px]" />
-            </QuestionEditButtonWrap>
+              <QuestionEditButton id={id} className="top-[7px]" />
           </div>
           <p
             className="text-sm font-light py-2 content"

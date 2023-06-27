@@ -1,6 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { clearUser } from 'store';
 import axios from 'axios';
+
 import Answer from 'components/global/answerdetail/Answer';
 import Editor from 'components/global/questionItem/Editor';
 import LoginModal from 'components/global/login/LoginModal';
@@ -12,40 +15,43 @@ const AnswerItem = ({ itemid }) => {
   const [commentInput, setCommentInput] = useState('');
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const { user } = useSelector((state) => state);
+
+  
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
   };
 
   const getCommentList = async () => {
     try {
-      const response = await axios.get(`/v1/comment/${id}`, {
+      const response = await axios.get(`/comment/${id}`, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
         },
         params: {
-          page: 0,
-          size: 4,
+          page: 1,
+          size: 5,
         },
       });
+      console.log(response.data);
       setAnswers(response.data.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const addComment = async (content) => {
+  const addComment = async (newAnswer) => {
     try {
-      const response = await axios.post(
-        `/v1/comment/${id}/${2}/question-answer`,
-        {
-          content: content,
-        }
-      );
-      const newAnswer = response.data.data;
-      setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
+      const response = await axios.post(`/comment/question-answer/${id}`, newAnswer, {
+        headers: {
+          Authorization: user.token,
+        },
+      });
+      const addedAnswer = response.data.data;
+      console.log(addedAnswer);
+      setAnswers((prevAnswers) => [...prevAnswers, addedAnswer]);
       console.log('댓글 추가 성공:', response.data);
     } catch (error) {
       console.error('댓글 추가 실패:', error);
@@ -53,30 +59,33 @@ const AnswerItem = ({ itemid }) => {
     }
   };
 
-  const handleDeleteAnswer = async (answerId) => {
-    try {
-      await fetch(`/v1/comment/delete/${id}/1`, {
-        method: 'DELETE',
-      });
-
-      const updatedAnswers = answers.filter(
-        (answer) => answer.commentId !== answerId
-      );
-      setAnswers(updatedAnswers);
-      console.log('댓글 삭제 성공');
-    } catch (error) {
-      console.error('댓글 삭제 실패:', error);
+  const handleDeleteAnswer = () => {
+    if (user.isLogin) {
+      axios
+        .delete(`comment/delete/${itemid}`, {
+          headers: {
+            Authorization: user.token,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setAnswers(answers.filter((i) => i.id !== id));
+        })
+        .catch(() => {
+          alert('답변 삭제 권한이 없습니다.');
+        });
     }
   };
 
-  const handleEditComment = async (
-    questionId,
-    commentId,
-    memberId,
-    editedContent
-  ) => {
+  const handleEditComment = async (questionId, commentId, content) => {
     try {
-      const response = await axios.patch(`/v1/comment/update/${id}/${1}/${1}`, {
+      const response = await axios.patch(`/comment/update/${questionId}/${commentId}`,   
+      {
+      headers: {
+        Authorization: user.token,
+      },
+    },
+    {
         content: editedContent,
       });
 
@@ -106,10 +115,11 @@ const AnswerItem = ({ itemid }) => {
       setShowInputMessage(true);
       return;
     }
-    if (!loggedIn) {
+    if (!user.isLogin) {
       setShowModal(true);
       return;
     }
+  
     const newAnswer = {
       commentId: Date.now().toString(),
       memberId: '123',
@@ -122,14 +132,16 @@ const AnswerItem = ({ itemid }) => {
       dislikeCount: 0,
       commentStatus: 'COMMENT',
     };
+  
     try {
-      await addComment(newAnswer.content);
+      await addComment(newAnswer);
       setCommentInput('');
       setShowInputMessage(false);
     } catch (error) {
       console.error(error);
     }
   };
+
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -142,7 +154,6 @@ const AnswerItem = ({ itemid }) => {
 
   useEffect(() => {
     getCommentList();
-    setLoggedIn(false);
     console.log(id);
   }, []);
 
@@ -157,7 +168,7 @@ const AnswerItem = ({ itemid }) => {
         />
       ))}
 
-      <div className="mt-10">
+        <div className="mt-10">
         <h2 className="mb-4">Your Answer</h2>
         <div>
           <Editor
@@ -169,13 +180,15 @@ const AnswerItem = ({ itemid }) => {
           {showInputMessage && (
             <p style={{ color: 'red' }}>내용을 입력해주세요.</p>
           )}
-          <button
-            className="pointBu03 my-5"
-            type="submit"
-            onClick={handleSubmitAnswer}
-          >
-            Submit your Answer
-          </button>
+           <button
+              className="pointBu03 my-5"
+              type="submit"
+              onClick={handleSubmitAnswer}
+            >
+
+              Submit your Answer
+            </button>
+          
         </div>
         {showModal && (
           <LoginModal
