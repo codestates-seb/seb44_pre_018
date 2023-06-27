@@ -81,6 +81,7 @@ public class CommentDto {
         private String authenticatedMemberName;
         private String content;  // 댓글 내용
         private boolean choose; // 댓글 채택 여부
+        // createdAt 추가해야됨
 
 
         @Positive

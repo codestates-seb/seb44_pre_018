@@ -4,6 +4,13 @@ spring:
     username: Dong #????
     password: 1234 #????
     driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: 6e7ad9cb4f1694bb297b
+            client-secret: 2891d1e1fc10b0f1afa4cee4ae28fa69488e53f0
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
