@@ -18,6 +18,8 @@ public class QuestionDto {
         @NotBlank(message = "내용을 작성해야 합니다")
         private String content;
         private long memberId;
+
+
     }
 
     @AllArgsConstructor

@@ -3,6 +3,7 @@ package com.e1i5.stackOverflow.question.entity;
 import com.e1i5.stackOverflow.audit.Auditable;
 import com.e1i5.stackOverflow.comment.entity.Comment;
 import com.e1i5.stackOverflow.member.entity.Member;
+import com.e1i5.stackOverflow.questionVote.entity.QuestionVote;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,12 +41,16 @@ public class Question extends Auditable {
     }
 
 
+
     @ManyToOne
     @JoinColumn(name = "memberId")
     private Member member;
 
-    @OneToMany(mappedBy = "commentId")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<QuestionVote> questionVoteList = new ArrayList<>();
 
     public enum QuestionStatus {
         QUESTION_NOT_EXIST("존재하지 않는 질문"),
@@ -58,10 +63,6 @@ public class Question extends Auditable {
             this.status = status;
         }
     }
-
-
-
-
 
     }
 

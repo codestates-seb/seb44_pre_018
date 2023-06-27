@@ -6,12 +6,8 @@ import com.e1i5.stackOverflow.question.entity.Question;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
-
-import java.time.LocalDateTime;
 
 
 @NoArgsConstructor
@@ -31,28 +27,17 @@ public class Comment extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-//    public void setMember(long memberId){ // post
-//        this.member = new Member();
-//        this.member.setMemberId(memberId);
-//    }
-
-//    public void addMember(Member member){  // 멤버 변경사항 설정
-//        this.member = member;
-//    }
 
     @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 
-    public void setQuestion(long questionId){
-        this.question = new Question();
-        this.question.setQuestionId(questionId);
+
+    // 댓글 수정부분 null exception 해결을 위해 초기화
+    public Comment(Member member, Question question) {
+        this.member = member;
+        this.question = question;
     }
-
-    //    public void addQuestion(Question question){  // 질문 변경사항 설정
-//        this.question = question;
-//    }
-
 
     private boolean choose; // f = comment t = answercomment
 

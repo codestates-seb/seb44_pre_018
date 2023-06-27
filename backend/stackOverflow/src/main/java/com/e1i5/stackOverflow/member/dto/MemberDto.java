@@ -24,17 +24,7 @@ public class MemberDto {
 
         @Pattern(regexp = "^(?=.*[!@#$%^&*])(?=\\S+$).{8,16}$",
                 message = "비밀번호는 8~16자이어야 하며, 특수기호를 포함해야 합니다.")
-        private String password;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class LoginPost{
-        @Email
-        private String email;
-
-        @Pattern(regexp = "^(?=.*[!@#$%^&*])(?=\\S+$).{8,16}$",
-                message = "비밀번호는 8~16자이어야 하며, 특수기호를 포함해야 합니다.")
+        @NotBlank
         private String password;
     }
 
@@ -50,6 +40,11 @@ public class MemberDto {
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
         private String phone;
 
+        @Pattern(regexp = "^(?=.*[!@#$%^&*])(?=\\S+$).{8,16}$",
+                message = "비밀번호는 8~16자이어야 하며, 특수기호를 포함해야 합니다.")
+        @NotBlank
+        private String password;
+
         public void setMemberId(long memberId) {
             this.memberId = memberId;
         }
@@ -61,8 +56,6 @@ public class MemberDto {
         private String name;
         private String phone;
         private String email;
-        private List<MemberQuestionDto.Response> questions;
-        private List<MemberCommentDto.Response> comments;
         private String profileImageName;
         private String profileImagePath;
     }
