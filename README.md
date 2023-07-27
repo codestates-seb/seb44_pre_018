@@ -1,13 +1,13 @@
 ## Codestates Pre-project ✨ E1I5 ✨
 
-![로고](./public/assets/readme/logo-w.png)
+![로고](readmeImg/logo-w.png)
 
 프로젝트 기간 : 2023.06.16 ~ 2023.06.27
 
-| 전혜빈(BE, 팀장)                         | 이동열(BE, 서기)                         | 안시준(BE)                               | 장근실(FE, 부팀장)                       | 박주현(FE)                               |
-| ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- |
-| Albatross53                              | 11dy                                     | Ansijun                                  | sirigogo                                 | hyuniiya                                 |
-| ![혜빈님](./public/assets/readme/hb.png) | ![동열님](./public/assets/readme/dy.png) | ![시준님](./public/assets/readme/sj.png) | ![근실님](./public/assets/readme/gs.png) | ![주현님](./public/assets/readme/jh.png) |
+| 전혜빈(BE, 팀장)            | 이동열(BE, 서기)            | 안시준(BE)                  | 장근실(FE, 부팀장)          | 박주현(FE)                  |
+| --------------------------- | --------------------------- | --------------------------- | --------------------------- | --------------------------- |
+| Albatross53                 | 11dy                        | Ansijun                     | sirigogo                    | hyuniiya                    |
+| ![혜빈님](readmeImg/hb.png) | ![동열님](readmeImg/dy.png) | ![시준님](readmeImg/sj.png) | ![근실님](readmeImg/gs.png) | ![주현님](readmeImg/jh.png) |
 
 ## ✉️ Commit Message
 
