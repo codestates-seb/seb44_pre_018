@@ -35,7 +35,6 @@ const AnswerItem = ({ itemid }) => {
           size: 5,
         },
       });
-      console.log(response.data);
       setAnswers(response.data.data);
     } catch (error) {
       console.error(error);
@@ -50,26 +49,23 @@ const AnswerItem = ({ itemid }) => {
         },
       });
       const addedAnswer = response.data.data;
-      console.log(addedAnswer);
       setAnswers((prevAnswers) => [...prevAnswers, addedAnswer]);
-      console.log('댓글 추가 성공:', response.data);
     } catch (error) {
       console.error('댓글 추가 실패:', error);
       throw error;
     }
   };
 
-  const handleDeleteAnswer = () => {
+  const handleDeleteAnswer = (commentId) => {
     if (user.isLogin) {
       axios
-        .delete(`comment/delete/${itemid}`, {
+        .delete(`/comment/delete/${commentId}`, {
           headers: {
             Authorization: user.token,
           },
         })
         .then((response) => {
-          console.log(response);
-          setAnswers(answers.filter((i) => i.id !== id));
+          setAnswers(answers.filter((answer) => answer.commentId !== commentId));
         })
         .catch(() => {
           alert('답변 삭제 권한이 없습니다.');
@@ -77,17 +73,23 @@ const AnswerItem = ({ itemid }) => {
     }
   };
 
-  const handleEditComment = async (questionId, commentId, content) => {
+  const handleEditComment = async (commentId, editedContent) => {
+    const comment = answers.find((answer) => answer.commentId === commentId);
+  
+    if (!comment) {
+      console.error('댓글을 찾을 수 없습니다.');
+      return;
+    }
     try {
-      const response = await axios.patch(`/comment/update/${questionId}/${commentId}`,   
-      {
-      headers: {
-        Authorization: user.token,
-      },
-    },
-    {
-        content: editedContent,
-      });
+      const response = await axios.patch(
+        `/comment/update/${comment.questionId}/${commentId}`,
+        { content: editedContent },
+        {
+          headers: {
+            Authorization: user.token,
+          },
+        }
+      );
 
       const updatedAnswers = answers.map((answer) => {
         if (answer.commentId === commentId) {
@@ -95,11 +97,9 @@ const AnswerItem = ({ itemid }) => {
         }
         return answer;
       });
-
+  
       setAnswers(updatedAnswers);
       localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-
-      console.log('댓글 수정 성공:', response.data);
     } catch (error) {
       console.error('댓글 수정 실패:', error);
     }
@@ -154,7 +154,6 @@ const AnswerItem = ({ itemid }) => {
 
   useEffect(() => {
     getCommentList();
-    console.log(id);
   }, []);
 
   return (
@@ -163,8 +162,8 @@ const AnswerItem = ({ itemid }) => {
         <Answer
           key={answer.commentId}
           answer={answer}
-          onDeleteAnswer={handleDeleteAnswer}
-          onEditAnswer={handleEditComment}
+          onDeleteAnswer={() => handleDeleteAnswer(answer.commentId)}
+          onEditAnswer={(editedContent) => handleEditComment(answer.commentId, editedContent)}
         />
       ))}
 

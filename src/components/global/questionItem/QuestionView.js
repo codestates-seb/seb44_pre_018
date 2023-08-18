@@ -99,7 +99,6 @@ const QuestionView = ({ question }) => {
             size: 4,
           },
         });
-        console.log(id);        
         const { totalElements } = response.data.pageInfo;
         setCommentCount(totalElements);
       } catch (error) {

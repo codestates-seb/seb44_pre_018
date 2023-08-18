@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 import Editor from 'components/global/questionItem/Editor';
@@ -69,6 +69,10 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
     setEditMode((prevMode) => !prevMode);
   };
 
+  useEffect(() => {
+  }, [editedContent]);
+
+
   const handleContentChange = (content) => {
     setEditedContent(content);
     if (setValue) {
@@ -77,12 +81,12 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
   };
 
   const handleSaveEdit = () => {
-    onEditAnswer(answer.answerId, editedContent);
+    onEditAnswer(editedContent);
     toggleEditMode();
   };
 
   const handleDeleteAnswer = () => {
-    onDeleteAnswer(answer.answerId);
+    onDeleteAnswer(answer.commentId);
   };
 
   return (
@@ -107,6 +111,7 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
               value={editedContent}
               setValue={handleContentChange}
               checkBody={handleCheckBody}
+              onChange={handleContentChange}
             />
           ) : (
             <p dangerouslySetInnerHTML={{ __html: answer.content }}></p>

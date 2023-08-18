@@ -2,7 +2,7 @@
   "name": "seb44_pre_018",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://22bf-211-227-10-200.ngrok-free.app",
+  "proxy": "https://port-0-e1i5-stackoverflow-ac2nlldvu1be.sel3.cloudtype.app/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
