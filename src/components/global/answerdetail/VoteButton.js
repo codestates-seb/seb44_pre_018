@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
@@ -24,25 +25,35 @@ const VoteContainer = styled.div`
   }
 `;
 
-const updateCommentLikes = async (commentId) => {
-  try {
-    await axios.patch(`/comment/like/${commentId}`);
-  } catch (error) {
-    console.error(error);
-  }
-};
+const VoteButton = ({ commentId, likeCount, dislikeCount }) => {
+  const [likes, setLikes] = useState(likeCount);
+  const [dislikes, setDislikes] = useState(dislikeCount);
+  const { user } = useSelector((state) => state);
 
-const updateCommentDislikes = async (commentId) => {
-  try {
-    await axios.patch(`/comment/dislike/${commentId}`);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const VoteButton = ({ commentId }) => {
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
+  const updateCommentLikes = async (commentId) => {
+    try {
+      await axios.patch(`/comment/like/${commentId}`,{}, {
+          headers: {
+            Authorization: user.token,
+          },
+    }
+    );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const updateCommentDislikes = async (commentId) => {
+    try {
+      await axios.patch(`/comment/dislike/${commentId}`,{}, {
+        headers: {
+          Authorization: user.token,
+        },
+  });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleLikeClick = () => {
     setLikes((prevLikes) => {
@@ -59,6 +70,11 @@ const VoteButton = ({ commentId }) => {
       return newDislikes;
     });
   };
+
+  // useEffect(() => {
+  //   fetchCommentCounts(commentId);
+  // }, [commentId]);
+
 
   return (
     <>
