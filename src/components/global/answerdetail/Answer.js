@@ -56,7 +56,7 @@ const AnswerContainer = styled.div`
   }
 `;
 
-const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
+const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue, likeCount, dislikeCount }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.content);
   const [bodyChecked, setBodyChecked] = useState(false);
@@ -101,7 +101,7 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
             src={require('assets/profile_image1.jpeg')}
             alt="프로필 이미지"
           />
-          <span className="username text-sm py-2">{answer.username}</span>
+          <span className="username text-sm font-light py-2">{answer.authenticatedMemberName}</span>
         </div>
 
         <div className="comment text-sm font-light py-2">
@@ -119,7 +119,7 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
         </div>
 
         <div className="right-section">
-          <VoteButton answerId={answer.answerId} />
+          <VoteButton commentId={answer.commentId} likeCount={likeCount} dislikeCount={dislikeCount}/>
           {editMode && (
             <button
               className="pointBu03"

@@ -35,6 +35,7 @@ const AnswerItem = ({ itemid }) => {
           size: 5,
         },
       });
+      console.log(response.data.data);
       setAnswers(response.data.data);
     } catch (error) {
       console.error(error);
@@ -164,6 +165,8 @@ const AnswerItem = ({ itemid }) => {
           answer={answer}
           onDeleteAnswer={() => handleDeleteAnswer(answer.commentId)}
           onEditAnswer={(editedContent) => handleEditComment(answer.commentId, editedContent)}
+          likeCount={answer.likeCount}
+          dislikeCount={answer.dislikeCount}
         />
       ))}
 

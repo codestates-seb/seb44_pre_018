@@ -125,7 +125,11 @@ const MyPage = () => {
       <Container>
         <div className="left-section">
           {user.profile_image && (
-            <img src={previewImage || user.profile_image} alt="Profile" />
+            <img
+            src={previewImage || user.profile_image}
+            alt="Profile"
+            onLoad={() => console.log('이미지 로드됨')}
+            />
           )}
           <Button className="pointBu01 w-50 text-sm" onClick={changePicture}>
             <FontAwesomeIcon icon={faArrowUpFromBracket} className="mr-1" />

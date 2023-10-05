@@ -34,16 +34,16 @@ const QuesitonButtonWrap = styled.div`
   }
 `;
 
-const QuestionView = ({ question }) => {
+const QuestionView = ({ question, likeCount, dislikeCount  }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
-  const [likeCount, setLikeCount] = useState(0);
-  const [dislikeCount, setDislikeCount] = useState(0);
+  const [, setLocalLikeCount] = useState(likeCount);
+  const [, setLocalDisLikeCount] = useState(dislikeCount);
   const { user } = useSelector((state) => state);
 
   const handleLike = async () => {
     try {
-      await axios.post(`/question/vote/${id}`,
+      const response = await axios.post(`/question/vote/${id}`,
         {
         voteStatus: 'LIKE',
         },
@@ -54,7 +54,11 @@ const QuestionView = ({ question }) => {
           },
         }
       );
-      setLikeCount((prevCount) => prevCount + 1);
+      console.log(response);
+      // const responseData = response.data;
+      // const disLikeCount = responseData.data.disLikeCount;
+      // const likeCount = responseData.data.likeCount;
+      setLocalLikeCount((prevCount) => prevCount + 1); 
     } catch (error) {
       console.error(error);
     }
@@ -74,7 +78,7 @@ const QuestionView = ({ question }) => {
           },
         }
       );
-      setDislikeCount((prevCount) => prevCount - 1);
+      setLocalDisLikeCount((prevCount) => prevCount - 1);
     } catch (error) {
       console.error(error);
     }
