@@ -40,7 +40,7 @@ const Login = () => {
 
       const {
         data: {
-          data: { email: resEmail, name: resName, phone: resPhone },
+          data: { data: userData },
         },
       } = await axios.get('/member/getmember', {
         headers: {
@@ -48,15 +48,7 @@ const Login = () => {
           'ngrok-skip-browser-warning': 'true',
         },
       });
-      dispatch(
-        loginUser({
-          name: resName,
-          email: resEmail,
-          phone: resPhone,
-          isLogin: true,
-          token: accessToken,
-        })
-      );
+      dispatch(loginUser({ ...userData, isLogin: true, token: accessToken }));
       navigate('/');
     } catch (err) {
       console.log(err);
