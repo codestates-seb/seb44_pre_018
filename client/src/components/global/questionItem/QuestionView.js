@@ -37,9 +37,29 @@ const QuesitonButtonWrap = styled.div`
 const QuestionView = ({ question, likeCount, dislikeCount  }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
-  const [, setLocalLikeCount] = useState(likeCount);
-  const [, setLocalDisLikeCount] = useState(dislikeCount);
+  const [userName,setUserName] = useState();
   const { user } = useSelector((state) => state);
+
+
+  const getUserData = () => {
+    axios
+      .get('/member/getmember', {
+        headers: {
+          Authorization: user.token,
+        },
+      }) 
+      .then((response) => {
+        const userData = response.data;
+        setUserName(userData.data.name);
+      })
+      .catch((error) => {
+        console.error('사용자 정보를 가져오는 중 오류 발생:', error);
+      });
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   const handleLike = async () => {
     try {
@@ -55,10 +75,6 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
         }
       );
       console.log(response);
-      // const responseData = response.data;
-      // const disLikeCount = responseData.data.disLikeCount;
-      // const likeCount = responseData.data.likeCount;
-      setLocalLikeCount((prevCount) => prevCount + 1); 
     } catch (error) {
       console.error(error);
     }
@@ -78,7 +94,6 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
           },
         }
       );
-      setLocalDisLikeCount((prevCount) => prevCount - 1);
     } catch (error) {
       console.error(error);
     }
@@ -132,14 +147,14 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
           <button onClick={handleLike}>
             <FontAwesomeIcon icon={faCaretUp} />
           </button>
-          <p>{likeCount}</p>
+          <p>{likeCount - dislikeCount}</p>
           <button onClick={handleDislike}>
             <FontAwesomeIcon icon={faCaretDown} />
           </button>
         </QuesitonButtonWrap>
         <div className="w-full relative pt-3">
           <div className="mt-2">
-              <QuestionEditButton id={id} className="top-[7px]" />
+          {user.token && userName === question.memberName && <QuestionEditButton id={id} className="top-[7px]" />}
           </div>
           <p
             className="text-sm font-light py-2 content"
