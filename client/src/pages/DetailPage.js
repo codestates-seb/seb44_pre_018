@@ -26,7 +26,6 @@ const DetailPage = () => {
           },
         });
         const data = response.data.data;
-        console.log(data);
         setLikeCount(data.likeCount);
         setDislikeCount(data.dislikeCount);
         setQuestion({

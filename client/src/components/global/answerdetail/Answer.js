@@ -56,7 +56,7 @@ const AnswerContainer = styled.div`
   }
 `;
 
-const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue, likeCount, dislikeCount }) => {
+const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue, likeCount, dislikeCount, authenticatedMemberName }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.content);
   const [bodyChecked, setBodyChecked] = useState(false);
@@ -88,13 +88,16 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue, likeCount, dis
   const handleDeleteAnswer = () => {
     onDeleteAnswer(answer.commentId);
   };
-
+  
   return (
     <AnswerContainer>
-      <AnswerDropdown
-        onEditAnswer={toggleEditMode}
-        onDeleteAnswer={handleDeleteAnswer}
-      />
+      {authenticatedMemberName === answer.authenticatedMemberName && (
+        <AnswerDropdown
+          onEditAnswer={toggleEditMode}
+          onDeleteAnswer={handleDeleteAnswer}
+        />
+      )}
+      
       <div className="answerContainer">
         <div className="left-section">
           <img

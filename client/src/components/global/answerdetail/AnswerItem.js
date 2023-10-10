@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { clearUser } from 'store';
 import axios from 'axios';
 
 import Answer from 'components/global/answerdetail/Answer';
@@ -16,12 +15,28 @@ const AnswerItem = ({ itemid }) => {
   const [bodyChecked, setBodyChecked] = useState(false);
   const [showInputMessage, setShowInputMessage] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [authenticatedMemberName,setAuthenticatedMemberName] = useState();
 
   const { user } = useSelector((state) => state);
-
   
   const handleCheckBody = (isChecked) => {
     setBodyChecked(isChecked);
+  };
+
+  const getUserData = () => {
+    axios
+      .get('/member/getmember', {
+        headers: {
+          Authorization: user.token,
+        },
+      }) 
+      .then((response) => {
+        const userData = response.data;
+        setAuthenticatedMemberName(userData.data.name);
+      })
+      .catch((error) => {
+        console.error('사용자 정보를 가져오는 중 오류 발생:', error);
+      });
   };
 
   const getCommentList = async () => {
@@ -35,7 +50,6 @@ const AnswerItem = ({ itemid }) => {
           size: 5,
         },
       });
-      console.log(response.data.data);
       setAnswers(response.data.data);
     } catch (error) {
       console.error(error);
@@ -156,6 +170,10 @@ const AnswerItem = ({ itemid }) => {
   useEffect(() => {
     getCommentList();
   }, []);
+  
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <>
@@ -167,6 +185,7 @@ const AnswerItem = ({ itemid }) => {
           onEditAnswer={(editedContent) => handleEditComment(answer.commentId, editedContent)}
           likeCount={answer.likeCount}
           dislikeCount={answer.dislikeCount}
+          authenticatedMemberName={authenticatedMemberName}
         />
       ))}
 
