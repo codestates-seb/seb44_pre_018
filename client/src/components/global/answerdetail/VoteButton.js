@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import LoginModal from 'components/global/login/LoginModal';
 
 
 const VoteContainer = styled.div`
@@ -28,6 +29,7 @@ const VoteContainer = styled.div`
 const VoteButton = ({ commentId, likeCount, dislikeCount }) => {
   const [likes, setLikes] = useState(likeCount);
   const [dislikes, setDislikes] = useState(dislikeCount);
+  const [showModal, setShowModal] = useState(false);
   const { user } = useSelector((state) => state);
 
   const updateCommentLikes = async (commentId) => {
@@ -56,24 +58,36 @@ const VoteButton = ({ commentId, likeCount, dislikeCount }) => {
   };
 
   const handleLikeClick = () => {
+    if(user.token) {
     setLikes((prevLikes) => {
       const newLikes = prevLikes + 1;
       updateCommentLikes(commentId);
       return newLikes;
     });
+  } else {
+    setShowModal(true);
+  }
   };
 
   const handleDislikeClick = () => {
+    if (user.token) {
     setDislikes((prevDislikes) => {
       const newDislikes = prevDislikes + 1;
       updateCommentDislikes(commentId);
       return newDislikes;
     });
+  } else {
+    setShowModal(true);
+  }
   };
 
-  // useEffect(() => {
-  //   fetchCommentCounts(commentId);
-  // }, [commentId]);
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const handleModalCancel = () => {
+    setShowModal(false);
+  };
 
 
   return (
@@ -86,6 +100,13 @@ const VoteButton = ({ commentId, likeCount, dislikeCount }) => {
         <FontAwesomeIcon icon={faThumbsDown} />
         <span>{dislikes}</span>
       </VoteContainer>
+      {showModal && (
+          <LoginModal
+            onClose={handleModalClose}
+            onCancel={handleModalCancel}
+            isOpen={showModal}
+          />
+        )}
     </>
   );
 };
