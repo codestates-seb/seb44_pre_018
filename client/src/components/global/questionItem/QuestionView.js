@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { styled } from 'styled-components';
 import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
+import LoginModal from 'components/global/login/LoginModal';
 
 const QuesitonButtonWrap = styled.div`
   display: flex;
@@ -38,6 +39,7 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
   const [userName,setUserName] = useState();
+  const [showModal, setShowModal] = useState(false);
   const { user } = useSelector((state) => state);
 
 
@@ -62,6 +64,10 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
   }, []);
 
   const handleLike = async () => {
+    if (!user.token) {
+      setShowModal(true);
+      return;
+    }
     try {
       const response = await axios.post(`/question/vote/${id}`,
         {
@@ -81,6 +87,10 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
   };
 
   const handleDislike = async () => {
+    if (!user.token) {
+      setShowModal(true);
+      return;
+    }
     try {
       await axios.post(
         `/question/vote/${id}`,
@@ -104,6 +114,15 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}.${month}.${day}`;
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate('/login');
+  };
+
+  const handleModalCancel = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -163,6 +182,13 @@ const QuestionView = ({ question, likeCount, dislikeCount  }) => {
           <TagList />
         </div>
       </div>
+      {showModal && (
+          <LoginModal
+            onClose={handleModalClose}
+            onCancel={handleModalCancel}
+            isOpen={showModal}
+          />
+        )}
     </div>
   );
 };
