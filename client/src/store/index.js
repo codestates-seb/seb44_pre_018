@@ -8,9 +8,11 @@ const token = getCookie('accessToken');
 const initialState = {
   name: '',
   email: '',
-  isLogin: false,
   phone: '',
   token: '',
+  profileImageName: '',
+  profileImagePath: '',
+  isLogin: false,
 };
 
 export const userSlice = createSlice({

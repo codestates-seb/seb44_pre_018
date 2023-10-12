@@ -5,6 +5,7 @@ import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+// import { useDispatch } from 'react-redux';
 
 const Container = styled.div`
   display: flex;
@@ -54,59 +55,134 @@ const ProfileDetails = styled.div`
 
 const MyPage = () => {
   const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const { user } = useSelector((state) => state);
-  const [member, setMember] = useState(null);
-  const [editedMember, setEditedMember] = useState(null);
+  // console.log('user:', user);
+  const [thisUser, setThisUser] = useState({
+    ...user.data,
+    currentPassword: '',
+    password: '',
+  });
   const [previewImage, setPreviewImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
+  const [imageFile, setImageFile] = useState(null);
   useEffect(() => {
-    if (editedMember) {
-      localStorage.setItem('member', JSON.stringify(editedMember));
-    }
-  }, [editedMember]);
+    setThisUser({ ...user, currentPassword: '', password: '' });
+  }, [user]);
 
-  useEffect(() => {
-    setPreviewImage(editedMember?.profile_image || member?.profile_image);
-  }, [editedMember, member]);
+  // const profileImageURL = user.data.profileImagePath;
 
   const changePicture = () => {
     const inputElement = document.createElement('input');
+    const acceptStr = '.jpg,.png,.jpeg';
     inputElement.type = 'file';
-    inputElement.accept = 'image/*';
+    inputElement.accept = acceptStr;
+
     inputElement.addEventListener('change', async (event) => {
       const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditedMember((prevMember) => ({
-          ...prevMember,
-          profile_image: reader.result,
-        }));
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      const fileExtension = '.' + file.name.split('.').pop();
+
+      if (acceptStr.includes(fileExtension)) {
+        setImageFile(file);
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file); 
+        reader.onloadend = () => {
+          const base64 = reader.result;
+          const userObj = {
+            profile_image: base64,
+          };
+          localStorage.setItem('member', JSON.stringify(userObj));
+          setPreviewImage(base64);
+          setImageFile(file);
+        };
+      }
     });
+
     inputElement.click();
   };
 
-  const handleInputChange = (e, f) => {
-    const value = e.target.value;
-    setEditedMember((prevMember) => ({
+  const handleInputChange = (e) => {
+    // const value = e.target.value;
+    // const name = e.target.name;
+    const {
+      target: { value, name },
+    } = e;
+    setThisUser((prevMember) => ({
       ...prevMember,
-      [f]: value,
+      [name]: value,
     }));
   };
 
-  const saveChanges = () => {
-    setMember((prevMember) =>
-      editedMember.profile_image ? editedMember : { ...prevMember }
-    );
-    setEditedMember(null);
-    setIsEditing(false);
+  const saveChanges = async () => {
+    console.log('thisUser:', thisUser);
+    try {
+      //1. 로그인 로직을 이용해서 기존 패스워드로 로그인이 가능한지
+      // const canLogin = await axios.post('/auth/login', {
+      //   username: thisUser.email,
+      //   password: thisUser.currentPassword,
+      // });
+      // 성공하면 아마 아래로 순차진행이 될 것이고
+      // 실패하면 아마 catch문으로 날라갈거다. => 그에 따른 로직 추가하면 됨. 예를들면 alert("유저 정보 변경 실패");
+      // 유저정보 패치 보낸다.
+      const result1 = await axios.patch(
+        '/member/update',
+        {
+          name: thisUser.data.name,
+          phone: thisUser.data.phone,
+          password: thisUser.currentPassword,
+          //  email: thisUser.data.email,
+          //  profileImageName: thisUser.data.profileImageName,
+          //  profileImagePath: thisUser.data.profileImagePath,
+        },
+        {
+          headers: {
+            Authorization: thisUser.token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      console.log('result1:', result1);
+      // 유저이미지 패치 보낸다.
+      const formData = new FormData();
+      if (imageFile) {
+        formData.append('file', imageFile);
+      }
+
+      const result2 = await axios.patch('/member/upload', formData, {
+        headers: {
+          Authorization: thisUser.token,
+          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'multipart/form-data', 
+        },
+      });
+      console.log('result2:',result2);
+
+      if (result2.status === 200 && result2.data.profileImageName && result2.data.profileImagePath) {
+        // dispatch(loginUser({
+        //   ...thisUser,
+        //   profileImageName: result2.data.profileImageName,
+        //   profileImagePath: result2.data.profileImagePath,
+        // }));
+        setThisUser((prevUser) => ({
+          ...prevUser,
+          profileImageName: result2.data.profileImageName,
+          profileImagePath: result2.data.profileImagePath,
+        }));
+        setPreviewImage(base64);
+      }
+      console.log('user2:', user);
+    } catch (err) {
+      console.log('err', err);
+    }
+    // setMember((prevMember) =>
+    //   editedMember.profile_image ? editedMember : { ...prevMember }
+    // );
+    // setEditedMember(null);
+    // setIsEditing(false);
   };
 
   const editProfile = () => {
-    setEditedMember({ ...member });
     setIsEditing(true);
   };
   const checkLogin = () => {
@@ -121,17 +197,23 @@ const MyPage = () => {
   return (
     <div className="inner">
       <h3 className="maintitle">MyPage</h3>
-      <h1 className="mt-3">Hello, {user.name}!</h1>
+      <h1 className="mt-3">Hello, {user.data.name}!</h1>
       <Container>
         <div className="left-section">
-          {user.profile_image && (
-            <img src={previewImage || user.profile_image} alt="Profile" />
-          )}
-          <Button className="pointBu01 w-50 text-sm" onClick={changePicture}>
-            <FontAwesomeIcon icon={faArrowUpFromBracket} className="mr-1" />
-            Change Picture
-          </Button>
-          {isEditing ? null : (
+          <img
+            src={
+              previewImage
+                ? previewImage || user.profile_image
+                : require('assets/profile_image1.jpeg')
+            }
+            alt="Profile"
+          />
+          {isEditing ? (
+            <Button className="pointBu01 w-50 text-sm" onClick={changePicture}>
+              <FontAwesomeIcon icon={faArrowUpFromBracket} className="mr-1" />
+              Change Picture
+            </Button>
+          ) : (
             <Button className="pointBu03" onClick={editProfile}>
               Edit Profile
             </Button>
@@ -143,8 +225,9 @@ const MyPage = () => {
               Name:
               <input
                 type="text"
-                value={isEditing ? editedMember.name : user.name}
-                onChange={(event) => handleInputChange(event, 'name')}
+                name="name"
+                value={thisUser.name}
+                onChange={handleInputChange}
                 disabled={!isEditing}
               />
             </span>
@@ -152,8 +235,29 @@ const MyPage = () => {
               Email:
               <input
                 type="text"
-                value={isEditing ? editedMember.email : user.email}
-                onChange={(event) => handleInputChange(event, 'email')}
+                name="email"
+                value={thisUser.email}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </span>
+            <span>
+              기존 Password:
+              <input
+                type="password"
+                name="currentPassword"
+                value={thisUser.currentPassword}
+                onChange={handleInputChange}
+                disabled={!isEditing}
+              />
+            </span>
+            <span>
+              새로운 Password:
+              <input
+                type="password"
+                name="password"
+                value={thisUser.password}
+                onChange={handleInputChange}
                 disabled={!isEditing}
               />
             </span>
@@ -161,8 +265,9 @@ const MyPage = () => {
               Phone:
               <input
                 type="text"
-                value={isEditing ? editedMember.phone : user.phone}
-                onChange={(event) => handleInputChange(event, 'phone')}
+                name="phone"
+                value={thisUser.phone}
+                onChange={handleInputChange}
                 disabled={!isEditing}
               />
             </span>

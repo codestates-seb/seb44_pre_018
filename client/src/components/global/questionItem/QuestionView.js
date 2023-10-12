@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import ItemView from 'components/global/questionItem/ItemView';
 import ItemAnswer from 'components/global/questionItem/ItemAnswer';
@@ -8,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { styled } from 'styled-components';
 import QuestionEditButton from 'components/global/questionItem/QuestionEditButton';
+import LoginModal from 'components/global/login/LoginModal';
 
 const QuesitonButtonWrap = styled.div`
   display: flex;
@@ -33,38 +35,79 @@ const QuesitonButtonWrap = styled.div`
   }
 `;
 
-const QuestionEditButtonWrap = styled.div`
-  margin-left: -20rem;
-`;
-
-const QuestionView = ({ question }) => {
+const QuestionView = ({ question, likeCount, dislikeCount  }) => {
   const { id } = useParams();
   const [commentCount, setCommentCount] = useState(0);
-  const [likeCount, setLikeCount] = useState(0);
-  const [dislikeCount, setDislikeCount] = useState(0);
+  const [userName,setUserName] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const { user } = useSelector((state) => state);
+
+
+  const getUserData = () => {
+    axios
+      .get('/member/getmember', {
+        headers: {
+          Authorization: user.token,
+        },
+      }) 
+      .then((response) => {
+        const userData = response.data;
+        setUserName(userData.data.name);
+      })
+      .catch((error) => {
+        console.error('사용자 정보를 가져오는 중 오류 발생:', error);
+      });
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   const handleLike = async () => {
+    if (!user.token) {
+      setShowModal(true);
+      return;
+    }
     try {
-      await axios.post(`/question/${id}/1`, {
+      const response = await axios.post(`/question/vote/${id}`,
+        {
         voteStatus: 'LIKE',
-      });
-      setLikeCount((prevCount) => prevCount + 1);
+        },
+        {
+          headers: {
+            Authorization: user.token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      console.log(response);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleDislike = async () => {
+    if (!user.token) {
+      setShowModal(true);
+      return;
+    }
     try {
-      await axios.post(`/question/${id}/1`, {
-        voteStatus: 'DISLIKE',
-      });
-      setLikeCount((prevCount) => prevCount - 1);
+      await axios.post(
+        `/question/vote/${id}`,
+        {
+          voteStatus: 'DISLIKE',
+        },
+        {
+          headers: {
+            Authorization: user.token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
     } catch (error) {
       console.error(error);
     }
   };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -73,10 +116,19 @@ const QuestionView = ({ question }) => {
     return `${year}.${month}.${day}`;
   };
 
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate('/login');
+  };
+
+  const handleModalCancel = () => {
+    setShowModal(false);
+  };
+
   useEffect(() => {
     const fetchCommentCount = async () => {
       try {
-        const response = await axios.get(`/v1/comment/${id}`, {
+        const response = await axios.get(`/comment/${id}`, {
           headers: {
             'ngrok-skip-browser-warning': 'true',
           },
@@ -86,7 +138,6 @@ const QuestionView = ({ question }) => {
           },
         });
         const { totalElements } = response.data.pageInfo;
-        setCommentCount(response.data.data);
         setCommentCount(totalElements);
       } catch (error) {
         console.error(error);
@@ -104,7 +155,7 @@ const QuestionView = ({ question }) => {
           <ItemView viewCount={question.view} />
         </div>
         <div className="mx-3">
-          <ItemAnswer commentCount={commentCount} />
+          <ItemAnswer viewAnswer={commentCount} />
         </div>
         <p className="ml-auto font-light">
           Asked: {formatDate(question.createdAt)}
@@ -115,16 +166,14 @@ const QuestionView = ({ question }) => {
           <button onClick={handleLike}>
             <FontAwesomeIcon icon={faCaretUp} />
           </button>
-          <p>{likeCount}</p>
+          <p>{likeCount - dislikeCount}</p>
           <button onClick={handleDislike}>
             <FontAwesomeIcon icon={faCaretDown} />
           </button>
         </QuesitonButtonWrap>
         <div className="w-full relative pt-3">
           <div className="mt-2">
-            <QuestionEditButtonWrap>
-              <QuestionEditButton className="top-[7px]" />
-            </QuestionEditButtonWrap>
+          {user.token && userName === question.memberName && <QuestionEditButton id={id} className="top-[7px]" />}
           </div>
           <p
             className="text-sm font-light py-2 content"
@@ -133,6 +182,13 @@ const QuestionView = ({ question }) => {
           <TagList />
         </div>
       </div>
+      {showModal && (
+          <LoginModal
+            onClose={handleModalClose}
+            onCancel={handleModalCancel}
+            isOpen={showModal}
+          />
+        )}
     </div>
   );
 };

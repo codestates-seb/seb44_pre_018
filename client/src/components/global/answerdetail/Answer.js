@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 import Editor from 'components/global/questionItem/Editor';
@@ -56,7 +56,7 @@ const AnswerContainer = styled.div`
   }
 `;
 
-const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
+const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue, likeCount, dislikeCount, authenticatedMemberName }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.content);
   const [bodyChecked, setBodyChecked] = useState(false);
@@ -69,6 +69,10 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
     setEditMode((prevMode) => !prevMode);
   };
 
+  useEffect(() => {
+  }, [editedContent]);
+
+
   const handleContentChange = (content) => {
     setEditedContent(content);
     if (setValue) {
@@ -77,27 +81,30 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
   };
 
   const handleSaveEdit = () => {
-    onEditAnswer(answer.answerId, editedContent);
+    onEditAnswer(editedContent);
     toggleEditMode();
   };
 
   const handleDeleteAnswer = () => {
-    onDeleteAnswer(answer.answerId);
+    onDeleteAnswer(answer.commentId);
   };
-
+  
   return (
     <AnswerContainer>
-      <AnswerDropdown
-        onEditAnswer={toggleEditMode}
-        onDeleteAnswer={handleDeleteAnswer}
-      />
+      {authenticatedMemberName === answer.authenticatedMemberName && (
+        <AnswerDropdown
+          onEditAnswer={toggleEditMode}
+          onDeleteAnswer={handleDeleteAnswer}
+        />
+      )}
+      
       <div className="answerContainer">
         <div className="left-section">
           <img
             src={require('assets/profile_image1.jpeg')}
             alt="프로필 이미지"
           />
-          <span className="username text-sm py-2">{answer.username}</span>
+          <span className="username text-sm font-light py-2">{answer.authenticatedMemberName}</span>
         </div>
 
         <div className="comment text-sm font-light py-2">
@@ -107,6 +114,7 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
               value={editedContent}
               setValue={handleContentChange}
               checkBody={handleCheckBody}
+              onChange={handleContentChange}
             />
           ) : (
             <p dangerouslySetInnerHTML={{ __html: answer.content }}></p>
@@ -114,7 +122,7 @@ const Answer = ({ answer, onDeleteAnswer, onEditAnswer, setValue }) => {
         </div>
 
         <div className="right-section">
-          <VoteButton answerId={answer.answerId} />
+          <VoteButton commentId={answer.commentId} likeCount={likeCount} dislikeCount={dislikeCount}/>
           {editMode && (
             <button
               className="pointBu03"

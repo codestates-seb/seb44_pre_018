@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import LoginModal from 'components/global/login/LoginModal';
 
 
 const VoteContainer = styled.div`
@@ -24,41 +26,69 @@ const VoteContainer = styled.div`
   }
 `;
 
-const updateCommentLikes = async () => {
-  try {
-    await axios.patch(`/v1/comment/like/${2}`);
-  } catch (error) {
-    console.error(error);
-  }
-};
+const VoteButton = ({ commentId, likeCount, dislikeCount }) => {
+  const [likes, setLikes] = useState(likeCount);
+  const [dislikes, setDislikes] = useState(dislikeCount);
+  const [showModal, setShowModal] = useState(false);
+  const { user } = useSelector((state) => state);
 
-const updateCommentDislikes = async () => {
-  try {
-    await axios.patch(`/v1/comment/dislike/${2}`);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const VoteButton = ({ commentId }) => {
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
+  const updateCommentLikes = async (commentId) => {
+    try {
+      await axios.patch(`/comment/like/${commentId}`,{}, {
+          headers: {
+            Authorization: user.token,
+          },
+    }
+    );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const updateCommentDislikes = async (commentId) => {
+    try {
+      await axios.patch(`/comment/dislike/${commentId}`,{}, {
+        headers: {
+          Authorization: user.token,
+        },
+  });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleLikeClick = () => {
+    if(user.token) {
     setLikes((prevLikes) => {
       const newLikes = prevLikes + 1;
       updateCommentLikes(commentId);
       return newLikes;
     });
+  } else {
+    setShowModal(true);
+  }
   };
 
   const handleDislikeClick = () => {
+    if (user.token) {
     setDislikes((prevDislikes) => {
       const newDislikes = prevDislikes + 1;
       updateCommentDislikes(commentId);
       return newDislikes;
     });
+  } else {
+    setShowModal(true);
+  }
   };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const handleModalCancel = () => {
+    setShowModal(false);
+  };
+
 
   return (
     <>
@@ -70,6 +100,13 @@ const VoteButton = ({ commentId }) => {
         <FontAwesomeIcon icon={faThumbsDown} />
         <span>{dislikes}</span>
       </VoteContainer>
+      {showModal && (
+          <LoginModal
+            onClose={handleModalClose}
+            onCancel={handleModalCancel}
+            isOpen={showModal}
+          />
+        )}
     </>
   );
 };
