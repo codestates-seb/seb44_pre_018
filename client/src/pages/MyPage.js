@@ -5,6 +5,7 @@ import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+// import { useDispatch } from 'react-redux';
 
 const Container = styled.div`
   display: flex;
@@ -54,9 +55,11 @@ const ProfileDetails = styled.div`
 
 const MyPage = () => {
   const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const { user } = useSelector((state) => state);
+  // console.log('user:', user);
   const [thisUser, setThisUser] = useState({
-    ...user,
+    ...user.data,
     currentPassword: '',
     password: '',
   });
@@ -67,9 +70,11 @@ const MyPage = () => {
     setThisUser({ ...user, currentPassword: '', password: '' });
   }, [user]);
 
+  // const profileImageURL = user.data.profileImagePath;
+
   const changePicture = () => {
     const inputElement = document.createElement('input');
-    const acceptStr = '.jpg,.png';
+    const acceptStr = '.jpg,.png,.jpeg';
     inputElement.type = 'file';
     inputElement.accept = acceptStr;
 
@@ -81,14 +86,15 @@ const MyPage = () => {
         setImageFile(file);
 
         const reader = new FileReader();
-        reader.readAsDataURL(file); // Read the selected file as a data URL
+        reader.readAsDataURL(file); 
         reader.onloadend = () => {
           const base64 = reader.result;
           const userObj = {
-            profile_image: reader.result,
+            profile_image: base64,
           };
           localStorage.setItem('member', JSON.stringify(userObj));
           setPreviewImage(base64);
+          setImageFile(file);
         };
       }
     });
@@ -109,7 +115,7 @@ const MyPage = () => {
   };
 
   const saveChanges = async () => {
-    console.log(thisUser);
+    console.log('thisUser:', thisUser);
     try {
       //1. 로그인 로직을 이용해서 기존 패스워드로 로그인이 가능한지
       // const canLogin = await axios.post('/auth/login', {
@@ -118,31 +124,54 @@ const MyPage = () => {
       // });
       // 성공하면 아마 아래로 순차진행이 될 것이고
       // 실패하면 아마 catch문으로 날라갈거다. => 그에 따른 로직 추가하면 됨. 예를들면 alert("유저 정보 변경 실패");
-      //2. 유저정보 패치 보낸다.
-      // const result1 = await axios.patch(
-      //   '/member/update',
-      //   {
-      //     name: thisUser.name,
-      //     phone: thisUser.phone,
-      //     password: thisUser.password,
-      //   },
-      //   {
-      //     headers: {
-      //       Authorization: thisUser.token,
-      //       'ngrok-skip-browser-warning': 'true',
-      //     },
-      //   }
-      // );
-      //3. 유저이미지 패치 보낸다.
-      // const formData = new FormData();
-      // formData.append('file', imageFile);
-      // const result2 = await axios.patch('/member/upload', formData, {
-      //   headers: {
-      //     Authorization: thisUser.token,
-      //     'ngrok-skip-browser-warning': 'true',
-      //   },
-      // });
-      console.log(result2);
+      // 유저정보 패치 보낸다.
+      const result1 = await axios.patch(
+        '/member/update',
+        {
+          name: thisUser.data.name,
+          phone: thisUser.data.phone,
+          password: thisUser.currentPassword,
+          //  email: thisUser.data.email,
+          //  profileImageName: thisUser.data.profileImageName,
+          //  profileImagePath: thisUser.data.profileImagePath,
+        },
+        {
+          headers: {
+            Authorization: thisUser.token,
+            'ngrok-skip-browser-warning': 'true',
+          },
+        }
+      );
+      console.log('result1:', result1);
+      // 유저이미지 패치 보낸다.
+      const formData = new FormData();
+      if (imageFile) {
+        formData.append('file', imageFile);
+      }
+
+      const result2 = await axios.patch('/member/upload', formData, {
+        headers: {
+          Authorization: thisUser.token,
+          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'multipart/form-data', 
+        },
+      });
+      console.log('result2:',result2);
+
+      if (result2.status === 200 && result2.data.profileImageName && result2.data.profileImagePath) {
+        // dispatch(loginUser({
+        //   ...thisUser,
+        //   profileImageName: result2.data.profileImageName,
+        //   profileImagePath: result2.data.profileImagePath,
+        // }));
+        setThisUser((prevUser) => ({
+          ...prevUser,
+          profileImageName: result2.data.profileImageName,
+          profileImagePath: result2.data.profileImagePath,
+        }));
+        setPreviewImage(base64);
+      }
+      console.log('user2:', user);
     } catch (err) {
       console.log('err', err);
     }
@@ -168,7 +197,7 @@ const MyPage = () => {
   return (
     <div className="inner">
       <h3 className="maintitle">MyPage</h3>
-      <h1 className="mt-3">Hello, {user.name}!</h1>
+      <h1 className="mt-3">Hello, {user.data.name}!</h1>
       <Container>
         <div className="left-section">
           <img

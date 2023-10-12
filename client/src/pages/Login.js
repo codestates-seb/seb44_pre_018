@@ -38,16 +38,19 @@ const Login = () => {
       const accessToken = result.headers.authorization;
       setCookie('Authorization', `${accessToken}`);
 
-      const {
-        data: {
-          data: { data: userData },
-        },
-      } = await axios.get('/member/getmember', {
+      // const {
+      //   data: {
+      //     data: { data: userData },
+      //   },
+      // }  
+      const response = await axios.get('/member/getmember', {
         headers: {
           Authorization: accessToken,
           'ngrok-skip-browser-warning': 'true',
         },
+        responseType: 'json',
       });
+      const userData = response.data;
       dispatch(loginUser({ ...userData, isLogin: true, token: accessToken }));
       navigate('/');
     } catch (err) {
